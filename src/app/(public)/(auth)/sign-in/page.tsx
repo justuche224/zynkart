@@ -28,7 +28,7 @@ const page = async () => {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="/images/Astronaut-suit-pana.png"
+          src="/images/—Pngtree—daily shopping cart_5398373.png"
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
