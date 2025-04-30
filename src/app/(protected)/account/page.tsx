@@ -1,5 +1,5 @@
 import Account from "@/components/account";
-import { serverAuth } from "@/lib/utils";
+import { serverAuth } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
 import React from "react";
 
