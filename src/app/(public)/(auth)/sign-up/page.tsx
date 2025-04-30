@@ -1,8 +1,7 @@
 import { RegisterForm } from "@/components/auth/sign-up";
 import { info } from "@/constants";
-import { auth } from "@/lib/auth";
+import { serverAuth } from "@/lib/server-auth";
 import { Metadata } from "next";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -11,9 +10,7 @@ export const metadata: Metadata = {
 };
 
 const page = async () => {
-  const data = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const data = await serverAuth();
   if (data?.session) {
     return redirect(info.defaultRedirect);
   }

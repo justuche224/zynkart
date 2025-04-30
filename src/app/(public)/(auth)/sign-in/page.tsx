@@ -3,17 +3,14 @@ import { info } from "@/constants";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { serverAuth } from "@/lib/server-auth";
 
 export const metadata: Metadata = {
   title: `Sign into ${info.name}`,
 };
 
 const page = async () => {
-  const data = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const data = await serverAuth();
   if (data?.session) {
     return redirect(info.defaultRedirect);
   }

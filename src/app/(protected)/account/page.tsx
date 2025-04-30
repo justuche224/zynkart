@@ -1,13 +1,10 @@
 import Account from "@/components/account";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { serverAuth } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import React from "react";
 
 const page = async () => {
-  const data = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const data = await serverAuth();
   if (!data?.session || !data?.user) {
     return redirect("/sign-in?callbackURL=/account");
   }

@@ -2,8 +2,10 @@ import db from "@/db";
 import { mailService } from "@/services/mail";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { emailHarmony } from "better-auth-harmony";
 
 export const auth = betterAuth({
+  plugins: [emailHarmony()],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
