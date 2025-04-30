@@ -8,7 +8,6 @@ import {
   Package,
   CreditCard,
   PlayCircle,
-  ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,15 +49,15 @@ export default function EnhancedHero() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-black overflow-hidden pt-10">
+    <div className="relative w-full min-h-screen bg-gradient-to-br from-white to-gray-50 dark:from-black dark:to-gray-900 overflow-hidden pt-10">
       {/* Background gradient effects */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-pink-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-pink-500/30 dark:bg-primary/20 rounded-full blur-3xl"></div>
       </div>
 
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20"></div>
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 dark:opacity-20"></div>
 
       <div className="container mx-auto px-4 py-16 flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
         <div
@@ -67,7 +66,7 @@ export default function EnhancedHero() {
           }`}
         >
           <div className="space-y-2">
-            <div className="inline-flex items-center px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-sm font-medium text-primary mb-4">
+            <div className="inline-flex items-center px-3 py-1 rounded-full border border-primary/50 bg-primary/20 dark:bg-primary/10 dark:border-primary/30 text-sm font-medium text-primary mb-4">
               <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>{" "}
               Next-gen eCommerce platform
             </div>
@@ -75,21 +74,23 @@ export default function EnhancedHero() {
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-600">
                 Zynkart
               </span>
-              <span className="block mt-1 text-white">Sell Without Limits</span>
+              <span className="block mt-1 text-gray-800 dark:text-white">
+                Sell Without Limits
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl font-medium text-white/80 mt-6">
+            <p className="text-xl md:text-2xl font-medium text-gray-700 dark:text-white/80 mt-6">
               Your complete eCommerce ecosystem
             </p>
           </div>
 
-          <p className="text-lg leading-relaxed text-white/70">
+          <p className="text-lg leading-relaxed text-gray-600 dark:text-white/70">
             Launch, manage, and scale your online business with our all-in-one
             platform. Create branded stores, process payments, and grow your
             customer base—all without technical expertise.
           </p>
 
-          <div className="relative bg-black/40 backdrop-blur-sm border border-white/10 rounded-xl p-6 mt-10">
-            <div className="absolute -top-3 left-4 px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full">
+          <div className="relative bg-white/80 dark:bg-black/40 backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-xl p-6 mt-10 shadow-lg">
+            <div className="absolute -top-3 left-4 px-3 py-1 bg-gradient-to-r from-primary to-pink-500 text-white text-xs font-semibold rounded-full">
               POWERFUL FEATURES
             </div>
 
@@ -104,14 +105,16 @@ export default function EnhancedHero() {
                   } ${activeFeature !== index && "pointer-events-none"}`}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="bg-gradient-to-br from-primary to-pink-600 p-3 rounded-lg">
+                    <div className="bg-gradient-to-br from-primary to-pink-600 p-3 rounded-lg text-white">
                       {feature.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                         {feature.title}
                       </h3>
-                      <p className="text-white/70">{feature.description}</p>
+                      <p className="text-gray-600 dark:text-white/70">
+                        {feature.description}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -123,7 +126,9 @@ export default function EnhancedHero() {
                 <button
                   key={index}
                   className={`w-2 h-2 rounded-full mx-1 ${
-                    activeFeature === index ? "bg-primary" : "bg-white/30"
+                    activeFeature === index
+                      ? "bg-primary"
+                      : "bg-gray-300 dark:bg-white/30"
                   }`}
                   onClick={() => setActiveFeature(index)}
                   aria-label={`Feature ${index + 1}`}
@@ -136,7 +141,7 @@ export default function EnhancedHero() {
             <Button
               asChild
               size="lg"
-              className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary hover:to-pink-500 text-white border-0 h-14 px-8 rounded-xl font-medium"
+              className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary hover:to-pink-500 text-white border-0 h-14 px-8 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all"
             >
               <Link href={"/sign-in"}>
                 Start for free <ArrowRight className="ml-2 h-5 w-5" />
@@ -145,13 +150,13 @@ export default function EnhancedHero() {
             <Button
               size="lg"
               variant="outline"
-              className="text-white border-white/20 hover:bg-white/10 h-14 px-8 rounded-xl"
+              className="bg-white/30 dark:bg-transparent border-gray-300 dark:border-white/20 hover:bg-white/50 dark:hover:bg-white/10 text-gray-700 dark:text-white h-14 px-8 rounded-xl shadow-md"
             >
               <PlayCircle className="mr-2 h-5 w-5" /> Watch demo
             </Button>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 text-white/60 text-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 text-sm text-gray-600 dark:text-white/70">
             <div className="flex items-center">
               <svg
                 className="h-5 w-5 text-primary mr-2"
@@ -166,47 +171,16 @@ export default function EnhancedHero() {
               </svg>
               <span>No credit card required</span>
             </div>
-            <div className="flex items-center">
-              <svg
-                className="h-5 w-5 text-primary mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span>Free 14-day trial</span>
-            </div>
-            <div className="flex items-center">
-              <svg
-                className="h-5 w-5 text-primary mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span>Cancel anytime</span>
-            </div>
           </div>
         </div>
 
         <div
-          className={`relative w-full max-w-md lg:max-w-lg xl:max-w-xl z-0 transition-all duration-1000 ${
+          className={`relative w-full hidden lg:block max-w-md lg:max-w-lg xl:max-w-xl z-0 transition-all duration-1000 ${
             isVisible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
           }`}
         >
           {/* 3D Product Showcase */}
           <div className="relative">
-            {/* Main image with glow effect */}
-            {/* <div className="absolute inset-0 bg-gradient-to-r from-primary to-pink-600 rounded-full blur-3xl opacity-30 animate-pulse"></div> */}
-
             <div className="relative animate-float">
               <Image
                 src="/images/—Pngtree—daily shopping cart_5398373.png"
@@ -219,19 +193,19 @@ export default function EnhancedHero() {
             </div>
 
             {/* Floating elements */}
-            <div className="absolute -top-8 -left-8 bg-white/10 backdrop-blur-lg p-4 rounded-lg border border-white/20 shadow-xl animate-float-slow">
+            <div className="absolute -top-8 -left-8 bg-white/90 dark:bg-white/10 backdrop-blur-lg p-4 rounded-lg border border-gray-200 dark:border-white/20 shadow-xl animate-float-slow">
               <div className="flex items-center gap-3">
                 <div className="bg-primary p-2 rounded-full">
                   <ShoppingCart className="h-5 w-5 text-white" />
                 </div>
-                <div>
-                  <p className="text-xs text-white/70">New order</p>
-                  <p className="text-sm font-medium text-white">$129.99</p>
+                <div className="text-gray-800 dark:text-white">
+                  <p className="text-xs">New order</p>
+                  <p className="text-sm font-medium">$129.99</p>
                 </div>
               </div>
             </div>
 
-            <div className="absolute bottom-10 -right-6 bg-white/10 backdrop-blur-lg p-4 rounded-lg border border-white/20 shadow-xl animate-float-delay">
+            <div className="absolute bottom-10 -right-6 bg-white/90 dark:bg-white/10 backdrop-blur-lg p-4 rounded-lg border border-gray-200 dark:border-white/20 shadow-xl animate-float-delay">
               <div className="flex items-center gap-3">
                 <div className="bg-green-500 p-2 rounded-full">
                   <svg
@@ -248,9 +222,9 @@ export default function EnhancedHero() {
                     />
                   </svg>
                 </div>
-                <div>
-                  <p className="text-xs text-white/70">Inventory updated</p>
-                  <p className="text-sm font-medium text-white">+ 24 items</p>
+                <div className="text-gray-800 dark:text-white">
+                  <p className="text-xs">Inventory updated</p>
+                  <p className="text-sm font-medium">+ 24 items</p>
                 </div>
               </div>
             </div>
