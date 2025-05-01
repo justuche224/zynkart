@@ -1,6 +1,7 @@
 import React from "react";
 import type { Store } from "../../types";
 import dynamic from "next/dynamic";
+import Loader from "@/components/loader";
 
 interface HomeProps {
   store: Store;
@@ -12,7 +13,7 @@ const StoreHome = ({ store }: { store: Store }) => {
   const Home = dynamic<HomeProps>(
     () => import(`../templates/${template}/home`),
     {
-      loading: () => <div>Loading…</div>,
+      loading: () => <Loader />,
     }
   );
 

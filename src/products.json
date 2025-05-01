@@ -1,0 +1,373 @@
+[
+  {
+    "id": "6a78c579-5162-47c3-9a12-81cf51b4b51c",
+    "name": "Vaseline Body Gell",
+    "slug": "vaseline-body-gell",
+    "description": "Vaseline Body Gell Oil",
+    "price": 9999,
+    "slashedFrom": null,
+    "trackQuantity": false,
+    "inStock": 0,
+    "createdAt": "2025-03-08T06:38:09.583Z",
+    "updatedAt": "2025-03-08T06:38:09.583Z",
+    "images": [
+      {
+        "id": "15512878-b765-4b70-877f-2bf9422515d7",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/c21e0963-6b74-44de-be9d-5f26109eafb7.jpeg",
+        "alt": "Vaseline Body Gell",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "b3c1bb44-f5b7-4bf0-980d-c2cd16765f5f",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/daa5efba-a2ee-4b02-a675-a226aa53875b.jpeg",
+        "alt": "Vaseline Body Gell",
+        "position": 1,
+        "isDefault": false
+      },
+      {
+        "id": "c5fe927b-7d48-4c07-8f78-ae0ea68ef321",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/506d2136-fcd9-4473-801d-5579c20e417c.jpeg",
+        "alt": "Vaseline Body Gell",
+        "position": 2,
+        "isDefault": false
+      },
+      {
+        "id": "e0867bd3-3489-41da-b38d-68273b7d3c02",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/0024973d-6b56-4329-ad57-bf654bcef694.jpeg",
+        "alt": "Vaseline Body Gell",
+        "position": 3,
+        "isDefault": false
+      }
+    ]
+  },
+  {
+    "id": "383188de-7f09-412b-ae73-405301e4e0f3",
+    "name": "Egg Soap",
+    "slug": "egg-soap",
+    "description": "Egg Saop",
+    "price": 1300,
+    "slashedFrom": 1500,
+    "trackQuantity": false,
+    "inStock": 0,
+    "createdAt": "2025-03-08T06:20:23.697Z",
+    "updatedAt": "2025-03-08T06:20:23.697Z",
+    "images": [
+      {
+        "id": "75c02f14-b35b-4097-8c4c-91392eb193e8",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/45f1d084-9b13-4dad-9a9f-9eac93793bb9.jpeg",
+        "alt": "Egg Soap",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "2c8dd6a9-741d-4884-bfc7-cd8358040ed1",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/272e92ef-077e-4d2e-8a25-916f38eea5ed.jpeg",
+        "alt": "Egg Soap",
+        "position": 1,
+        "isDefault": false
+      },
+      {
+        "id": "341360d6-9381-403b-93c5-1d8f433bcbef",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/4b64770d-c835-4dc7-98ec-437b1ecab2dd.jpeg",
+        "alt": "Egg Soap",
+        "position": 2,
+        "isDefault": false
+      },
+      {
+        "id": "78fe59fe-68c4-4e4b-b3bb-34c6bdb068a7",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/a1c96caa-652d-4034-b0b6-ed88001418de.jpeg",
+        "alt": "Egg Soap",
+        "position": 3,
+        "isDefault": false
+      }
+    ]
+  },
+  {
+    "id": "a29b2e7f-d494-4238-a640-21df3ce8ba95",
+    "name": "Dr Teals Lotion",
+    "slug": "dr-teals-lotion",
+    "description": "Dr Teals Lotion",
+    "price": 9500,
+    "slashedFrom": null,
+    "trackQuantity": true,
+    "inStock": 70,
+    "createdAt": "2025-03-08T06:21:44.799Z",
+    "updatedAt": "2025-03-08T06:21:44.799Z",
+    "images": [
+      {
+        "id": "27cfeb85-f48e-495b-80c7-a24562f859de",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/d19c4da1-a62e-4433-afc3-588b2b28a30d.jpeg",
+        "alt": "Dr Teals Lotion",
+        "position": 0,
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "id": "bd284d9e-b643-4555-9999-ab03190ca9a1",
+    "name": "Nivea Perfect and Radiant Lotion",
+    "slug": "nivea-perfect-and-radiant-lotion",
+    "description": "Nivea Perfect and Radiant Lotion 400ml",
+    "price": 4500,
+    "slashedFrom": 5000,
+    "trackQuantity": true,
+    "inStock": 48,
+    "createdAt": "2025-03-08T06:22:52.477Z",
+    "updatedAt": "2025-03-08T06:22:52.477Z",
+    "images": [
+      {
+        "id": "42d085c8-0d07-4fb6-989c-22787b34e088",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/43dc8a4a-104f-4cb3-a51f-818f985220a8.jpeg",
+        "alt": "Nivea Perfect and Radiant Lotion",
+        "position": 0,
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "id": "5199923c-ee60-4e75-91e0-54b34567ca7f",
+    "name": "Karis body spray",
+    "slug": "karis-body-spray",
+    "description": "Karis body spray",
+    "price": 2999,
+    "slashedFrom": null,
+    "trackQuantity": true,
+    "inStock": 25,
+    "createdAt": "2025-03-08T06:23:54.446Z",
+    "updatedAt": "2025-03-08T06:23:54.446Z",
+    "images": [
+      {
+        "id": "0921e284-84a6-49da-8cdb-b06894d96138",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/5e531559-f402-4091-904d-d2b91909407c.jpeg",
+        "alt": "Karis body spray",
+        "position": 0,
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "id": "74310fa8-19ce-4b39-98e0-2ff661a6da93",
+    "name": "Veet Gold Face Cleanser",
+    "slug": "veet-gold-face-cleanser",
+    "description": "Veet Gold Face Cleanser",
+    "price": 2999,
+    "slashedFrom": null,
+    "trackQuantity": false,
+    "inStock": 0,
+    "createdAt": "2025-03-08T06:24:57.310Z",
+    "updatedAt": "2025-03-08T06:24:57.310Z",
+    "images": [
+      {
+        "id": "77fe0e2a-e434-4bfb-8e7f-95a119e8226c",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/9d9eeef3-1d96-4d05-b2b9-a7ed501a0905.jpeg",
+        "alt": "Veet Gold Face Cleanser",
+        "position": 0,
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "id": "6315ddca-2dbb-434a-9ded-d053b6dfec9a",
+    "name": "Egg Yolk Face Cream",
+    "slug": "egg-yolk-face-cream",
+    "description": "Egg Yolk Face Cream",
+    "price": 1550,
+    "slashedFrom": 1700,
+    "trackQuantity": true,
+    "inStock": 23,
+    "createdAt": "2025-03-08T06:30:03.746Z",
+    "updatedAt": "2025-03-08T06:30:03.746Z",
+    "images": [
+      {
+        "id": "8d3099c5-bc77-4f24-bad1-2ac9d26c894e",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/5098c44e-f23a-4fe4-9a5c-317243bdedd7.jpeg",
+        "alt": "Egg Yolk Face Cream",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "140c20ff-1820-4b39-bb8d-b3f73ec33e79",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/df4ada16-40c3-4e54-bbc7-1fc6b21d1bd0.jpeg",
+        "alt": "Egg Yolk Face Cream",
+        "position": 1,
+        "isDefault": false
+      },
+      {
+        "id": "c40ed993-fab6-4b6a-b044-477c36dd0fc5",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/96d288f8-fc9f-4aa4-95c1-81fa72e23c24.jpeg",
+        "alt": "Egg Yolk Face Cream",
+        "position": 2,
+        "isDefault": false
+      }
+    ]
+  },
+  {
+    "id": "4cebb4ba-01b8-407e-a323-46d1c84c9e68",
+    "name": "Fair and White Gold Exfoliating Shower Gel",
+    "slug": "fair-and-white-gold-exfoliating-shower-gel",
+    "description": "Fair and White Gold Exfoliating Shower Gel",
+    "price": 9999,
+    "slashedFrom": null,
+    "trackQuantity": false,
+    "inStock": 0,
+    "createdAt": "2025-03-08T06:31:44.614Z",
+    "updatedAt": "2025-03-08T06:31:44.614Z",
+    "images": [
+      {
+        "id": "7c1a302d-317e-4b3d-8472-aa510d6685aa",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/89d53a82-9478-468c-97c6-aefb2a69fb74.jpeg",
+        "alt": "Fair and White Gold Exfoliating Shower Gel",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "32a8bbb8-102d-46d5-881b-9f5be6597c0d",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/a014308b-d3a7-4a20-a13c-afb9dc6ca3ff.jpeg",
+        "alt": "Fair and White Gold Exfoliating Shower Gel",
+        "position": 1,
+        "isDefault": false
+      }
+    ]
+  },
+  {
+    "id": "553634da-21de-4793-916b-78e95d9c0dc7",
+    "name": "Splendide perfume",
+    "slug": "splendide-perfume",
+    "description": "Splendide perfume",
+    "price": 5000,
+    "slashedFrom": null,
+    "trackQuantity": false,
+    "inStock": 0,
+    "createdAt": "2025-03-08T06:34:11.297Z",
+    "updatedAt": "2025-03-08T06:34:11.297Z",
+    "images": [
+      {
+        "id": "7b023e97-18a5-482a-85dc-7d2ef8786ff5",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/6be065b9-620b-4b2b-9f07-56546c605de3.jpeg",
+        "alt": "Splendide perfume",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "8d44e9a0-4682-4e3a-aacf-377ca0d8116e",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/b5d44c8e-3e0a-4bed-ab24-2012086ea55b.jpeg",
+        "alt": "Splendide perfume",
+        "position": 1,
+        "isDefault": false
+      },
+      {
+        "id": "9ecce9ab-ac9f-484f-9741-a4dffbd9cf39",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/cdcdf692-7c9f-4f4d-bc2b-4e808dc64168.jpeg",
+        "alt": "Splendide perfume",
+        "position": 2,
+        "isDefault": false
+      },
+      {
+        "id": "c9cb81bb-bb36-4a0e-ba9c-d2412d31a6d3",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/22fd4388-ffb3-4d74-a0b7-3e29f345fe4c.jpeg",
+        "alt": "Splendide perfume",
+        "position": 3,
+        "isDefault": false
+      }
+    ]
+  },
+  {
+    "id": "32fbbbbb-f717-488a-96af-fd15a8b903b2",
+    "name": "Mousuf Wardi Perfume",
+    "slug": "mousuf-wardi-perfume",
+    "description": "Mousuf Wardi Perfume",
+    "price": 4500,
+    "slashedFrom": null,
+    "trackQuantity": true,
+    "inStock": 59,
+    "createdAt": "2025-03-08T06:35:39.649Z",
+    "updatedAt": "2025-03-08T06:35:39.649Z",
+    "images": [
+      {
+        "id": "5ec095ee-6aaa-4cee-8c4f-bf6c0df49401",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/952ddedd-f5c2-4b15-9c99-5c3e18de401c.jpeg",
+        "alt": "Mousuf Wardi Perfume",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "f07b3fa7-309f-4a3d-9717-ce060393c0b6",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/68e4c530-276f-40c1-8fb7-4335ef634d98.jpeg",
+        "alt": "Mousuf Wardi Perfume",
+        "position": 1,
+        "isDefault": false
+      },
+      {
+        "id": "f946070e-2e20-4608-942c-490c0df14c19",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/e1b25c5b-f255-4292-b617-04db7cbcae97.jpeg",
+        "alt": "Mousuf Wardi Perfume",
+        "position": 2,
+        "isDefault": false
+      },
+      {
+        "id": "6ac26bdc-69d5-4af4-9969-6a0ad55873ea",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/558204d8-0a0a-480d-af40-05795e83b681.jpeg",
+        "alt": "Mousuf Wardi Perfume",
+        "position": 3,
+        "isDefault": false
+      },
+      {
+        "id": "fdc1680f-f391-4fc3-a715-0a4e9bd1afa9",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/0ac8a3fb-e03b-4c5f-8bff-bf15ebdfd19c.jpeg",
+        "alt": "Mousuf Wardi Perfume",
+        "position": 4,
+        "isDefault": false
+      }
+    ]
+  },
+  {
+    "id": "ba15654e-6566-4f64-8e65-824006dd5ae7",
+    "name": "ST Ives Lotion",
+    "slug": "st-ives-lotion",
+    "description": "ST Ives Lotion",
+    "price": 7499,
+    "slashedFrom": null,
+    "trackQuantity": false,
+    "inStock": 0,
+    "createdAt": "2025-03-08T06:36:44.095Z",
+    "updatedAt": "2025-03-08T06:36:44.095Z",
+    "images": [
+      {
+        "id": "e00ce5b1-6b5d-4289-a3dc-c066cb09dbe7",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/5b0f0cc7-b63c-41d2-a5db-732665d92549.jpeg",
+        "alt": "ST Ives Lotion",
+        "position": 0,
+        "isDefault": true
+      },
+      {
+        "id": "3054b879-9610-44dd-9e00-f9c4d6217eda",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/361f80f9-00a2-45af-8d92-f29405ffed72.jpeg",
+        "alt": "ST Ives Lotion",
+        "position": 1,
+        "isDefault": false
+      },
+      {
+        "id": "8b082907-419a-4ccf-9f87-b0157483f76f",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/7c211dd6-5796-490c-b303-65f7bfc20164.jpeg",
+        "alt": "ST Ives Lotion",
+        "position": 2,
+        "isDefault": false
+      },
+      {
+        "id": "6bd1f95b-57fb-4dd5-9cf4-3a053a0f6b76",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/08a5158b-fd0e-4d85-840b-38448ec28fdc.jpeg",
+        "alt": "ST Ives Lotion",
+        "position": 3,
+        "isDefault": false
+      },
+      {
+        "id": "8b15c270-3478-4986-a532-207153ed14f9",
+        "url": "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify/795187dd-6acb-4439-aad9-033754b82264.jpeg",
+        "alt": "ST Ives Lotion",
+        "position": 4,
+        "isDefault": false
+      }
+    ]
+  }
+]

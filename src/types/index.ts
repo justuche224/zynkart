@@ -5,12 +5,23 @@ export type Store = {
   template: string;
 };
 
-export type Product = {
-  id: number;
+export interface Product {
+  id: string;
   name: string;
   slug: string;
-  price: number;
   description: string;
-  imageUrl: string;
-  storeId: number;
-};
+  price: number;
+  slashedFrom: number | null;
+  inStock: number;
+  trackQuantity: boolean;
+  // categoryId: string;
+  createdAt: string;
+  updatedAt: string;
+  images: {
+    id: string;
+    url: string;
+    alt: string;
+    position: number;
+    isDefault: boolean;
+  }[];
+}
