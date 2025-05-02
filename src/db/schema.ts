@@ -1,4 +1,9 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+
+// -------------------------------------------------------
+// User Authentication Tables
+// --------------------------------------------------------
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -51,3 +56,30 @@ export const verification = pgTable("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
+// -------------------------------------------------------
+// Store Tables
+// -------------------------------------------------------
+
+export const store = pgTable(
+  "store",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    merchantId: text("merchant_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    slug: text("slug").notNull().unique(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+
+    template: text("template").notNull(),
+  },
+  (table) => [
+    index("store_slug_idx").on(table.slug),
+    index("store_merchant_id_idx").on(table.merchantId),
+    index("store_name_idx").on(table.name),
+  ]
+);

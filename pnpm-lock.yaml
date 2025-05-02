@@ -92,6 +92,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.4
         version: 1.2.4(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@react-hook/media-query':
+        specifier: ^1.1.1
+        version: 1.1.1(react@19.1.0)
       better-auth:
         specifier: ^1.2.7
         version: 1.2.7
@@ -1454,6 +1457,11 @@ packages:
 
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
+
+  '@react-hook/media-query@1.1.1':
+    resolution: {integrity: sha512-VM14wDOX5CW5Dn6b2lTiMd79BFMTut9AZj2+vIRT3LCKgMCYmdqruTtzDPSnIVDQdtxdPgtOzvU9oK20LopuOw==}
+    peerDependencies:
+      react: '>=16.8'
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -4562,6 +4570,10 @@ snapshots:
       '@types/react-dom': 19.1.2(@types/react@19.1.2)
 
   '@radix-ui/rect@1.1.1': {}
+
+  '@react-hook/media-query@1.1.1(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
 
   '@rtsao/scc@1.1.0': {}
 
