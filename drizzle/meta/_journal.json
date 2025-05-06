@@ -22,6 +22,27 @@
       "when": 1746217680115,
       "tag": "0002_burly_caretaker",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1746329215309,
+      "tag": "0003_lumpy_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1746329306842,
+      "tag": "0004_slimy_hex",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1746540197210,
+      "tag": "0005_complex_morph",
+      "breakpoints": true
     }
   ]
 }

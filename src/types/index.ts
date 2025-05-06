@@ -1,3 +1,23 @@
+import {
+  category,
+  product,
+  productImage,
+  // shippingZone,
+  // storeProfile,
+} from "@/db/schema";
+import { InferSelectModel } from "drizzle-orm";
+// import type z from "zod";
+
+// export type ShippingZone = InferSelectModel<typeof shippingZone>;
+
+// export type StoreProfile = InferSelectModel<typeof storeProfile>;
+
+export type Category = InferSelectModel<typeof category>;
+
+export type ProductWithImages = InferSelectModel<typeof product> & {
+  images: InferSelectModel<typeof productImage>[];
+};
+
 export type Store = {
   id: number;
   name: string;

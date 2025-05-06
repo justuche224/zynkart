@@ -99,6 +99,9 @@ function ProfileForm({
     resolver: zodResolver(StoreSchema),
     defaultValues: {
       name: "",
+      address: "",
+      phone: "",
+      email: "",
     },
   });
 
@@ -117,7 +120,7 @@ function ProfileForm({
     setError(undefined);
     setSuccess(undefined);
     startTransition(async () => {
-      const { data, error } = await createStore(merchantId, values.name);
+      const { data, error } = await createStore(merchantId, values);
       if (error) {
         setError(error);
       }
@@ -133,7 +136,7 @@ function ProfileForm({
         className={cn("grid items-start gap-4", className)}
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           <FormField
             control={form.control}
             name="name"
@@ -153,6 +156,66 @@ function ProfileForm({
                 <FormDescription>
                   {slug && `Store will be available at ${slug}.zynkart.io`}
                 </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="address"
+            disabled={isPending}
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel htmlFor="address">Store contact address</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    id="address"
+                    type="text"
+                    placeholder="No 2, Somemething road, Some Place"
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            disabled={isPending}
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel htmlFor="email">Store contact address</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    id="email"
+                    type="text"
+                    placeholder="store@provider.com"
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            disabled={isPending}
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel htmlFor="phone">Store contect number</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    id="phone"
+                    type="text"
+                    placeholder="+2348000000"
+                    required
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
