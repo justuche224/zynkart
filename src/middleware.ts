@@ -71,13 +71,13 @@ export function middleware(req: NextRequest) {
   }
 
   // For auth routes on the main domain:
-  if (isAuthRoute) {
-    // If the user is logged in, send them to the default redirect.
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-    }
-    return NextResponse.next();
-  }
+  // if (isAuthRoute) {
+  //   // If the user is logged in, send them to the default redirect.
+  //   if (isLoggedIn) {
+  //     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  //   }
+  //   return NextResponse.next();
+  // }
 
   // For any other route on the main domain, if the user is not logged in, redirect to sign in.
   if (!isLoggedIn && !isPublicRoute) {

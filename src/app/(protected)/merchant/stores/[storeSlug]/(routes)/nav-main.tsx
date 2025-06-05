@@ -53,7 +53,7 @@ export function NavMain({
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  isActive={pathname === `/merchant/${storeSlug}${item.url}`}
+                  isActive={pathname === `/merchant/stores/${storeSlug}${item.url}`}
                 >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
@@ -67,12 +67,14 @@ export function NavMain({
                       <SidebarMenuSubButton
                         asChild
                         className={cn(
-                          pathname === `/merchant/${storeSlug}${subItem.url}`
+                          pathname === `/merchant/stores/${storeSlug}${subItem.url}`
                             ? "bg-accent text-accent-foreground"
                             : "text-muted-foreground"
                         )}
                       >
-                        <Link href={`/merchant/${storeSlug}${subItem.url}`}>
+                        <Link
+                          href={`/merchant/stores/${storeSlug}${subItem.url}`}
+                        >
                           <span>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>

@@ -435,3 +435,10 @@ export const productRelations = relations(product, ({ one, many }) => ({
     references: [productWeight.productId],
   }),
 }));
+
+export const productImageRelations = relations(productImage, ({ one }) => ({
+  product: one(product, {
+    fields: [productImage.productId],
+    references: [product.id],
+  }),
+}));

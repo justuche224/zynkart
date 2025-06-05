@@ -96,7 +96,10 @@ const NewProductForm = ({
 
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const form = useForm<z.infer<typeof NewProductSchema>>({
+  type NewProductFormInput = z.input<typeof NewProductSchema>;
+  type NewProductFormOutput = z.output<typeof NewProductSchema>;
+
+  const form = useForm<NewProductFormInput, any, NewProductFormOutput>({
     resolver: zodResolver(NewProductSchema),
     defaultValues: {
       name: "",
@@ -139,7 +142,7 @@ const NewProductForm = ({
           const imageFile = await convertBlobUrlToFile(url);
           const { imageUrl, error } = await uploadImage({
             file: imageFile,
-            bucket: "cartify",
+            bucket: process.env.NEXT_PUBLIC_SUPABASE_BUCKET!,
           });
 
           if (error) throw new Error(`Failed to upload image: ${error}`);
@@ -204,7 +207,7 @@ const NewProductForm = ({
     },
   });
 
-  const onSubmit = (values: z.infer<typeof NewProductSchema>) => {
+  const onSubmit = (values: NewProductFormOutput) => {
     setError("");
     setSuccess("");
     createProductMutation.mutate(values);
@@ -755,7 +758,7 @@ const NewProductForm = ({
                             sizes={sizes}
                             value={field.value || []}
                             onChange={field.onChange}
-                            trackQuantity={form.watch("trackQuantity")}
+                            trackQuantity={form.watch("trackQuantity") || false}
                             basePrice={form.watch("price")}
                             onAddColor={handleAddColor}
                             onAddSize={handleAddSize}
