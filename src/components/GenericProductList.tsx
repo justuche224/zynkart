@@ -340,31 +340,30 @@ const GenericProductList = <T extends BaseProduct>({
                     </div>
                     <div className="flex gap-2">
                       <Button
-                        className="w-full"
+                        className="w-1/2"
                         variant="destructive"
                         onClick={handleDeleteClick}
                         disabled={deleteProductMutation.isPending}
                       >
-                        Delete <Trash className="ml-2" />
+                         <Trash className="ml-2" />
                       </Button>
                       <Button
-                        className="w-full"
+                        className="w-1/2"
                         variant="default"
                         onClick={() =>
                           router.push(
-                            `/merchant/${storeSlug}/products/${selectedProduct.id}/edit`
+                            `/merchant/stores/${storeSlug}/products/${selectedProduct.id}/edit`
                           )
                         }
                       >
-                        Edit <Pen className="ml-2" />
+                         <Pen className="ml-2" />
                       </Button>
                     </div>
                     {productDetailsPath && (
                       <Button
                         className="w-full gap-2"
                         onClick={() => {
-                          window.location.href =
-                            productDetailsPath(selectedProduct);
+                          router.push(productDetailsPath(selectedProduct))
                         }}
                       >
                         View Full Details

@@ -16,26 +16,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { product, productImage } from "@/server/database/schema";
+import type { product, productImage } from "@/db/schema";
 import type { InferSelectModel } from "drizzle-orm";
-import { formatDate } from "@/utils/date-formatting";
-import formatPrice from "@/utils/price-formatter";
+import { formatDate } from "@/lib/date-formatter";
+import formatPrice from "@/lib/price-formatter";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import logger from "@/utils/logger";
-import { deleteProduct } from "@/server/actions/product/delete-product";
+import { deleteProduct } from "@/actions/product/delete-product";
 import Link from "next/link";
 
 type Image = InferSelectModel<typeof productImage>;
 type ProductWithRelations = InferSelectModel<typeof product> & {
-  storeProfile: {
-    id: string;
     store: {
       merchantId: string;
       slug: string;
     };
-  };
   category: {
     id: string;
     name: string;
@@ -55,25 +51,25 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
   const router = useRouter();
 
   const handleDeleteConfirm = async () => {
-    if (!productData.id || !productData.storeProfile.store.merchantId) return;
+    if (!productData.id || !productData.store.merchantId) return;
 
     setIsDeleting(true);
     try {
       const result = await deleteProduct(
         productData.id,
-        productData.storeProfile.store.slug,
-        productData.storeProfile.store.merchantId
+        productData.store.slug,
+        productData.store.merchantId
       );
       if (result.error) {
         toast.error(result.error);
       } else {
         router.push(
-          `/merchant/${productData.storeProfile.store.slug}/products`
+          `/merchant/stores/${productData.store.slug}/products`
         );
         toast.success("Product deleted successfully");
       }
     } catch (error) {
-      logger.error("Failed to delete product:", error);
+      console.error("Failed to delete product:", error);
     } finally {
       setIsDeleting(false);
     }
@@ -95,7 +91,7 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
               size="sm"
               onClick={() =>
                 router.push(
-                  `/merchant/${productData.storeProfile.store.slug}/products/${productData.slug}/edit`
+                  `/merchant/stores/${productData.store.slug}/products/${productData.slug}/edit`
                 )
               }
             >
@@ -236,7 +232,7 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
               </div>
               <div>
                 <p className="font-semibold">Store</p>
-                <p>{productData.storeProfile.store.slug}</p>
+                <p>{productData.store.slug}</p>
               </div>
             </CardContent>
           </Card>
@@ -260,7 +256,7 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
 
         <div className="flex justify-end space-x-4">
           <Link
-            href={`http://${productData.storeProfile.store.slug}.localhost:3000/${productData.slug}`}
+            href={`http://${productData.store.slug}.localhost:3000/${productData.slug}`}
             target="_blank"
           >
             <Button variant="outline">

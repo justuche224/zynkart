@@ -30,7 +30,7 @@ const ProductList = ({ products, storeData }: ProductListProps) => {
         header={
           <div className="flex items-center justify-between">
             <h1 className="text-4xl font-bold mb-4">{storeData.name}</h1>
-            <Link href={`/merchant/${storeData.slug}/products/new`}>
+            <Link href={`/merchant/stores/${storeData.slug}/products/new`}>
               <Button variant="outline" className="gap-2">
                 <Plus size={20} />
                 <span className="hidden md:inline-block">Add Product</span>
@@ -38,9 +38,9 @@ const ProductList = ({ products, storeData }: ProductListProps) => {
             </Link>
           </div>
         }
-        productDetailsPath={(product) =>
-          `/merchant/${storeData.slug}/products/${product.slug}`
-        }
+        productDetailsPath={(product) => {
+          return `/merchant/stores/${storeData.slug}/products/${product.slug}`;
+        }}
       />
     </div>
   );

@@ -198,7 +198,7 @@ const NewProductForm = ({
       setImageUrls([]);
 
       // Redirect to products page
-      router.push(`/merchant/${storeSlug}/products`);
+      router.push(`/merchant/stores/${storeSlug}/products`);
       router.refresh();
     },
     onError: (error: Error) => {
@@ -307,7 +307,7 @@ const NewProductForm = ({
           transition={{ duration: 0.3 }}
         >
           <Link
-            href={`/merchant/${storeSlug}/products`}
+            href={`/merchant/stores/${storeSlug}/products`}
             className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

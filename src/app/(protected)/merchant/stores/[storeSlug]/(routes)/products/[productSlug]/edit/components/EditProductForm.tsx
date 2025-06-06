@@ -27,8 +27,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/ui/form-error";
+import { FormSuccess } from "@/components/ui/form-success";
 import {
   Card,
   CardHeader,
@@ -37,17 +37,17 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { InferSelectModel } from "drizzle-orm";
-import { category, size, color, productSource } from "@/server/database/schema";
+import { category, size, color, productSource } from "@/db/schema";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Alert } from "@/components/ui/alert";
-import { convertBlobUrlToFile } from "@/utils/convert-blob-url-to-file";
-import { uploadImage } from "@/utils/supabase/storage/client";
-import formatPrice from "@/utils/price-formatter";
+import { convertBlobUrlToFile } from "@/lib/convert-blob-url-to-file";
+import { uploadImage } from "@/lib/supabase/storage/client";
+import formatPrice from "@/lib/price-formatter";
 import { ProductWithImages } from "@/types";
-import { updateProduct } from "@/server/actions/product/update-product";
+import { updateProduct } from "@/actions/product/update-product";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024;
@@ -62,9 +62,8 @@ type EditProductFormProps = {
   storeData: {
     id: string;
     name: string;
-    storeProfileId: string | null;
   };
-  storeProfileId?: string;
+  storeId?: string;
   categories?: Category[];
   colors?: Color[];
   sizes?: Size[];
@@ -76,7 +75,7 @@ type EditProductFormProps = {
 
 const EditProductForm = ({
   storeData,
-  storeProfileId,
+  storeId,
   categories,
   vendors,
   merchantId,
@@ -98,8 +97,10 @@ const EditProductForm = ({
   const queryClient = useQueryClient();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
+  type NewProductFormInput = z.input<typeof NewProductSchema>;
+  type NewProductFormOutput = z.output<typeof NewProductSchema>
 
-  const form = useForm<z.infer<typeof NewProductSchema>>({
+  const form = useForm<NewProductFormInput, any, NewProductFormOutput>({
     resolver: zodResolver(NewProductSchema),
     defaultValues: {
       name: product.name,
@@ -112,7 +113,7 @@ const EditProductForm = ({
       inStock: product.inStock,
       productSourceId: product.productSourceId || "",
       newVendorName: "",
-      storeProfileId: storeProfileId || product.storeProfileId,
+      storeId: storeId || product.storeId,
       variants: [],
     },
   });
@@ -203,11 +204,11 @@ const EditProductForm = ({
     },
     onSuccess: (updatedProduct) => {
       // Invalidate products query to trigger refetch
-      queryClient.invalidateQueries({ queryKey: ["products", storeProfileId] });
+      queryClient.invalidateQueries({ queryKey: ["products", storeId] });
 
       // Optimistically update product list
       queryClient.setQueryData(
-        ["products", storeProfileId, 1], // assuming we're on page 1
+          ["products", storeId, 1],
 
         (oldData: any) => {
           if (!oldData) return oldData;
@@ -224,7 +225,7 @@ const EditProductForm = ({
 
       setSuccess("Product updated successfully!");
       toast.success("Product updated");
-      router.push(`/merchant/${storeSlug}/products`);
+      router.push(`/merchant/stores/${storeSlug}/products`);
       router.refresh();
     },
     onError: (error: Error) => {
@@ -233,7 +234,7 @@ const EditProductForm = ({
     },
   });
 
-  const onSubmit = (values: z.infer<typeof NewProductSchema>) => {
+  const onSubmit = (values: NewProductFormOutput) => {
     setError("");
     setSuccess("");
 
@@ -296,7 +297,7 @@ const EditProductForm = ({
           transition={{ duration: 0.3 }}
         >
           <Link
-            href={`/merchant/${storeSlug}/products`}
+            href={`/merchant/stores/${storeSlug}/products`}
             className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -799,7 +800,7 @@ const EditProductForm = ({
                       disabled={updateProductMutation.isPending}
                       asChild
                     >
-                      <Link href={`/merchant/${storeSlug}/products`}>
+                      <Link href={`/merchant/stores/${storeSlug}/products`}>
                         Cancel
                       </Link>
                     </Button>

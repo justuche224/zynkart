@@ -1,18 +1,17 @@
-import { currentUser } from "@/lib/current-user";
-import { db } from "@/server/database";
+import db from "@/db";
 import {
   store,
-  storeProfile,
   category,
   color,
   size,
   productSource,
   product,
-} from "@/server/database/schema";
+} from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
 import EditProductForm from "./components/EditProductForm";
+import { serverAuth } from "@/lib/server-auth";
 
 const page = async ({
   params,
@@ -20,25 +19,23 @@ const page = async ({
   params: Promise<{ storeSlug: string; productSlug: string }>;
 }) => {
   const { storeSlug, productSlug } = await params;
-  const merchant = await currentUser();
-  if (!merchant?.id) return redirect("/auth/sign-in");
+  const merchant = await serverAuth();
+  if (!merchant?.user) return redirect("/auth/sign-in");
 
   const storeData = await db
     .select({
       id: store.id,
       name: store.name,
-      storeProfileId: storeProfile.id,
     })
     .from(store)
-    .leftJoin(storeProfile, eq(storeProfile.storeId, store.id))
-    .where(and(eq(store.slug, storeSlug), eq(store.merchantId, merchant.id)))
+    .where(and(eq(store.slug, storeSlug), eq(store.merchantId, merchant.user.id)))
     .limit(1);
 
-  if (!storeData || !storeData[0].storeProfileId) return redirect("/merchant");
+  if (!storeData) return redirect("/merchant");
 
   const existingProduct = await db.query.product.findFirst({
     where: and(
-      eq(product.storeProfileId, storeData[0].storeProfileId),
+      eq(product.storeId, storeData[0].id),
       eq(product.slug, productSlug)
     ),
     with: {
@@ -52,22 +49,22 @@ const page = async ({
 
   const [categories, colors, sizes, vendors] = await Promise.all([
     db.query.category.findMany({
-      where: eq(category.storeProfileId, storeData[0].storeProfileId),
+      where: eq(category.storeId, storeData[0].id),
     }),
     db.query.color.findMany({
-      where: eq(color.storeProfileId, storeData[0].storeProfileId),
+      where: eq(color.storeId, storeData[0].id),
     }),
     db.query.size.findMany({
-      where: eq(size.storeProfileId, storeData[0].storeProfileId),
+      where: eq(size.storeId, storeData[0].id),
     }),
     db.query.productSource.findMany({
-      where: eq(productSource.storeProfileId, storeData[0].storeProfileId),
+      where: eq(productSource.storeId, storeData[0].id),
     }),
   ]);
 
   const info = {
     storeData: storeData[0],
-    storeProfileId: storeData[0].storeProfileId,
+    storeId: storeData[0].id,
     categories: categories,
     colors: colors,
     sizes: sizes,
@@ -76,7 +73,7 @@ const page = async ({
   };
 
   return (
-    <EditProductForm {...info} storeSlug={storeSlug} merchantId={merchant.id} />
+    <EditProductForm {...info} storeSlug={storeSlug} merchantId={merchant.user.id} />
   );
 };
 
