@@ -132,3 +132,15 @@ export const NewProductSchema = z
   export const UpdateCategorySchema = CreateCategorySchema.extend({
     id: z.string().min(1, "Category ID is required"),
   });
+
+  export const BankSchema = z.object({
+    bankCode: z.string().min(1, "Bank code is required"),
+    bankName: z.string().min(1, "Bank name is required"),
+    accountName: z.string().min(1, "Account name is required"),
+    accountNumber: z.string().min(10, "Account number is required"),
+    country: z.string().min(1, "Country is required"),
+    currency: z.string().min(1, "Currency is required"),
+    businessName: z.string().min(1, "Business name is required"),
+    storeId: z.string().min(1, "Store ID is required"),
+    storeSlug: z.string().min(1, "Store slug is required"),
+  });

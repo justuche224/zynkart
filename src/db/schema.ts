@@ -139,12 +139,19 @@ export const bank = pgTable("bank", {
   businessName: text("business_name").notNull(),
   percentageCharge: numeric("percentage_charge").notNull(),
   subaccountCode: text("subaccount_code").notNull().unique(),
-  storeId: text("store_profile_id")
+  storeId: text("store_id")
     .notNull()
     .references(() => store.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const bankRelations = relations(bank, ({ one }) => ({
+  store: one(store, {
+    fields: [bank.storeId],
+    references: [store.id],
+  }),
+}));
 
 export const category = pgTable(
   "category",
