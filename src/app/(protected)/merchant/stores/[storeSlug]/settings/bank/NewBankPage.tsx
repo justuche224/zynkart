@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { addBank } from "@/actions/bank/create";
+import { useQuery } from "@tanstack/react-query";
 
 type FormData = z.infer<typeof BankSchema>;
 
@@ -47,8 +48,24 @@ const NewBankPage = ({
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const [banks, setBanks] = useState<Bank[]>([]);
   const [isVerifying, setIsVerifying] = useState(false);
+
+  const {
+    data: banks = [],
+    isLoading: isLoadingBanks,
+    error: banksError,
+  } = useQuery<Bank[]>({
+    queryKey: ["banks"],
+    queryFn: async () => {
+      const response = await fetch("/api/banks");
+      if (!response.ok) {
+        throw new Error("Failed to fetch banks");
+      }
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 60, // 1 hour
+    refetchOnWindowFocus: false,
+  });
 
   const form = useForm<FormData>({
     resolver: zodResolver(BankSchema),
@@ -66,22 +83,10 @@ const NewBankPage = ({
   });
 
   useEffect(() => {
-    const fetchBanks = async () => {
-      try {
-        const response = await fetch("/api/banks");
-        if (!response.ok) {
-          throw new Error("Failed to fetch banks");
-        }
-        const data = await response.json();
-        setBanks(data);
-      } catch (error) {
-        console.error("Error fetching banks:", error);
-        setError("Failed to fetch banks. Please try again.");
-      }
-    };
-
-    fetchBanks();
-  }, []);
+    if (banksError) {
+      setError("Failed to fetch banks. Please try again.");
+    }
+  }, [banksError]);
 
   const verifyAccount = async (accountNumber: string, bankCode: string) => {
     setError("");
@@ -164,7 +169,7 @@ const NewBankPage = ({
                 <FormLabel>Bank</FormLabel>
                 <FormControl>
                   <Select
-                    disabled={isPending}
+                    disabled={isPending || isLoadingBanks}
                     onValueChange={(value) => {
                       const selectedBank = banks.find(
                         (bank) => bank.code === value

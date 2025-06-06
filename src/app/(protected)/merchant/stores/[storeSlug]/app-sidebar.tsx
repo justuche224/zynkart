@@ -154,8 +154,8 @@ export function AppSidebar({
             url: "/settings/shipping-and-delivery",
           },
           {
-            title: "Billing",
-            url: "/settings/billing",
+            title: "Receive Payments",
+            url: "/settings/bank",
           },
           {
             title: "all",
