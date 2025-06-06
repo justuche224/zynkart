@@ -109,3 +109,26 @@ export const NewProductSchema = z
       path: ["slashedFrom"],
     }
   );
+
+  export const CreateCategorySchema = z.object({
+    name: z
+      .string()
+      .min(3, {
+        message:
+          "Category Name should be more than 3 characters but less than 50 characters",
+      })
+      .max(50, {
+        message:
+          "Category Name should be more than 3 characters but less than 50 characters",
+      })
+      .regex(/^[a-zA-Z0-9\s-]+$/, {
+        message:
+          "Category Name can only contain letters, numbers, spaces, and hyphens.",
+      }),
+    storeId: z.string(),
+    merchantId: z.string(),
+  });
+
+  export const UpdateCategorySchema = CreateCategorySchema.extend({
+    id: z.string().min(1, "Category ID is required"),
+  });
