@@ -144,3 +144,14 @@ export const NewProductSchema = z
     storeId: z.string().min(1, "Store ID is required"),
     storeSlug: z.string().min(1, "Store slug is required"),
   });
+
+  export const ShipingZoneSchema = z.object({
+    country: z.string().min(1, "Country is required"),
+    state: z.string().optional(),
+    area: z.string().optional(),
+    shippingCost: z.number().optional(),
+    isActive: z.boolean().default(true),
+    minOrderAmount: z.number().optional(),
+    maxOrderAmount: z.number().optional(),
+    estimatedDays: z.number().optional(),
+  });

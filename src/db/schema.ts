@@ -124,6 +124,7 @@ export const storeRelation = relations(store, ({ one, many }) => ({
     fields: [store.id],
     references: [bank.storeId],
   }),
+  shippingZones: many(shippingZone),
 }));
 
 export const bank = pgTable("bank", {
@@ -449,3 +450,84 @@ export const productImageRelations = relations(productImage, ({ one }) => ({
     references: [product.id],
   }),
 }));
+
+export const shippingZoneTypeEnum = pgEnum("shipping_zone_type", [
+  "COUNTRY",
+  "STATE",
+  "AREA",
+]);
+
+export const shippingZone = pgTable(
+  "shipping_zone",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    country: text("country").notNull(),
+    state: text("state"), // Optional for country-wide zones
+    area: text("area"), // Optional for state/country-wide zones
+    zoneType: shippingZoneTypeEnum("zone_type").notNull(),
+    shippingCost: integer("shipping_cost").notNull(), //  0 for free shipping
+    isActive: boolean("is_active").default(true).notNull(),
+    minOrderAmount: integer("min_order_amount"), // Optional minimum order amount for this zone
+    maxOrderAmount: integer("max_order_amount"), // Optional maximum order amount for this zone
+    estimatedDays: integer("estimated_days"), // Estimated delivery days
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure unique combination of country, state, area per store
+    uniqueIndex("shipping_zone_location_idx").on(
+      table.storeId,
+      table.country,
+      table.state,
+      table.area
+    ),
+    index("shipping_zone_store_id_idx").on(table.storeId),
+    index("shipping_zone_country_idx").on(table.country),
+  ]
+);
+
+// For additional shipping conditions or surcharges
+export const shippingCondition = pgTable(
+  "shipping_condition",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    shippingZoneId: text("shipping_zone_id")
+      .notNull()
+      .references(() => shippingZone.id, { onDelete: "cascade" }),
+    minWeight: integer("min_weight"), // In grams
+    maxWeight: integer("max_weight"), // In grams
+    additionalCost: integer("additional_cost").notNull(), // Additional cost for this condition
+    description: text("description").notNull(), // e.g., "Heavy items surcharge"
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [index("shipping_condition_zone_id_idx").on(table.shippingZoneId)]
+);
+
+export const shippingZoneRelations = relations(
+  shippingZone,
+  ({ one, many }) => ({
+    store: one(store, {
+      fields: [shippingZone.storeId],
+      references: [store.id],
+    }),
+    conditions: many(shippingCondition),
+  })
+);
+
+export const shippingConditionRelations = relations(
+  shippingCondition,
+  ({ one }) => ({
+    zone: one(shippingZone, {
+      fields: [shippingCondition.shippingZoneId],
+      references: [shippingZone.id],
+    }),
+  })
+);

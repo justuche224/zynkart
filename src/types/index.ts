@@ -2,6 +2,7 @@ import {
   category,
   product,
   productImage,
+  shippingZone,
   // shippingZone,
   // storeProfile,
 } from "@/db/schema";
@@ -45,3 +46,5 @@ export interface Product {
     isDefault: boolean;
   }[];
 }
+
+export type ShippingZone = InferSelectModel<typeof shippingZone>;

@@ -50,6 +50,13 @@
       "when": 1749213401946,
       "tag": "0006_flawless_slipstream",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749214288871,
+      "tag": "0007_equal_scarlet_witch",
+      "breakpoints": true
     }
   ]
 }
