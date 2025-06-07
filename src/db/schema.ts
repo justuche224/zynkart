@@ -302,6 +302,13 @@ export const color = pgTable(
   ]
 );
 
+export const colorRelations = relations(color, ({ one }) => ({
+  store: one(store, {
+    fields: [color.storeId],
+    references: [store.id],
+  }),
+}));
+
 // Create size table
 export const size = pgTable(
   "size",
@@ -323,6 +330,13 @@ export const size = pgTable(
     index("size_store_profile_id_idx").on(table.storeId),
   ]
 );
+
+export const sizeRelations = relations(size, ({ one }) => ({
+  store: one(store, {
+    fields: [size.storeId],
+    references: [store.id],
+  }),
+}));
 
 // product variant table to handle color/size combinations
 export const productVariant = pgTable(
@@ -426,6 +440,13 @@ export const banner = pgTable(
   ]
 );
 
+export const bannerRelations = relations(banner, ({ one }) => ({
+  store: one(store, {
+    fields: [banner.storeId],
+    references: [store.id],
+  }),
+}));
+
 export const productSource = pgTable(
   "product_source",
   {
@@ -452,6 +473,13 @@ export const productSource = pgTable(
     index("product_source_store_profile_id_idx").on(table.storeId),
   ]
 );
+
+export const productSourceRelations = relations(productSource, ({ one }) => ({
+  store: one(store, {
+    fields: [productSource.storeId],
+    references: [store.id],
+  }),
+}));
 
 export const domain = pgTable(
   "domain",

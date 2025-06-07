@@ -3,13 +3,13 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Product } from "@/types";
+import type { ProductWithImages } from "@/types";
 import { useCartStore } from "@/store/cart";
 import formatPrice from "@/lib/price-formatter";
 import Link from "next/link";
 
 interface ProductCardListProps {
-  product: Product;
+  product: ProductWithImages;
 }
 
 const ProductCardList = ({ product }: ProductCardListProps) => {
@@ -72,7 +72,7 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
             />
           </Link>
 
-          {!product.inStock && (
+          {product.trackQuantity && product.inStock <= 0 && (
             <Badge variant="secondary" className="absolute top-2 left-2">
               Out of Stock
             </Badge>
@@ -126,10 +126,14 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
                 <Button
                   className="gap-1"
                   onClick={handleAddToCart}
-                  disabled={!product.inStock}
+                  disabled={product.trackQuantity && product.inStock <= 0}
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  {product.inStock ? "Add to Cart" : "Out of Stock"}
+                  {product.trackQuantity ? (
+                    product.inStock > 0 ? "Add to Cart" : "Out of Stock"
+                  ) : (
+                    "Add to Cart"
+                  )}
                 </Button>
               ) : (
                 <div className="flex items-center gap-4">
@@ -147,7 +151,10 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
                     variant="outline"
                     size="icon"
                     onClick={handleIncrement}
-                    disabled={!product.inStock}
+                    disabled={
+                      product.trackQuantity &&
+                      cartItem.quantity >= product.inStock
+                    }
                   >
                     <Plus className="h-4 w-4" />
                   </Button>

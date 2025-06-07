@@ -2,29 +2,35 @@
 
 import { useEffect, useState } from "react";
 
+import { getProductsByStoreWithPagination } from "@/actions/store/public/products/get-with-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import productsJson from "@/products.json";
+import { ProductWithImages } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import ProductCard from "./product-card";
 import ProductCardList from "./product-card-list";
-import { Product } from "@/types";
 
 interface ProductListProps {
   viewMode: "grid" | "list";
   searchQuery?: string;
+  storeId: string;
 }
 
-function ProductList({ viewMode, searchQuery = "" }: ProductListProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+function ProductList({
+  viewMode,
+  searchQuery = "",
+  storeId,
+}: ProductListProps) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["products", storeId],
+    queryFn: () =>
+      getProductsByStoreWithPagination({ storeId, active: true, limit: 20 }),
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setProducts(productsJson);
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+  const products = data?.products || [];
+
+  const [filteredProducts, setFilteredProducts] = useState<ProductWithImages[]>(
+    []
+  );
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -37,7 +43,7 @@ function ProductList({ viewMode, searchQuery = "" }: ProductListProps) {
     }
   }, [products, searchQuery]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="space-y-4">
         <div
@@ -66,6 +72,17 @@ function ProductList({ viewMode, searchQuery = "" }: ProductListProps) {
             )
           )}
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="text-destructive mb-4">Error loading products.</div>
+        <p className="text-sm text-muted-foreground max-w-md">
+          There was a problem fetching products. Please try again later.
+        </p>
       </div>
     );
   }

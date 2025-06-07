@@ -1,3 +1,4 @@
+import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
 import {
   Facebook,
   Instagram,
@@ -7,18 +8,7 @@ import {
   MapPin,
 } from "lucide-react";
 
-interface Store {
-  id: string;
-  name: string;
-  slug: string;
-  storeProfile: {
-    id: string;
-    contactEmail: string | null;
-    contactPhone: string | null;
-  };
-}
-
-export const Footer = ({ store }: { store: Store }) => {
+export const Footer = ({ store }: { store: StoreDataFromHomePage }) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -85,15 +75,15 @@ export const Footer = ({ store }: { store: Store }) => {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <span>07006000000, 0201888300</span>
+                <span>{store.phone}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>{store.storeProfile.contactEmail}</span>
+                <span>{store.email}</span>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span>Lagos, Nigeria</span>
+                <span>{store.address}</span>
               </li>
             </ul>
           </div>
@@ -102,15 +92,16 @@ export const Footer = ({ store }: { store: Store }) => {
           <div className="space-y-4">
             <h3 className="font-semibold">Connect With Us</h3>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-primary">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-primary">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </a>
+              {store.socials.map((social) => (
+                <a
+                  href={social.link}
+                  className="hover:text-primary underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {social.name}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -120,7 +111,7 @@ export const Footer = ({ store }: { store: Store }) => {
           <p>
             {currentYear} {store.name}. All rights reserved.
           </p>
-          <i>Made with love by Justuche</i>
+          <i>Made with Zynkart❤️</i>
         </div>
       </div>
     </footer>

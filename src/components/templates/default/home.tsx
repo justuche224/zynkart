@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Filter, Grid3X3, List, ShoppingBag } from "lucide-react";
 
-import productsJson from "@/products.json";
+// import productsJson from "@/products.json";
 import ProductWheel from "./_components/product-wheel";
 import ProductList from "./_components/product-list";
 import { Footer } from "./_components/footer";
@@ -25,95 +25,48 @@ import {
 import { ProductFilters } from "./_components/product-filters";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Store } from "@/types";
+// import { Input } from "@/components/ui/input";
+// import { Card, CardContent } from "@/components/ui/card";
+// import { Badge } from "@/components/ui/badge";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 import { SiteHeader } from "./_components/navbar";
+import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import Banners from "./_components/banners";
+import ByCategories from "./_components/by-category";
 
 interface HomeProps {
-  store: Store;
+  store: StoreDataFromHomePage;
 }
 
 const Home = ({ store }: HomeProps) => {
-  return <Index />;
+  return <Index store={store} />;
 };
 
 export default Home;
 
-function Index() {
+function Index({ store }: HomeProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const featuredProducts = productsJson.slice(0, 4);
-  const newArrivals = productsJson.slice(4, 8);
-  const bestSellers = [...productsJson]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 4);
+  const useProductWheel = true;
+  // const newArrivals = productsJson.slice(4, 8);
+  // const bestSellers = [...productsJson]
+  //   .sort(() => Math.random() - 0.5)
+  //   .slice(0, 4);
 
   return (
     <>
       <SiteHeader />
       <div className="max-w-7xl xl:mx-auto mt-20">
         {/* Hero Section */}
-        <section className="relative w-full bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
-          <div className="container max-w-7xl mx-auto px-4 py-12 md:py-24">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-6">
-                <Badge
-                  variant="outline"
-                  className="px-3 py-1 text-sm bg-background"
-                >
-                  New Season Collection
-                </Badge>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                  Discover Your{" "}
-                  <span className="text-primary">Perfect Style</span>
-                </h1>
-                <p className="text-muted-foreground text-lg max-w-md">
-                  Shop the latest trends and discover premium quality products
-                  at affordable prices.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Button size="lg" asChild>
-                    <Link href="/products">Shop Now</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <Link href="/categories">Browse Categories</Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="relative">
-                <div className="aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image
-                    width={500}
-                    height={500}
-                    src="/images/high-angle-hand-holding-cream-container.jpg"
-                    alt="Hero Image"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <div className="absolute -bottom-6 -left-6 bg-background rounded-lg shadow-lg p-4 hidden md:block">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <ShoppingBag className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Special Offer</p>
-                      <p className="text-sm text-muted-foreground">
-                        Up to 50% off
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {useProductWheel ? (
+          <ProductWheel storeId={store.id} />
+        ) : (
+          <Banners banners={store.banners} />
+        )}
 
         {/* Featured Categories */}
-        <section className="container max-w-7xl mx-auto px-4 py-16">
+        <section>
           <div className="flex flex-col items-center text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Shop by Category
@@ -123,64 +76,11 @@ function Index() {
               categories
             </p>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[
-              {
-                name: "Body Creams",
-                image: "2150167958.jpg",
-                slug: "body-creams",
-              },
-              {
-                name: "Perfumes",
-                image: "edoardo-cuoghi-mL8CpOhZfHY-unsplash.jpg",
-                slug: "perfumes",
-              },
-              {
-                name: "Soaps and Body washes",
-                image: "tarah-dane-5j6PQNwN8rs-unsplash.jpg",
-                slug: "soaps-and-body-washes",
-              },
-              {
-                name: "Hair Care",
-                image: "4188870_45.jpg",
-                slug: "hair-care",
-              },
-            ].map((category) => (
-              <Link
-                key={category.slug}
-                href={`/categories/${category.slug}`}
-                className="group"
-              >
-                <div className="relative rounded-lg overflow-hidden">
-                  <div className="aspect-square">
-                    <Image
-                      width={300}
-                      height={300}
-                      src={`/images/${category.image}`}
-                      alt={category.name}
-                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                    <div className="w-full">
-                      <h3 className="text-white font-medium text-lg md:text-xl">
-                        {category.name}
-                      </h3>
-                      <div className="flex items-center text-white/80 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span>Shop Now</span>
-                        <ArrowRight className="ml-1 h-3 w-3" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <ByCategories storeId={store.id} />
         </section>
 
         {/* Featured Products Carousel */}
-        <section className="py-8">
+        {!useProductWheel && (<section className="py-8">
           <div className="container max-w-7xl mx-auto px-4 mb-8">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Featured Products
@@ -189,11 +89,12 @@ function Index() {
               Discover our handpicked selection of premium products
             </p>
           </div>
-          <ProductWheel productList={featuredProducts} />
-        </section>
+          <ProductWheel storeId={store.id} />
+        </section>)}
 
         {/* New Arrivals & Best Sellers */}
-        <section className="container max-w-7xl mx-auto px-4 py-16">
+        {/* TODO: Add new arrivals and best sellers */}
+        {/* <section className="container max-w-7xl mx-auto px-4 py-16">
           <Tabs defaultValue="new-arrivals" className="w-full">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
               <TabsList>
@@ -309,10 +210,11 @@ function Index() {
               </div>
             </TabsContent>
           </Tabs>
-        </section>
+        </section> */}
 
         {/* Special Offer Banner */}
-        <section className="py-16">
+        {/* TODO: Add special offer banner (marketing banner feature) */}
+        {/* <section className="py-16">
           <div className="container max-w-7xl mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
@@ -350,7 +252,7 @@ function Index() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* All Products Section */}
         <section className="container max-w-5xl mx-auto px-4 py-16">
@@ -420,7 +322,7 @@ function Index() {
             </div>
           </div>
 
-          <ProductList viewMode={viewMode} />
+          <ProductList viewMode={viewMode} storeId={store.id} />
 
           <div className="flex justify-center mt-8">
             <Button variant="outline" size="lg" asChild>
@@ -428,18 +330,7 @@ function Index() {
             </Button>
           </div>
         </section>
-        <Footer
-          store={{
-            id: "1",
-            name: "My Store",
-            slug: "my-store",
-            storeProfile: {
-              id: "1",
-              contactEmail: "mystore@me.com",
-              contactPhone: "555-555-5555",
-            },
-          }}
-        />
+        <Footer store={store} />
       </div>
     </>
   );

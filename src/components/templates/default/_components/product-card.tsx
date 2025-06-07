@@ -4,13 +4,13 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Product } from "@/types";
+import type { ProductWithImages } from "@/types";
 import { useCartStore } from "@/store/cart";
 import formatPrice from "@/lib/price-formatter";
 import Link from "next/link";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductWithImages;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
@@ -80,7 +80,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </Link>
 
-        {!product.inStock && (
+        {product.trackQuantity && product.inStock <= 0 && (
           <Badge variant="secondary" className="absolute top-2 left-2">
             Out of Stock
           </Badge>
@@ -128,10 +128,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
             size="sm"
             className="w-full gap-1 text-xs"
             onClick={handleAddToCart}
-            disabled={!product.inStock}
+            disabled={product.trackQuantity && product.inStock <= 0}
           >
             <ShoppingCart className="h-3 w-3" />
-            {product.inStock ? "Add to Cart" : "Out of Stock"}
+            {product.trackQuantity ? (
+              product.inStock > 0 ? "Add to Cart" : "Out of Stock"
+            ) : (
+              "Add to Cart"
+            )}
           </Button>
         ) : (
           <div className="flex items-center justify-between w-full">
@@ -149,7 +153,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
               variant="outline"
               className="h-8 w-8 p-0"
               onClick={handleIncrement}
-              disabled={!product.inStock}
+              disabled={
+                product.trackQuantity &&
+                cartItem.quantity >= product.inStock
+              }
             >
               <Plus className="h-3 w-3" />
             </Button>

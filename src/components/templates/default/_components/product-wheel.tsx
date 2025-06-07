@@ -9,12 +9,79 @@ import {
 import formatPrice from "@/lib/price-formatter";
 import AddToCart from "@/components/add-to-cart";
 import { ArrowRight } from "lucide-react";
-import { Product } from "@/types";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getFeaturedProducts } from "@/actions/store/public/products/featured";
 
-function ProductWheel({ productList }: { productList: Product[] }) {
+function ProductWheelSkeleton() {
   return (
-    <div className="relative w-full py-8 px-8">
+    <div className="relative w-full py-2 md:py-8 px-2 md:px-8">
+      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background to-background/80 pointer-events-none" />
+      <div className="w-full max-w-7xl mx-auto animate-pulse">
+        <div className="relative w-full overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-10 bg-gradient-to-br from-background to-muted/50 border border-border/40 shadow-lg">
+          <div className="flex flex-row justify-between items-center gap-4 sm:gap-8 lg:gap-12">
+            {/* Product Details Skeleton */}
+            <div className="flex-1 space-y-3 sm:space-y-4 lg:space-y-6">
+              <div className="space-y-2 sm:space-y-3">
+                <div className="h-7 sm:h-8 lg:h-9 w-3/4 bg-muted rounded-md"></div>
+                <div className="space-y-2 pt-2">
+                  <div className="h-4 sm:h-5 w-full bg-muted rounded-md"></div>
+                  <div className="h-4 sm:h-5 w-5/6 bg-muted rounded-md"></div>
+                </div>
+              </div>
+
+              <div className="h-8 sm:h-9 lg:h-10 w-1/3 bg-muted rounded-md"></div>
+
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-20 bg-muted rounded-full"></div>
+              </div>
+
+              <div className="flex flex-col gap-2 sm:gap-4 items-start pt-2">
+                <div className="h-10 sm:h-11 w-full max-w-[140px] sm:max-w-[160px] lg:min-w-[180px] bg-muted rounded-lg"></div>
+                <div className="h-5 w-24 bg-muted rounded-md"></div>
+              </div>
+            </div>
+
+            {/* Product Image Skeleton */}
+            <div className="relative flex-shrink-0">
+              <div className="relative aspect-square w-28 sm:w-32 lg:w-[350px] bg-muted rounded-lg sm:rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+        {/* Carousel Indicators Skeleton */}
+        <div className="flex justify-center mt-4 sm:mt-6 gap-1 sm:gap-1.5">
+          {[...Array(5)].map((_, index) => (
+            <div
+              key={index}
+              className={`h-1 sm:h-1.5 rounded-full ${
+                index === 0 ? "w-4 sm:w-6 bg-muted" : "w-1 sm:w-1.5 bg-muted/50"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductWheel({ storeId }: { storeId: string }) {
+  const {
+    data: productList,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["featured-products"],
+    queryFn: () => getFeaturedProducts({ storeId, limit: 5 }),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isLoading) return <ProductWheelSkeleton />;
+
+  if (error || !productList || productList.length === 0) return null;
+
+  return (
+    <div className="relative w-full py-2 md:py-8 px-2 md:px-8">
       <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background to-background/80 pointer-events-none" />
 
       <Carousel
@@ -26,7 +93,7 @@ function ProductWheel({ productList }: { productList: Product[] }) {
         ]}
       >
         <CarouselContent>
-          {productList.map((product) => (
+          {productList?.map((product) => (
             <CarouselItem key={product.slug} className="lg:basis-full">
               <div className="relative w-full overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-10 bg-gradient-to-br from-background to-muted/50 border border-border/40 shadow-lg">
                 <div className="flex flex-row justify-between items-center gap-4 sm:gap-8 lg:gap-12">
@@ -118,7 +185,7 @@ function ProductWheel({ productList }: { productList: Product[] }) {
 
       {/* Carousel Indicators */}
       <div className="flex justify-center mt-4 sm:mt-6 gap-1 sm:gap-1.5">
-        {productList.map((_, index) => (
+        {productList?.map((_, index) => (
           <div
             key={index}
             className={`h-1 sm:h-1.5 rounded-full transition-all duration-300 ${

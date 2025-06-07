@@ -1,13 +1,13 @@
 import React from "react";
-import type { Store } from "../../types";
 import dynamic from "next/dynamic";
 import Loader from "@/components/loader";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
 
 interface HomeProps {
-  store: Store;
+  store: StoreDataFromHomePage;
 }
 
-const StoreHome = ({ store }: { store: Store }) => {
+const StoreHome = ({ store }: HomeProps) => {
   const { template } = store;
 
   const Home = dynamic<HomeProps>(
