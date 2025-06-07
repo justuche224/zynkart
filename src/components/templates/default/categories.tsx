@@ -5,7 +5,6 @@ import { SiteHeader } from "./_components/navbar";
 import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
 import { CategoriesFromHomePage } from "@/app/store/[storeSlug]/categories/page";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 

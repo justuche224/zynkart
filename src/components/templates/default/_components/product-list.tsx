@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { getProductsByStoreWithPagination } from "@/actions/store/public/products/get-with-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,19 +35,13 @@ function ProductList({
 
   const products = data?.products || [];
 
-  const [filteredProducts, setFilteredProducts] = useState<ProductWithImages[]>(
-    []
-  );
-
-  useEffect(() => {
+  const filteredProducts = useMemo(() => {
     if (searchQuery.trim() === "") {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredProducts(filtered);
+      return products;
     }
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   }, [products, searchQuery]);
 
   if (isLoading) {

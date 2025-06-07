@@ -23,13 +23,19 @@ import {
 import { ProductFilters } from "./_components/product-filters";
 import ProductList from "./_components/product-list";
 import { SiteHeader } from "./_components/navbar";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { Footer } from "./_components/footer";
 
-export default function ProductPage() {
+export interface ProductListPageProps {
+  store: StoreDataFromHomePage;
+}
+
+export default function ProductsList({ store }: ProductListPageProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader storeId={store.id} />
       <div className="container mx-auto px-4 py-8 mt-20">
         <div className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-4">
@@ -110,11 +116,12 @@ export default function ProductPage() {
             </div>
 
             <div className="flex-1">
-              <ProductList viewMode={viewMode} />
+              <ProductList viewMode={viewMode} storeId={store.id} />
             </div>
           </div>
         </div>
       </div>
+      <Footer store={store} />
     </>
   );
 }

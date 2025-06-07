@@ -1,11 +1,12 @@
-import React from "react";
-import type { Product, Store } from "../../types";
+import React from "react";  
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import type { ProductListPageProps } from "@/components/templates/default/product-list";
 
-const ProductsListPage = ({ store }: { store: Store }) => {
+const ProductsListPage = ({ store }: { store: StoreDataFromHomePage }) => {
   const { template } = store;
-  const ProductPage = dynamic(
+  const ProductsList = dynamic<ProductListPageProps>(
     () => import(`../templates/${template}/product-list`),
     {
       loading: () => (
@@ -16,11 +17,11 @@ const ProductsListPage = ({ store }: { store: Store }) => {
     }
   );
 
-  if (!ProductPage) {
+  if (!ProductsList) {
     return <div>Template not found</div>;
   }
 
-  return <ProductPage />;
+  return <ProductsList store={store} />;
 };
 
 export default ProductsListPage;
