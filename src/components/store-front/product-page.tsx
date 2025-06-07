@@ -1,19 +1,15 @@
 import React from "react";
-import type { Product, Store } from "../../types";
 import dynamic from "next/dynamic";
 import Loader from "@/components/loader";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { ProductInfoFromProductPage } from "@/app/store/[storeSlug]/products/[productSlug]/page";
 
 interface ProductDetailsPageProps {
-  product: Product;
+  store: StoreDataFromHomePage;
+  product: ProductInfoFromProductPage;
 }
 
-const ProductPage = ({
-  product,
-  store,
-}: {
-  product: Product;
-  store: Store;
-}) => {
+const ProductPage = ({ store, product }: ProductDetailsPageProps) => {
   const { template } = store;
   const ProductDetails = dynamic<ProductDetailsPageProps>(
     () => import(`../templates/${template}/product-page`),
@@ -26,7 +22,7 @@ const ProductPage = ({
     return <div>Template not found</div>;
   }
 
-  return <ProductDetails product={product} />;
+  return <ProductDetails store={store} product={product} />;
 };
 
 export default ProductPage;

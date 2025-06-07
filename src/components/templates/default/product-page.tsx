@@ -6,12 +6,19 @@ import { Minus, Plus, ShoppingCart, Heart, ArrowLeft } from "lucide-react";
 import { formatDate } from "@/lib/date-formatter";
 import { toast } from "sonner";
 import { useCartStore } from "@/store/cart";
-import { Product } from "@/types";
 import ReviewsSection from "./_components/reviews-section";
 import Link from "next/link";
 import { SiteHeader } from "./_components/navbar";
+import { ProductInfoFromProductPage } from "@/app/store/[storeSlug]/products/[productSlug]/page";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { Footer } from "./_components/footer";
 
-const ProductInfoPage = ({ product }: { product: Product }) => {
+interface ProductInfoPageProps {
+  product: ProductInfoFromProductPage;
+  store: StoreDataFromHomePage;
+}
+
+const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
   const { items, addItem, removeItem, updateItemQuantity } = useCartStore();
   const cartItem = items.find((item) => item.id === product.id);
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
@@ -56,7 +63,7 @@ const ProductInfoPage = ({ product }: { product: Product }) => {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader storeId={store.id} />
       <div className="container max-w-6xl mx-auto px-4 pb-8 mt-20">
         {/* back button */}
         <div className="mb-4">
@@ -73,7 +80,7 @@ const ProductInfoPage = ({ product }: { product: Product }) => {
             <div className="relative aspect-square overflow-hidden rounded-lg border">
               <img
                 src={selectedImage.url}
-                alt={selectedImage.alt || ""}
+                alt={product.name || ""}
                 className="object-cover"
               />
             </div>
@@ -83,18 +90,18 @@ const ProductInfoPage = ({ product }: { product: Product }) => {
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {product.images.map((image) => (
                   <button
-                    key={image.id}
+                    key={image.url}
                     onClick={() => setSelectedImage(image)}
                     className={`relative w-20 aspect-square rounded-md overflow-hidden border-2 
                     ${
-                      selectedImage.id === image.id
+                      selectedImage.url === image.url
                         ? "border-primary"
                         : "border-transparent"
                     }`}
                   >
                     <img
                       src={image.url}
-                      alt={image.alt || ""}
+                      alt={product.name || ""}
                       className="object-cover"
                     />
                   </button>
@@ -212,6 +219,7 @@ const ProductInfoPage = ({ product }: { product: Product }) => {
         </div>
         <ReviewsSection />
       </div>
+      <Footer store={store} />
     </>
   );
 };

@@ -1,27 +1,161 @@
-import React from "react";
-import type { Store } from "@/types";
-import productsJson from "@/products.json";
-import ProductPage from "@/components/store-front/product-page";
+import type { Metadata } from "next";
+import Product from "@/components/store-front/product-page";
+import { and, eq } from "drizzle-orm";
+import db from "@/db";
+import { banner, category, product, store } from "@/db/schema";
 
-const page = async ({
+export async function generateMetadata({
   params,
 }: {
   params: Promise<{ storeSlug: string; productSlug: string }>;
-}) => {
+}): Promise<Metadata> {
   const { storeSlug, productSlug } = await params;
-  const store: Store = {
-    id: 1,
-    name: "Store Name",
-    slug: storeSlug,
-    template: "default",
-  };
 
-  const product = productsJson.find((product) => product.slug === productSlug);
-  if (!product) {
+  const storeData = await db.query.store.findFirst({
+    where: eq(store.slug, storeSlug),
+    columns: {
+      id: true,
+      name: true,
+      description: true,
+      slug: true,
+    },
+  });
+
+  if (!storeData) {
+    return {
+      title: "Store Not Found",
+      description: "The requested store could not be found.",
+    };
+  }
+
+  const productData = await db.query.product.findFirst({
+    where: and(eq(product.slug, productSlug), eq(product.storeId, storeData.id), eq(product.status, "ACTIVE")),
+    columns: {
+      name: true,
+      slug: true,
+      description: true,
+    },
+    with: {
+      images: { 
+        columns: {
+          url: true,
+        },
+      },
+    }
+  });
+
+
+
+  if (!productData) {
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+
+  return {
+    title: `${productData.name} - ${storeData.name} - Online Store`,
+    description:
+      productData.description ||
+      `Shop at ${storeData.name} for the best products and deals.`,
+    keywords: [`${storeData.name}`, "online store", "shopping", "ecommerce"],
+    openGraph: {
+      title: `${productData.name} - ${storeData.name} - Online Store`,
+      images: productData.images.map((image) => image.url),
+      description:
+        productData.description ||
+        `Shop at ${storeData.name} for the best products and deals.`,
+      url: `/${storeData.slug}`,
+      siteName: storeData.name,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${productData.name} - ${storeData.name} - Online Store`,
+      images: productData.images.map((image) => image.url),
+      description:
+        productData.description ||
+        `Shop at ${storeData.name} for the best products and deals.`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+const getStoreForHomePage = async (storeSlug: string) => {
+  return db.query.store.findFirst({
+    where: eq(store.slug, storeSlug),
+    columns: {
+      id: true,
+      merchantId: true,
+      address: true,
+      description: true,
+      email: true,
+      name: true,
+      phone: true,
+      slug: true,
+      template: true,
+    },
+    with: {
+      socials: {
+        columns: {
+          id: true,
+          name: true,
+          link: true,
+        },
+      },
+      banners: {
+        columns: {
+          imageUrl: true,
+          linkUrl: true,
+          description: true,
+          id: true,
+          title: true,
+        },
+        where: eq(banner.isActive, true),
+      },
+    },
+  });
+};
+
+const getProductInfoForProductPage = async (productSlug: string) => {
+  return db.query.product.findFirst({
+    where: eq(product.slug, productSlug),
+    with: {
+      images: {
+        columns: {
+          url: true,
+        },
+      },
+    },
+  });
+};
+
+export type StoreDataFromHomePage = NonNullable<
+  Awaited<ReturnType<typeof getStoreForHomePage>>
+>;
+export type BannersFromHomePage = StoreDataFromHomePage["banners"];
+export type ProductInfoFromProductPage = NonNullable<
+  Awaited<ReturnType<typeof getProductInfoForProductPage>>
+>;
+
+const page = async ({ params }: { params: Promise<{ storeSlug: string, productSlug: string }> }) => {
+  const { storeSlug, productSlug } = await params;
+  const storeData = await getStoreForHomePage(storeSlug);
+  const productInfo = await getProductInfoForProductPage(productSlug);
+
+  if (!storeData) {
+    return <div>Store not found</div>;
+  }
+
+  if (!productInfo) {
     return <div>Product not found</div>;
   }
 
-  return <ProductPage store={store} product={product} />;
+
+  return <Product store={storeData} product={productInfo} />;
 };
 
 export default page;
