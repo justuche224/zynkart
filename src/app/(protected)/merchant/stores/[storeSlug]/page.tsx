@@ -3,17 +3,8 @@ import StoreOverview from "@/components/store-overview";
 import { serverAuth } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
 import React from "react";
+import { getStoreHealth } from "@/actions/store/health";
 
-const storeHealth = {
-  hasAccountDetails: false,
-  hasProducts: false,
-  hasShippingZones: false,
-  totalProducts: 6,
-  hasOwnerDoneKYC: false,
-  customised: false,
-  healthScore: 0,
-  recommendations: [],
-};
 const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   const user = await serverAuth();
   if (!user?.session || !user?.user) {
@@ -33,6 +24,8 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
       </div>
     );
   }
+
+  const storeHealth = await getStoreHealth(data.id, data.slug);
 
   return (
     <div>

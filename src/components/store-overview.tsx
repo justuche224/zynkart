@@ -18,7 +18,6 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +33,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { type StoreHealth } from "@/actions/store/health";
 
 interface StoreData {
   id: string;
@@ -47,81 +47,6 @@ interface StoreData {
   phone: string;
   email: string;
 }
-
-interface StoreHealth {
-  hasAccountDetails: boolean;
-  hasProducts: boolean;
-  hasShippingZones: boolean;
-  totalProducts: number;
-  hasOwnerDoneKYC: boolean;
-  customised: boolean;
-  healthScore: number;
-  recommendations: {
-    info: string;
-    link: string;
-  }[];
-}
-
-// Complete the recommendations based on health status
-const getRecommendations = (health: StoreHealth, slug: string) => {
-  const recommendations = [];
-
-  if (!health.hasAccountDetails) {
-    recommendations.push({
-      info: "Add your bank account details to receive payments from customers",
-      link: `/merchant/${slug}/settings/payments`,
-    });
-  }
-
-  if (!health.hasProducts) {
-    recommendations.push({
-      info: "Add your first product to start selling",
-      link: `/merchant/${slug}/products/new`,
-    });
-  } else if (health.totalProducts < 10) {
-    recommendations.push({
-      info: "Add more products to increase your store's visibility",
-      link: `/merchant/${slug}/products/new`,
-    });
-  }
-
-  if (!health.hasShippingZones) {
-    recommendations.push({
-      info: "Set up shipping zones to define delivery fees for different locations",
-      link: `/merchant/${slug}/settings/shipping`,
-    });
-  }
-
-  if (!health.hasOwnerDoneKYC) {
-    recommendations.push({
-      info: "Complete your KYC verification to enable checkout for customers",
-      link: `/merchant/${slug}/settings/verification`,
-    });
-  }
-
-  if (!health.customised) {
-    recommendations.push({
-      info: "Customize your store with a logo, banner, and theme to attract more customers",
-      link: `/merchant/${slug}/settings/appearance`,
-    });
-  }
-
-  return recommendations;
-};
-
-// Calculate health score based on completed items
-const calculateHealthScore = (health: StoreHealth) => {
-  let score = 0;
-
-  if (health.hasAccountDetails) score += 20;
-  if (health.hasProducts) score += 15;
-  if (health.hasShippingZones) score += 15;
-  if (health.totalProducts >= 10) score += 10;
-  if (health.hasOwnerDoneKYC) score += 20;
-  if (health.customised) score += 20;
-
-  return score;
-};
 
 const getHealthStatus = (score: number) => {
   if (score < 30) return "Critical";
@@ -137,20 +62,13 @@ const getHealthColor = (score: number) => {
   return "text-green-500";
 };
 
-export default function MerchantDashboard({
+export default function StoreOverview({
   store,
-  health: initialHealth,
+  health,
 }: {
   store: StoreData;
   health: StoreHealth;
 }) {
-  // Update health score based on calculation
-  const [health, setHealth] = useState({
-    ...initialHealth,
-    healthScore: calculateHealthScore(initialHealth),
-    recommendations: getRecommendations(initialHealth, store.slug),
-  });
-
   return (
     <div className="flex min-h-screen">
       <main className="flex-1 overflow-auto">
