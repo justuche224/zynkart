@@ -15,22 +15,23 @@ export const getProductsByStoreWithPagination = async ({
   limit = 20,
   offset = 0,
   active,
+  categoryId,
 }: {
   storeId: string;
   limit?: number;
   offset?: number;
   active?: boolean;
+  categoryId?: string;
 }): Promise<PaginatedResponse> => {
-  console.log("storeId", storeId);
-  console.log("limit", limit);
-  console.log("offset", offset);
-  console.log("active", active);
   try {
     if (!storeId) return { products: [], totalProducts: 0 };
 
     const conditions = [eq(product.storeId, storeId)];
     if (active) {
       conditions.push(eq(product.status, "ACTIVE"));
+    }
+    if (categoryId) {
+      conditions.push(eq(product.categoryId, categoryId));
     }
 
     const totalResult = await db
@@ -66,6 +67,5 @@ export const getProductsByStoreWithPagination = async ({
 // TODO: add sorting to the response
 // TODO: add filtering to the response
 // TODO: add search to the response
-// TODO: add category to the response
 // TODO: add brand to the response
 // TODO: add price range to the response

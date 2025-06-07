@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Categories from "@/components/store-front/categories";
+import Categories from "@/components/store-front/category-page";
 import { eq } from "drizzle-orm";
 import db from "@/db";
 import { banner, category, store } from "@/db/schema";
@@ -7,15 +7,23 @@ import { banner, category, store } from "@/db/schema";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ storeSlug: string }>;
+  params: Promise<{ storeSlug: string; categorySlug: string }>;
 }): Promise<Metadata> {
-  const { storeSlug } = await params;
+  const { storeSlug, categorySlug } = await params;
 
   const storeData = await db.query.store.findFirst({
     where: eq(store.slug, storeSlug),
     columns: {
       name: true,
       description: true,
+      slug: true,
+    },
+  });
+
+  const categoryData = await db.query.category.findFirst({
+    where: eq(category.slug, categorySlug),
+    columns: {
+      name: true,
       slug: true,
     },
   });
@@ -27,14 +35,21 @@ export async function generateMetadata({
     };
   }
 
+  if (!categoryData) {
+    return {
+      title: "Category Not Found",
+      description: "The requested category could not be found.",
+    };
+  }
+
   return {
-    title: `Categories - ${storeData.name} - Online Store`,
+    title: `${categoryData.name} - ${storeData.name} - Online Store`,
     description:
       storeData.description ||
       `Shop at ${storeData.name} for the best products and deals.`,
     keywords: [`${storeData.name}`, "online store", "shopping", "ecommerce"],
     openGraph: {
-      title: `Categories - ${storeData.name} - Online Store`,
+      title: `${categoryData.name} - ${storeData.name} - Online Store`,
       description:
         storeData.description ||
         `Shop at ${storeData.name} for the best products and deals.`,
@@ -44,7 +59,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `Categories - ${storeData.name} - Online Store`,
+      title: `${categoryData.name} - ${storeData.name} - Online Store`,
       description:
         storeData.description ||
         `Shop at ${storeData.name} for the best products and deals.`,
@@ -92,9 +107,9 @@ const getStoreForHomePage = async (storeSlug: string) => {
   });
 };
 
-const getCategoriesForHomePage = async (storeId: string) => {
-  return db.query.category.findMany({
-    where: eq(category.storeId, storeId),
+const getCategoryInfoForCategoryPage = async (categorySlug: string) => {
+  return db.query.category.findFirst({
+    where: eq(category.slug, categorySlug),
     columns: {
       id: true,
       name: true,
@@ -108,21 +123,25 @@ export type StoreDataFromHomePage = NonNullable<
   Awaited<ReturnType<typeof getStoreForHomePage>>
 >;
 export type BannersFromHomePage = StoreDataFromHomePage["banners"];
-export type CategoriesFromHomePage = NonNullable<
-  Awaited<ReturnType<typeof getCategoriesForHomePage>>
+export type CategoryInfoFromCategoryPage = NonNullable<
+  Awaited<ReturnType<typeof getCategoryInfoForCategoryPage>>
 >;
 
-const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
-  const { storeSlug } = await params;
+const page = async ({ params }: { params: Promise<{ storeSlug: string, categorySlug: string }> }) => {
+  const { storeSlug, categorySlug } = await params;
   const storeData = await getStoreForHomePage(storeSlug);
+  const categoryInfo = await getCategoryInfoForCategoryPage(categorySlug);
 
   if (!storeData) {
     return <div>Store not found</div>;
   }
 
-  const categories = await getCategoriesForHomePage(storeData.id);
+  if (!categoryInfo) {
+    return <div>Category not found</div>;
+  }
 
-  return <Categories store={storeData} categories={categories} />;
+
+  return <Categories store={storeData} categoryInfo={categoryInfo} />;
 };
 
 export default page;

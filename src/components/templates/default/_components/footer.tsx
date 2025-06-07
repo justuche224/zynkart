@@ -98,6 +98,7 @@ export const Footer = ({ store }: { store: StoreDataFromHomePage }) => {
                   className="hover:text-primary underline"
                   target="_blank"
                   rel="noopener noreferrer"
+                  key={social.name}
                 >
                   {social.name}
                 </a>

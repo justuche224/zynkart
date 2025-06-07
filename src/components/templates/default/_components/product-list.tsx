@@ -13,17 +13,24 @@ interface ProductListProps {
   viewMode: "grid" | "list";
   searchQuery?: string;
   storeId: string;
+  categoryId?: string;
 }
 
 function ProductList({
   viewMode,
   searchQuery = "",
   storeId,
+  categoryId,
 }: ProductListProps) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["products", storeId],
+    queryKey: ["products", storeId, categoryId],
     queryFn: () =>
-      getProductsByStoreWithPagination({ storeId, active: true, limit: 20 }),
+      getProductsByStoreWithPagination({
+        storeId,
+        active: true,
+        limit: 20,
+        categoryId,
+      }),
   });
 
   const products = data?.products || [];
