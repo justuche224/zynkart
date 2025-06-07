@@ -111,6 +111,24 @@ export const store = pgTable(
   ]
 );
 
+export const customisations = pgTable("customisations", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  storeId: text("store_id")
+    .notNull()
+    .references(() => store.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const customisationsRelations = relations(customisations, ({ one }) => ({
+  store: one(store, {
+    fields: [customisations.storeId],
+    references: [store.id],
+  }),
+}));
+
 export const storeSocial = pgTable("store_social", {
   id: text("id")
     .primaryKey()
@@ -148,6 +166,10 @@ export const storeRelation = relations(store, ({ one, many }) => ({
   }),
   shippingZones: many(shippingZone),
   socials: many(storeSocial),
+  customisations: one(customisations, {
+    fields: [store.id],
+    references: [customisations.storeId],
+  }),
 }));
 
 export const bank = pgTable("bank", {

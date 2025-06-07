@@ -83,7 +83,7 @@ export function AppSidebar({
           },
           {
             title: "Customisation",
-            url: "/customisation",
+            url: "/customise",
           },
         ],
       },
