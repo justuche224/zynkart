@@ -26,6 +26,12 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { info } from "@/constants";
+import { useQuery } from "@tanstack/react-query";
+import { categoryList } from "@/actions/store/public/category/list";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const LIMIT = 5;
 
 const data = {
   user: {
@@ -72,39 +78,9 @@ const data = {
       icon: SearchIcon,
     },
   ],
-  categories: [
-    {
-      name: "Body Lotions and Creams",
-      url: "/categories/body-lotions-and-creams",
-    },
-    {
-      name: "Soaps and Body Washes",
-      url: "/categories/soaps-and-body-washes",
-    },
-    {
-      name: "Shampoos and Conditioners",
-      url: "/categories/shampoos-and-conditioners",
-    },
-    {
-      name: "Hair Care",
-      url: "/categories/hair-care",
-    },
-    {
-      name: "Perfumes and Deodorants",
-      url: "/categories/perfumes-and-deodorants",
-    },
-    {
-      name: "Face Care",
-      url: "/categories/face-care",
-    },
-    {
-      name: "Baby Care",
-      url: "/categories/baby-care",
-    },
-  ],
 };
 
-export function SiteHeader() {
+export function SiteHeader({ storeId }: { storeId: string }) {
   const currentPath = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -127,6 +103,7 @@ export function SiteHeader() {
             <NavigationMenu
               pathname={currentPath}
               onItemClick={() => setIsOpen(false)}
+              storeId={storeId}
             />
             <div className="absolute bottom-0 left-0 right-0">
               <NavUser user={data.user} />
@@ -179,10 +156,21 @@ function Cart() {
 function NavigationMenu({
   pathname,
   onItemClick,
+  storeId,
 }: {
   pathname: string;
   onItemClick: () => void;
+  storeId: string;
 }) {
+  const {
+    data: categories,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["categories-list-navbar", storeId],
+    queryFn: () => categoryList({ storeId, limit: LIMIT }),
+  });
+
   return (
     <ScrollArea className="py-4 h-full overflow-y-auto pb-16">
       <div className="space-y-1 px-3">
@@ -212,10 +200,25 @@ function NavigationMenu({
 
       <div className="space-y-1 px-3">
         <h3 className="mb-2 text-sm font-semibold">Categories</h3>
-        {data.categories.map((category) => (
+        {isLoading && (
+          <div className="space-y-2">
+            {[...Array(LIMIT)].map((_, i) => (
+              <div
+                key={i}
+                className="h-8 w-full bg-muted rounded-md animate-pulse"
+              ></div>
+            ))}
+          </div>
+        )}
+        {error && (
+          <div className="text-sm text-destructive">
+            Could not load categories.
+          </div>
+        )}
+        {categories?.map((category) => (
           <Link
-            key={category.name}
-            href={category.url}
+            key={category.id}
+            href={`/categories/${category.slug}`}
             onClick={onItemClick}
             className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-muted"
           >
@@ -266,8 +269,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ModeToggle } from "@/components/mode-toggle";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export function NavUser({
   user,

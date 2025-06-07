@@ -56,7 +56,7 @@ function Index({ store }: HomeProps) {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader storeId={store.id} />
       <div className="max-w-7xl xl:mx-auto mt-20">
         {/* Hero Section */}
         {useProductWheel ? (
@@ -80,17 +80,19 @@ function Index({ store }: HomeProps) {
         </section>
 
         {/* Featured Products Carousel */}
-        {!useProductWheel && (<section className="py-8">
-          <div className="container max-w-7xl mx-auto px-4 mb-8">
-            <h2 className="text-3xl font-bold tracking-tight mb-4">
-              Featured Products
-            </h2>
-            <p className="text-muted-foreground max-w-2xl">
-              Discover our handpicked selection of premium products
-            </p>
-          </div>
-          <ProductWheel storeId={store.id} />
-        </section>)}
+        {!useProductWheel && (
+          <section className="py-8">
+            <div className="container max-w-7xl mx-auto px-4 mb-8">
+              <h2 className="text-3xl font-bold tracking-tight mb-4">
+                Featured Products
+              </h2>
+              <p className="text-muted-foreground max-w-2xl">
+                Discover our handpicked selection of premium products
+              </p>
+            </div>
+            <ProductWheel storeId={store.id} />
+          </section>
+        )}
 
         {/* New Arrivals & Best Sellers */}
         {/* TODO: Add new arrivals and best sellers */}
