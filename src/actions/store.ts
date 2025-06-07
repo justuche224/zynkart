@@ -96,3 +96,42 @@ export const getStoreByMerchant = async (storeSlug?: string, id?: string) => {
     return { error: "Failed to get store!" };
   }
 };
+
+export const updateStore = async (
+  storeId: string,
+  values: {
+    description?: string;
+    phone: string;
+    email: string;
+    address: string;
+  }
+) => {
+  try {
+    const session = await serverAuth();
+    if (!values.phone) return { error: "Phone is required!" };
+    if (!values.email) return { error: "Email is required!" };
+    if (!values.address) return { error: "Address is required!" };
+
+    if (!session?.session || !session.user) return { error: "Unauthorised!" };
+    const storeInfo = await db
+      .select()
+      .from(store)
+      .where(and(eq(store.id, storeId), eq(store.merchantId, session.user.id)));
+
+    if (!storeInfo) return { error: "Store not found!" };
+
+    const updatedStore = await db
+      .update(store)
+      .set({
+        description: values.description,
+        phone: values.phone,
+        email: values.email,
+        address: values.address,
+      })
+      .where(and(eq(store.id, storeId), eq(store.merchantId, session.user.id)));
+
+    return { data: updatedStore[0] };
+  } catch (error) {
+    return { error: "Failed to update store!" };
+  }
+};

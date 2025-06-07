@@ -70,12 +70,12 @@ export function AppSidebar({
         isActive: true,
         items: [
           {
-            title: "Overview",
-            url: "",
+            title: "Info",
+            url: "/",
           },
           {
-            title: "Info",
-            url: "/info",
+            title: "Dashboard",
+            url: "/dashboard",
           },
           {
             title: "Banners",
@@ -142,7 +142,7 @@ export function AppSidebar({
         isActive: true,
         items: [
           {
-            title: "Store",
+            title: "Info",
             url: "/settings/store",
           },
           {

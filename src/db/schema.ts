@@ -102,6 +102,7 @@ export const store = pgTable(
     address: text("address").notNull(),
     phone: text("phone").notNull(),
     email: text("email").notNull(),
+    description: text("description"),
   },
   (table) => [
     index("store_slug_idx").on(table.slug),
@@ -109,6 +110,27 @@ export const store = pgTable(
     index("store_name_idx").on(table.name),
   ]
 );
+
+export const storeSocial = pgTable("store_social", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  storeId: text("store_id")
+    .notNull()
+    .references(() => store.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  link: text("link").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const storeSocialRelations = relations(storeSocial, ({ one }) => ({
+  store: one(store, {
+    fields: [storeSocial.storeId],
+    references: [store.id],
+  }),
+}));
+
 export const storeRelation = relations(store, ({ one, many }) => ({
   merchant: one(user, {
     fields: [store.merchantId],
@@ -125,6 +147,7 @@ export const storeRelation = relations(store, ({ one, many }) => ({
     references: [bank.storeId],
   }),
   shippingZones: many(shippingZone),
+  socials: many(storeSocial),
 }));
 
 export const bank = pgTable("bank", {
