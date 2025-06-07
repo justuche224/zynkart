@@ -1,13 +1,13 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateCategorySchema } from "@/schemas";
+import { UpdateCategorySchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -31,6 +31,10 @@ import { Category } from "@/types";
 import { updateCategory } from "@/actions/category/edit";
 import { FormSuccess } from "@/components/ui/form-success";
 import { FormError } from "@/components/ui/form-error";
+import Image from "next/image";
+import { Alert } from "@/components/ui/alert";
+import { convertBlobUrlToFile } from "@/lib/convert-blob-url-to-file";
+import { uploadImage } from "@/lib/supabase/storage/client";
 
 interface EditCategoryFormProps {
   storeId: string;
@@ -38,6 +42,8 @@ interface EditCategoryFormProps {
   storeSlug: string;
   category: Category;
 }
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const EditCategoryForm = ({
   storeId,
@@ -50,27 +56,79 @@ const EditCategoryForm = ({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof CreateCategorySchema>>({
-    resolver: zodResolver(CreateCategorySchema),
+  const [imageUrl, setImageUrl] = useState<string | undefined>(
+    category.imageUrl || undefined
+  );
+  const [isNewImageSelected, setIsNewImageSelected] = useState(false);
+  const [imageError, setImageError] = useState<string>("");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const form = useForm<z.infer<typeof UpdateCategorySchema>>({
+    resolver: zodResolver(UpdateCategorySchema),
     defaultValues: {
       name: category.name,
       storeId: storeId,
       merchantId: merchantId,
+      imageUrl: category.imageUrl || undefined,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof CreateCategorySchema>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+
+    if (file.size > MAX_FILE_SIZE) {
+      setImageError(`Image exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`);
+      return;
+    }
+
+    setImageError("");
+    const newImageUrl = URL.createObjectURL(file);
+    setImageUrl(newImageUrl);
+    setIsNewImageSelected(true);
+  };
+
+  const removeImage = () => {
+    setImageUrl(undefined);
+    setIsNewImageSelected(true); // to indicate change
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
+  };
+
+  const onSubmit = (values: z.infer<typeof UpdateCategorySchema>) => {
     setError("");
     setSuccess("");
 
-    // Add the category.id to the values
-    const updateValues = {
-      ...values,
-      id: category.id,
-    };
-
     startTransition(async () => {
       try {
+        let finalImageUrl: string | null | undefined = category.imageUrl;
+
+        if (isNewImageSelected) {
+          if (imageUrl) {
+            const imageFile = await convertBlobUrlToFile(imageUrl);
+            const { imageUrl: newImageUrl, error } = await uploadImage({
+              file: imageFile,
+              bucket: process.env.NEXT_PUBLIC_SUPABASE_BUCKET!,
+              folder: "categories",
+            });
+
+            if (error) throw new Error(`Failed to upload image: ${error}`);
+            finalImageUrl = newImageUrl;
+          } else {
+            // Image was removed
+            finalImageUrl = null;
+          }
+        }
+
+        const updateValues = {
+          ...values,
+          id: category.id,
+          imageUrl: finalImageUrl,
+        };
+
         const result = await updateCategory(updateValues);
 
         if (!result.success) {
@@ -81,9 +139,9 @@ const EditCategoryForm = ({
         setSuccess("Category updated successfully!");
         router.push(`/merchant/stores/${storeSlug}/categories`);
         router.refresh();
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
-        setError("Something went wrong. Please try again.");
+        setError(error.message || "Something went wrong. Please try again.");
       }
     });
   };
@@ -115,6 +173,53 @@ const EditCategoryForm = ({
                   className="space-y-6"
                 >
                   <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-medium">Category Image</h3>
+                      <p className="text-sm text-gray-500">
+                        Upload 1 image (max {MAX_FILE_SIZE / 1024 / 1024}
+                        MB). This is optional.
+                      </p>
+                    </div>
+
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      ref={imageInputRef}
+                      onChange={handleImageChange}
+                      disabled={isPending}
+                    />
+
+                    {imageUrl && (
+                      <div className="relative group w-48 h-36">
+                        <Image
+                          src={imageUrl}
+                          fill
+                          alt="Category image"
+                          className="object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-80 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => imageInputRef.current?.click()}
+                      disabled={isPending}
+                    >
+                      {imageUrl ? "Change Image" : "Select Image"}
+                    </Button>
+
+                    {imageError && (
+                      <Alert variant="destructive">{imageError}</Alert>
+                    )}
                     <FormField
                       control={form.control}
                       name="name"

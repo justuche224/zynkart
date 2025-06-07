@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,7 @@ import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateCategorySchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -30,12 +30,19 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { createCategory } from "@/actions/category/create";
+import Image from "next/image";
+import { Alert } from "@/components/ui/alert";
+import { convertBlobUrlToFile } from "@/lib/convert-blob-url-to-file";
+import { uploadImage } from "@/lib/supabase/storage/client";
 
 interface NewCategoryFormProps {
   storeId: string;
   merchantId: string;
   storeSlug: string;
 }
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILES = 1;
 
 const NewCategoryForm = ({
   storeId,
@@ -47,6 +54,10 @@ const NewCategoryForm = ({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageError, setImageError] = useState<string>("");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
   const form = useForm<z.infer<typeof CreateCategorySchema>>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {
@@ -56,13 +67,58 @@ const NewCategoryForm = ({
     },
   });
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const filesArray = Array.from(files);
+
+    if (imageUrls.length + filesArray.length > MAX_FILES) {
+      setImageError(`Maximum ${MAX_FILES} image allowed`);
+      return;
+    }
+
+    const invalidFiles = filesArray.filter((file) => file.size > MAX_FILE_SIZE);
+    if (invalidFiles.length > 0) {
+      setImageError(`Image exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`);
+      return;
+    }
+
+    setImageError("");
+    const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+    setImageUrls([...imageUrls, ...newImageUrls]);
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   const onSubmit = (values: z.infer<typeof CreateCategorySchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
       try {
-        const result = await createCategory(values);
+        let imageUrl: string | undefined = undefined;
+
+        if (imageUrls.length > 0) {
+          const imageFile = await convertBlobUrlToFile(imageUrls[0]);
+          const { imageUrl: uploadedUrl, error } = await uploadImage({
+            file: imageFile,
+            bucket: process.env.NEXT_PUBLIC_SUPABASE_BUCKET!,
+            folder: "categories",
+          });
+
+          if (error) throw new Error(`Failed to upload image: ${error}`);
+          imageUrl = uploadedUrl;
+        }
+
+        const finalValues = {
+          ...values,
+          imageUrl,
+        };
+
+        const result = await createCategory(finalValues);
 
         if (!result.success) {
           setError(result.error?.message);
@@ -110,6 +166,58 @@ const NewCategoryForm = ({
                   className="space-y-6"
                 >
                   <div className="space-y-4">
+                    <div className="flex flex-col gap-4">
+                      <div>
+                        <h3 className="text-lg font-medium">Category Image</h3>
+                        <p className="text-sm text-gray-500">
+                          Upload 1 image (max {MAX_FILE_SIZE / 1024 / 1024}
+                          MB). This is optional.
+                        </p>
+                      </div>
+
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        ref={imageInputRef}
+                        onChange={handleImageChange}
+                        disabled={isPending || imageUrls.length >= MAX_FILES}
+                      />
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => imageInputRef.current?.click()}
+                        disabled={isPending || imageUrls.length >= MAX_FILES}
+                      >
+                        Select Image
+                      </Button>
+
+                      {imageError && (
+                        <Alert variant="destructive">{imageError}</Alert>
+                      )}
+
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+                        {imageUrls.map((url, index) => (
+                          <div key={url} className="relative group">
+                            <Image
+                              src={url}
+                              width={500}
+                              height={375}
+                              alt={`Category image ${index + 1}`}
+                              className="object-cover rounded-lg aspect-[4/3] w-full h-full"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(index)}
+                              className="absolute top-2 right-2 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                     <FormField
                       control={form.control}
                       name="name"

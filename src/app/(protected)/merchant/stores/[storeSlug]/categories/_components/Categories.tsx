@@ -33,6 +33,7 @@ interface Props {
     name: string;
     slug: string;
     productCount: number;
+    imageUrl: string | null;
   }[];
   storeSlug: string;
   merchantId: string;
@@ -132,9 +133,22 @@ const Categories = ({ categories, storeSlug, merchantId }: Props) => {
         >
           {initialCategories.map((category) => (
             <motion.div key={category.id} variants={itemVariants}>
-              <Card className="group hover:shadow-lg transition-all duration-300 bg-sidebar">
+              <Card
+                className={`group hover:shadow-lg transition-all duration-300 bg-sidebar ${
+                  category.imageUrl ? "bg-cover bg-center" : ""
+                }`}
+                style={{
+                  backgroundImage: category.imageUrl
+                    ? `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4)), url(${category.imageUrl})`
+                    : "none",
+                }}
+              >
                 <CardHeader>
-                  <CardTitle className="flex justify-between items-center">
+                  <CardTitle
+                    className={`flex justify-between items-center ${
+                      category.imageUrl ? "text-white" : ""
+                    }`}
+                  >
                     <span>{category.name}</span>
                     <AlertDialog>
                       <div className="flex items-center gap-2">
@@ -148,7 +162,13 @@ const Categories = ({ categories, storeSlug, merchantId }: Props) => {
                             )
                           }
                         >
-                          <Pen className="w-4 h-4 text-muted-foreground" />
+                          <Pen
+                            className={`w-4 h-4 ${
+                              category.imageUrl
+                                ? "text-gray-200"
+                                : "text-muted-foreground"
+                            }`}
+                          />
                         </Button>
 
                         <AlertDialogTrigger asChild>
@@ -185,7 +205,9 @@ const Categories = ({ categories, storeSlug, merchantId }: Props) => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription
+                    className={category.imageUrl ? "text-gray-300" : ""}
+                  >
                     {category.productCount} product
                     {category.productCount !== 1 ? "s" : ""}
                   </CardDescription>
@@ -193,7 +215,11 @@ const Categories = ({ categories, storeSlug, merchantId }: Props) => {
                 <CardContent>
                   <Link
                     href={`categories/${category.slug}`}
-                    className="flex items-center justify-between text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className={`flex items-center justify-between text-sm transition-colors ${
+                      category.imageUrl
+                        ? "text-gray-300 hover:text-white"
+                        : "text-muted-foreground hover:text-primary"
+                    }`}
                   >
                     <span>View details</span>
                     <ChevronRight

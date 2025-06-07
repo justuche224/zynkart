@@ -39,12 +39,12 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
       name: category.name,
       slug: category.slug,
       productCount: sql<number>`COUNT(${product.id})`.as("productCount"),
+      imageUrl: category.imageUrl,
     })
     .from(category)
     .leftJoin(product, eq(category.id, product.categoryId))
     .where(eq(category.storeId, storeData.id))
-    .groupBy(category.id, category.name, category.slug);
-
+    .groupBy(category.id, category.name, category.slug, category.imageUrl);
   return <Categories categories={categoriesWithCount} storeSlug={storeSlug} merchantId={user.user.id} />;
 };
 

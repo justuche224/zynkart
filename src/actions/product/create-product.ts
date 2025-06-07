@@ -17,11 +17,17 @@ import db from "@/db";
 
 const MAX_FILES = 5;
 
-export const createProduct = async (
-  values: z.infer<typeof NewProductSchema>,
-  merchantId: string,
-  storeId: string
-) => {
+export const createProduct = async ({
+  values,
+  merchantId,
+  storeId,
+  categoryImageUrl,
+}: {
+  values: z.infer<typeof NewProductSchema>;
+  merchantId: string;
+  storeId: string;
+  categoryImageUrl: string | null;
+}) => {
   try {
     // Validate input schema
     const validationResult = NewProductSchema.safeParse(values);
@@ -108,6 +114,7 @@ export const createProduct = async (
           name: values.newCategoryName,
           slug: slugify(values.newCategoryName),
           storeId,
+          imageUrl: categoryImageUrl,
         })
         .returning();
 

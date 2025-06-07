@@ -11,6 +11,7 @@ interface CreateCategoryInput {
   storeId: string;
   storeProfileId?: string;
   merchantId: string;
+  imageUrl?: string;
 }
 
 export const createCategory = async (input: CreateCategoryInput) => {
@@ -79,6 +80,7 @@ export const createCategory = async (input: CreateCategoryInput) => {
         name: input.name,
         slug: storeSlug,
         storeId: input.storeId,
+        imageUrl: input.imageUrl,
       })
       .returning();
 

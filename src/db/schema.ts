@@ -185,6 +185,7 @@ export const category = pgTable(
       .$defaultFn(() => crypto.randomUUID()),
     name: text("name").notNull(),
     slug: text("slug").notNull(),
+    imageUrl: text("image_url"),
     storeId: text("store_id")
       .notNull()
       .references(() => store.id, { onDelete: "cascade" }),

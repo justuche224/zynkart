@@ -127,6 +127,7 @@ export const CreateCategorySchema = z.object({
     }),
   storeId: z.string(),
   merchantId: z.string(),
+  imageUrl: z.string().optional(),
 });
 
 export const UpdateCategorySchema = CreateCategorySchema.extend({

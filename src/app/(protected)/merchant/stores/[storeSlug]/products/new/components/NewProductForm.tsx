@@ -89,12 +89,15 @@ const NewProductForm = ({
   );
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageError, setImageError] = useState<string>("");
+  const [categoryImageUrls, setCategoryImageUrls] = useState<string[]>([]);
+  const [categoryImageError, setCategoryImageError] = useState<string>("");
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const categoryImageInputRef = useRef<HTMLInputElement>(null);
 
   type NewProductFormInput = z.input<typeof NewProductSchema>;
   type NewProductFormOutput = z.output<typeof NewProductSchema>;
@@ -130,10 +133,23 @@ const NewProductForm = ({
   const createProductMutation = useMutation({
     mutationFn: async (values: z.infer<typeof NewProductSchema>) => {
       if (imageUrls.length === 0) {
-        throw new Error("At least one image is required");
+        throw new Error("At least one product image is required");
       }
       if (imageUrls.length > MAX_FILES) {
-        throw new Error(`Maximum ${MAX_FILES} images allowed`);
+        throw new Error(`Maximum ${MAX_FILES} product images allowed`);
+      }
+
+      let uploadedCategoryImageUrl: string | null = null;
+      if (values.newCategoryName && categoryImageUrls.length > 0) {
+        const imageFile = await convertBlobUrlToFile(categoryImageUrls[0]);
+        const { imageUrl, error } = await uploadImage({
+          file: imageFile,
+          bucket: process.env.NEXT_PUBLIC_SUPABASE_BUCKET!,
+          folder: "categories",
+        });
+
+        if (error) throw new Error(`Failed to upload category image: ${error}`);
+        uploadedCategoryImageUrl = imageUrl;
       }
 
       // Upload images to Supabase
@@ -143,6 +159,7 @@ const NewProductForm = ({
           const { imageUrl, error } = await uploadImage({
             file: imageFile,
             bucket: process.env.NEXT_PUBLIC_SUPABASE_BUCKET!,
+            folder: "products",
           });
 
           if (error) throw new Error(`Failed to upload image: ${error}`);
@@ -162,7 +179,12 @@ const NewProductForm = ({
       };
 
       // Call server action to create product
-      const result = await createProduct(finalValues, merchantId, storeData.id);
+      const result = await createProduct({
+        values: finalValues,
+        merchantId,
+        storeId: storeData.id,
+        categoryImageUrl: uploadedCategoryImageUrl,
+      });
 
       if (!result.success) {
         throw new Error(result.error?.message || "Failed to create product");
@@ -196,6 +218,7 @@ const NewProductForm = ({
       toast.success("Product added");
       form.reset();
       setImageUrls([]);
+      setCategoryImageUrls([]);
 
       // Redirect to products page
       router.push(`/merchant/stores/${storeSlug}/products`);
@@ -239,6 +262,41 @@ const NewProductForm = ({
 
   const removeImage = (indexToRemove: number) => {
     setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleCategoryImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const filesArray = Array.from(files);
+
+    if (categoryImageUrls.length + filesArray.length > 1) {
+      setCategoryImageError("Maximum 1 image allowed");
+      return;
+    }
+
+    const invalidFiles = filesArray.filter((file) => file.size > MAX_FILE_SIZE);
+    if (invalidFiles.length > 0) {
+      setCategoryImageError(
+        `Image exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`
+      );
+      return;
+    }
+
+    setCategoryImageError("");
+    const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+    setCategoryImageUrls(newImageUrls);
+  };
+
+  const removeCategoryImage = (indexToRemove: number) => {
+    setCategoryImageUrls((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
+    if (categoryImageInputRef.current) {
+      categoryImageInputRef.current.value = "";
+    }
   };
 
   // VARIATION
@@ -591,31 +649,89 @@ const NewProductForm = ({
                               ))}
                             </div>
                           ) : (
-                            <FormField
-                              control={form.control}
-                              name="newCategoryName"
-                              render={({ field: newCategoryField }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Input
-                                      {...newCategoryField}
-                                      disabled={createProductMutation.isPending}
-                                      placeholder="Enter new category name..."
-                                      className="w-full"
-                                      onChange={(e) => {
-                                        newCategoryField.onChange(e);
-                                        form.setValue("categoryId", "");
-                                      }}
+                            <div className="space-y-4">
+                              <FormField
+                                control={form.control}
+                                name="newCategoryName"
+                                render={({ field: newCategoryField }) => (
+                                  <FormItem>
+                                    <FormControl>
+                                      <Input
+                                        {...newCategoryField}
+                                        disabled={
+                                          createProductMutation.isPending
+                                        }
+                                        placeholder="Enter new category name..."
+                                        className="w-full"
+                                        onChange={(e) => {
+                                          newCategoryField.onChange(e);
+                                          form.setValue("categoryId", "");
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormDescription>
+                                      A new category will be created with this
+                                      name
+                                    </FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <div className="flex flex-col gap-2">
+                                <FormLabel>Category Image (Optional)</FormLabel>
+                                <FormDescription>
+                                  Upload 1 image (max 4MB). This image will be
+                                  used for the new category.
+                                </FormDescription>
+                                <input
+                                  type="file"
+                                  hidden
+                                  accept="image/*"
+                                  ref={categoryImageInputRef}
+                                  onChange={handleCategoryImageChange}
+                                  disabled={
+                                    createProductMutation.isPending ||
+                                    categoryImageUrls.length >= 1
+                                  }
+                                />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={() =>
+                                    categoryImageInputRef.current?.click()
+                                  }
+                                  disabled={
+                                    createProductMutation.isPending ||
+                                    categoryImageUrls.length >= 1
+                                  }
+                                  className="w-fit"
+                                >
+                                  Select Category Image
+                                </Button>
+                                {categoryImageError && (
+                                  <Alert variant="destructive">
+                                    {categoryImageError}
+                                  </Alert>
+                                )}
+                                {categoryImageUrls.length > 0 && (
+                                  <div className="relative group w-32 h-32">
+                                    <Image
+                                      src={categoryImageUrls[0]}
+                                      fill
+                                      alt="Category image"
+                                      className="object-cover rounded-lg"
                                     />
-                                  </FormControl>
-                                  <FormDescription>
-                                    A new category will be created with this
-                                    name
-                                  </FormDescription>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                                    <button
+                                      type="button"
+                                      onClick={() => removeCategoryImage(0)}
+                                      className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-80 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           )}
                           <FormMessage />
                         </FormItem>

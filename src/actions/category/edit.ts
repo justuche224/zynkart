@@ -11,10 +11,10 @@ interface UpdateCategoryInput {
   name: string;
   storeId: string;
   merchantId: string;
+  imageUrl?: string | null;
 }
 
 export const updateCategory = async (input: UpdateCategoryInput) => {
-  
   const validationResult = UpdateCategorySchema.safeParse(input);
   if (!validationResult.success) {
     return {
@@ -99,6 +99,7 @@ export const updateCategory = async (input: UpdateCategoryInput) => {
       .set({
         name: input.name,
         slug: newSlug,
+        imageUrl: input.imageUrl,
         updatedAt: new Date(),
       })
       .where(eq(category.id, input.id))
