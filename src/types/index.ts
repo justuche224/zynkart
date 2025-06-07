@@ -3,6 +3,7 @@ import {
   product,
   productImage,
   shippingZone,
+  banner,
   // shippingZone,
   // storeProfile,
 } from "@/db/schema";
@@ -48,3 +49,4 @@ export interface Product {
 }
 
 export type ShippingZone = InferSelectModel<typeof shippingZone>;
+export type Banner = InferSelectModel<typeof banner>;

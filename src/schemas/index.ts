@@ -110,48 +110,61 @@ export const NewProductSchema = z
     }
   );
 
-  export const CreateCategorySchema = z.object({
-    name: z
-      .string()
-      .min(3, {
-        message:
-          "Category Name should be more than 3 characters but less than 50 characters",
-      })
-      .max(50, {
-        message:
-          "Category Name should be more than 3 characters but less than 50 characters",
-      })
-      .regex(/^[a-zA-Z0-9\s-]+$/, {
-        message:
-          "Category Name can only contain letters, numbers, spaces, and hyphens.",
-      }),
-    storeId: z.string(),
-    merchantId: z.string(),
-  });
+export const CreateCategorySchema = z.object({
+  name: z
+    .string()
+    .min(3, {
+      message:
+        "Category Name should be more than 3 characters but less than 50 characters",
+    })
+    .max(50, {
+      message:
+        "Category Name should be more than 3 characters but less than 50 characters",
+    })
+    .regex(/^[a-zA-Z0-9\s-]+$/, {
+      message:
+        "Category Name can only contain letters, numbers, spaces, and hyphens.",
+    }),
+  storeId: z.string(),
+  merchantId: z.string(),
+});
 
-  export const UpdateCategorySchema = CreateCategorySchema.extend({
-    id: z.string().min(1, "Category ID is required"),
-  });
+export const UpdateCategorySchema = CreateCategorySchema.extend({
+  id: z.string().min(1, "Category ID is required"),
+});
 
-  export const BankSchema = z.object({
-    bankCode: z.string().min(1, "Bank code is required"),
-    bankName: z.string().min(1, "Bank name is required"),
-    accountName: z.string().min(1, "Account name is required"),
-    accountNumber: z.string().min(10, "Account number is required"),
-    country: z.string().min(1, "Country is required"),
-    currency: z.string().min(1, "Currency is required"),
-    businessName: z.string().min(1, "Business name is required"),
-    storeId: z.string().min(1, "Store ID is required"),
-    storeSlug: z.string().min(1, "Store slug is required"),
-  });
+export const BankSchema = z.object({
+  bankCode: z.string().min(1, "Bank code is required"),
+  bankName: z.string().min(1, "Bank name is required"),
+  accountName: z.string().min(1, "Account name is required"),
+  accountNumber: z.string().min(10, "Account number is required"),
+  country: z.string().min(1, "Country is required"),
+  currency: z.string().min(1, "Currency is required"),
+  businessName: z.string().min(1, "Business name is required"),
+  storeId: z.string().min(1, "Store ID is required"),
+  storeSlug: z.string().min(1, "Store slug is required"),
+});
 
-  export const ShipingZoneSchema = z.object({
-    country: z.string().min(1, "Country is required"),
-    state: z.string().optional(),
-    area: z.string().optional(),
-    shippingCost: z.number().optional(),
-    isActive: z.boolean().default(true),
-    minOrderAmount: z.number().optional(),
-    maxOrderAmount: z.number().optional(),
-    estimatedDays: z.number().optional(),
-  });
+export const ShipingZoneSchema = z.object({
+  country: z.string().min(1, "Country is required"),
+  state: z.string().optional(),
+  area: z.string().optional(),
+  shippingCost: z.number().optional(),
+  isActive: z.boolean().default(true),
+  minOrderAmount: z.number().optional(),
+  maxOrderAmount: z.number().optional(),
+  estimatedDays: z.number().optional(),
+});
+
+export const NewBannerSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  linkUrl: z
+    .string()
+    // .url({ message: "Please enter a valid URL." })
+    .optional()
+    .or(z.literal("")),
+  isActive: z.boolean().default(true),
+  storeId: z.string(),
+  imageUrl: z.string().optional(),
+});
