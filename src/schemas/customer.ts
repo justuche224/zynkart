@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { customer } from "@/db/schema";
 
 export const customerSignUpSchema = z
   .object({
@@ -30,3 +31,4 @@ export const customerSignInSchema = z.object({
 
 export type TCustomerSignUpSchema = z.infer<typeof customerSignUpSchema>;
 export type TCustomerSignInSchema = z.infer<typeof customerSignInSchema>;
+export type TCustomer = typeof customer.$inferSelect;

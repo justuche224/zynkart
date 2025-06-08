@@ -10,8 +10,9 @@ import { customer, customerSesssion } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { sign, verify } from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { getClientIp } from "@/lib/get-ip";
 
 export const getCurrentCustomer = async () => {
   const token = (await cookies()).get("customer_token")?.value;
@@ -98,6 +99,8 @@ export const signInCustomer = async ({
       };
     }
 
+    const userAgent = (await headers()).get("user-agent") || null;
+    const ip = await getClientIp();
     const session = await db
       .insert(customerSesssion)
       .values({
@@ -107,6 +110,8 @@ export const signInCustomer = async ({
         token: "pending",
         createdAt: new Date(),
         updatedAt: new Date(),
+        userAgent,
+        ipAddress: ip,
       })
       .returning();
 
@@ -187,6 +192,76 @@ export const signUpCustomer = async ({
       success: "Account created successfully",
       error: "",
       data: newCustomer[0],
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      error: "An unexpected error occurred. Please try again.",
+      success: "",
+    };
+  }
+};
+
+export const getAllCustomerSession = async () => {
+  const token = (await cookies()).get("customer_token")?.value;
+
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const decoded = verify(token, process.env.JWT_SECRET as string) as {
+      sessionId: string;
+    };
+
+    const session = await db.query.customerSesssion.findFirst({
+      where: eq(customerSesssion.id, decoded.sessionId),
+      columns: { id: true },
+      with: {
+        customer: {
+          columns: { id: true },
+        },
+      },
+    });
+
+    if (!session) {
+      return null;
+    }
+
+    const sessions = await db.query.customerSesssion.findMany({
+      where: eq(customerSesssion.customerId, session?.customer.id),
+    });
+
+    return {
+      customer: session.customer,
+      currentSession: session,
+      sessions,
+    };
+  } catch (error) {
+    return null;
+  }
+};
+
+export const revokeCustomerSession = async (sessionId: string) => {
+  try {
+    const session = await db.query.customerSesssion.findFirst({
+      where: eq(customerSesssion.id, sessionId),
+    });
+
+    if (!session) {
+      return {
+        error: "Session not found",
+        success: "",
+      };
+    }
+
+    await db.delete(customerSesssion).where(eq(customerSesssion.id, sessionId));
+
+    revalidatePath("/store/[slug]/account", "layout");
+
+    return {
+      success: "Session revoked successfully",
+      error: "",
     };
   } catch (error) {
     console.error(error);

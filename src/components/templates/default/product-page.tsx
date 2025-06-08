@@ -63,7 +63,7 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
 
   return (
     <>
-      <SiteHeader storeId={store.id} />
+      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
       <div className="container max-w-6xl mx-auto px-4 pb-8 mt-20">
         {/* back button */}
         <div className="mb-4">

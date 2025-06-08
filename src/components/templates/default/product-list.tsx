@@ -35,7 +35,7 @@ export default function ProductsList({ store }: ProductListPageProps) {
 
   return (
     <>
-      <SiteHeader storeId={store.id} />
+      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
       <div className="container mx-auto px-4 py-8 mt-20">
         <div className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-4">

@@ -16,11 +16,11 @@ export const serverAuth = async () => {
 export const serverCustomerAuth = async () => {
   const token = (await cookies()).get("customer_token")?.value;
 
-    if (!token) {
+  if (!token) {
     return null;
   }
 
-   try {
+  try {
     const decoded = verify(token, process.env.JWT_SECRET as string) as {
       sessionId: string;
     };
@@ -28,7 +28,13 @@ export const serverCustomerAuth = async () => {
     const session = await db.query.customerSesssion.findFirst({
       where: eq(customerSesssion.id, decoded.sessionId),
       with: {
-        customer: true,
+        customer: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
@@ -38,6 +44,7 @@ export const serverCustomerAuth = async () => {
 
     return session.customer;
   } catch (error) {
+    console.error(error);
     return null;
   }
-}
+};

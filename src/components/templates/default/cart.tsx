@@ -47,7 +47,7 @@ const CartPage = () => {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
       <div className="container max-w-6xl mx-auto px-4 py-8 mt-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">

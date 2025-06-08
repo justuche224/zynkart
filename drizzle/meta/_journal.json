@@ -99,6 +99,13 @@
       "when": 1749371670254,
       "tag": "0013_burly_thanos",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1749395983716,
+      "tag": "0014_third_night_thrasher",
+      "breakpoints": true
     }
   ]
 }

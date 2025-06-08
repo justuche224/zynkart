@@ -25,11 +25,12 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { info } from "@/constants";
 import { useQuery } from "@tanstack/react-query";
 import { categoryList } from "@/actions/store/public/category/list";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import NavUser from "./nav-user";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const LIMIT = 5;
 
@@ -80,7 +81,7 @@ const data = {
   ],
 };
 
-export function SiteHeader({ storeId }: { storeId: string }) {
+export function SiteHeader({ storeId, storeSlug, storeName }: { storeId: string; storeSlug: string; storeName: string }) {
   const currentPath = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -97,7 +98,7 @@ export function SiteHeader({ storeId }: { storeId: string }) {
           <SheetContent side="left">
             <SheetHeader>
               <Link href="/">
-                <SheetTitle>{info.name}</SheetTitle>
+                <SheetTitle>{storeName}</SheetTitle>
               </Link>
             </SheetHeader>
             <NavigationMenu
@@ -105,9 +106,6 @@ export function SiteHeader({ storeId }: { storeId: string }) {
               onItemClick={() => setIsOpen(false)}
               storeId={storeId}
             />
-            <div className="absolute bottom-0 left-0 right-0">
-              <NavUser user={data.user} />
-            </div>
           </SheetContent>
         </Sheet>
 
@@ -129,6 +127,7 @@ export function SiteHeader({ storeId }: { storeId: string }) {
         <div className="flex items-center gap-4">
           <Cart />
           <ModeToggle />
+          <NavUser storeSlug={storeSlug} />
         </div>
       </div>
     </header>
@@ -250,101 +249,101 @@ function NavigationMenu({
   );
 }
 
-import {
-  BellIcon,
-  CreditCardIcon,
-  LogOutIcon,
-  MoreVerticalIcon,
-  UserCircleIcon,
-} from "lucide-react";
+// import {
+//   BellIcon,
+//   CreditCardIcon,
+//   LogOutIcon,
+//   MoreVerticalIcon,
+//   UserCircleIcon,
+// } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ModeToggle } from "@/components/mode-toggle";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuGroup,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import { ModeToggle } from "@/components/mode-toggle";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
-  return (
-    <div>
-      <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="bg-sidebar w-full">
-            <Button
-              variant="ghost"
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground rounded-none"
-            >
-              <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
-                </span>
-              </div>
-              <MoreVerticalIcon className="ml-auto size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side="top"
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircleIcon />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
-  );
-}
+// export function NavUser({
+//   user,
+// }: {
+//   user: {
+//     name: string;
+//     email: string;
+//     avatar: string;
+//   };
+// }) {
+//   return (
+//     <div>
+//       <div>
+//         <DropdownMenu>
+//           <DropdownMenuTrigger asChild className="bg-sidebar w-full">
+//             <Button
+//               variant="ghost"
+//               size="lg"
+//               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground rounded-none"
+//             >
+//               <Avatar className="h-8 w-8 rounded-lg grayscale">
+//                 <AvatarImage src={user.avatar} alt={user.name} />
+//                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+//               </Avatar>
+//               <div className="grid flex-1 text-left text-sm leading-tight">
+//                 <span className="truncate font-medium">{user.name}</span>
+//                 <span className="truncate text-xs text-muted-foreground">
+//                   {user.email}
+//                 </span>
+//               </div>
+//               <MoreVerticalIcon className="ml-auto size-4" />
+//             </Button>
+//           </DropdownMenuTrigger>
+//           <DropdownMenuContent
+//             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+//             side="top"
+//             align="end"
+//             sideOffset={4}
+//           >
+//             <DropdownMenuLabel className="p-0 font-normal">
+//               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+//                 <Avatar className="h-8 w-8 rounded-lg">
+//                   <AvatarImage src={user.avatar} alt={user.name} />
+//                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+//                 </Avatar>
+//                 <div className="grid flex-1 text-left text-sm leading-tight">
+//                   <span className="truncate font-medium">{user.name}</span>
+//                   <span className="truncate text-xs text-muted-foreground">
+//                     {user.email}
+//                   </span>
+//                 </div>
+//               </div>
+//             </DropdownMenuLabel>
+//             <DropdownMenuSeparator />
+//             <DropdownMenuGroup>
+//               <DropdownMenuItem>
+//                 <UserCircleIcon />
+//                 Account
+//               </DropdownMenuItem>
+//               <DropdownMenuItem>
+//                 <CreditCardIcon />
+//                 Billing
+//               </DropdownMenuItem>
+//               <DropdownMenuItem>
+//                 <BellIcon />
+//                 Notifications
+//               </DropdownMenuItem>
+//             </DropdownMenuGroup>
+//             <DropdownMenuSeparator />
+//             <DropdownMenuItem>
+//               <LogOutIcon />
+//               Log out
+//             </DropdownMenuItem>
+//           </DropdownMenuContent>
+//         </DropdownMenu>
+//       </div>
+//     </div>
+//   );
+// }

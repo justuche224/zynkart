@@ -47,7 +47,7 @@ function Index({ store, categoryInfo }: HomeProps) {
 
   return (
     <>
-      <SiteHeader storeId={store.id} />
+      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
       <div className="max-w-7xl xl:mx-auto mt-20">
         <section className="container max-w-5xl mx-auto px-4 py-16">
           <div className="flex flex-col items-center text-center mb-12">

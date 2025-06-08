@@ -56,7 +56,7 @@ export async function generateMetadata({
   };
 }
 
-const getStoreForHomePage = async (storeSlug: string) => {
+export const getStoreForHomePage = async (storeSlug: string) => {
   return db.query.store.findFirst({
     where: eq(store.slug, storeSlug),
     columns: {

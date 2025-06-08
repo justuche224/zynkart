@@ -8,6 +8,8 @@ type Customer = {
   name: string;
   email: string;
   storeId: string;
+  image: string | null;
+  phone: string | null;
 };
 
 export const CustomerSessionProvider = ({

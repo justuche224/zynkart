@@ -56,7 +56,7 @@ function Index({ store }: HomeProps) {
 
   return (
     <>
-      <SiteHeader storeId={store.id} />
+      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
       <div className="max-w-7xl xl:mx-auto mt-20">
         {/* Hero Section */}
         {useProductWheel ? (
