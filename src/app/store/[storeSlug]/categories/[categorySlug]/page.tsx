@@ -86,13 +86,6 @@ const getStoreForHomePage = async (storeSlug: string) => {
       template: true,
     },
     with: {
-      socials: {
-        columns: {
-          id: true,
-          name: true,
-          link: true,
-        },
-      },
       banners: {
         columns: {
           imageUrl: true,

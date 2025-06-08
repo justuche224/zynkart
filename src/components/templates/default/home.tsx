@@ -332,7 +332,7 @@ function Index({ store }: HomeProps) {
             </Button>
           </div>
         </section>
-        <Footer store={store} />
+        <Footer storeSlug={store.slug} />
       </div>
     </>
   );

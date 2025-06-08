@@ -1,6 +1,6 @@
 "use client";
 
-import { getStoreSocials } from "@/actions/store-socials/get";
+import { getStoreSocials } from "@/actions/product/store-socials/get";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
@@ -27,8 +27,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { addStoreSocial } from "@/actions/store-socials/add";
-import { deleteStoreSocial } from "@/actions/store-socials/delete";
+import { addStoreSocial } from "@/actions/product/store-socials/add";
+import { deleteStoreSocial } from "@/actions/product/store-socials/delete";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";

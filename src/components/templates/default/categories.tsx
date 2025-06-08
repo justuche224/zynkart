@@ -53,7 +53,7 @@ const Categories = ({ store, categories }: CategoriesProps) => {
             ))}
           </div>
         </section>
-        <Footer store={store} />
+        <Footer storeSlug={store.slug} />
       </div>
     </>
   );

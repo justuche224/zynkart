@@ -219,7 +219,7 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
         </div>
         <ReviewsSection />
       </div>
-      <Footer store={store} />
+      <Footer storeSlug={store.slug} />
     </>
   );
 };

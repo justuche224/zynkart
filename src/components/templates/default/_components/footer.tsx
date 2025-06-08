@@ -1,15 +1,139 @@
-import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+"use client";
+
+import { getStoreFooter } from "@/actions/store/public/footer";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 import {
   Facebook,
   Instagram,
-  Twitter,
   Mail,
-  Phone,
   MapPin,
+  Phone,
+  Twitter,
 } from "lucide-react";
 
-export const Footer = ({ store }: { store: StoreDataFromHomePage }) => {
+const FooterSkeleton = () => {
+  return (
+    <footer className="bg-sidebar border-t mt-8">
+      <div className="container max-w-5xl mx-auto px-2 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* About Section */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">
+              <Skeleton className="h-6 w-32" />
+            </h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Skeleton className="h-4 w-24" />
+              </li>
+              <li>
+                <Skeleton className="h-4 w-20" />
+              </li>
+              <li>
+                <Skeleton className="h-4 w-32" />
+              </li>
+              <li>
+                <Skeleton className="h-4 w-28" />
+              </li>
+            </ul>
+          </div>
+
+          {/* Customer Service */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">
+              <Skeleton className="h-6 w-40" />
+            </h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Skeleton className="h-4 w-24" />
+              </li>
+              <li>
+                <Skeleton className="h-4 w-36" />
+              </li>
+              <li>
+                <Skeleton className="h-4 w-32" />
+              </li>
+              <li>
+                <Skeleton className="h-4 w-16" />
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Information */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">
+              <Skeleton className="h-6 w-32" />
+            </h3>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-center gap-2">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-4 w-28" />
+              </li>
+              <li className="flex items-center gap-2">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-4 w-36" />
+              </li>
+              <li className="flex items-center gap-2">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-4 w-40" />
+              </li>
+            </ul>
+          </div>
+
+          {/* Social Media & Newsletter */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">
+              <Skeleton className="h-6 w-40" />
+            </h3>
+            <div className="flex gap-4">
+              <Skeleton className="h-6 w-10" />
+              <Skeleton className="h-6 w-10" />
+              <Skeleton className="h-6 w-10" />
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-8 pt-4 border-t text-center text-sm text-muted-foreground">
+          <span>
+            <Skeleton className="h-4 w-48" />
+          </span>
+          <span>
+            <Skeleton className="h-4 w-32" />
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export const Footer = ({ storeSlug }: { storeSlug: string }) => {
   const currentYear = new Date().getFullYear();
+
+  const {
+    data: store,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["store-footer", storeSlug],
+    queryFn: async () => await getStoreFooter(storeSlug),
+  });
+
+  if (isLoading) {
+    return <FooterSkeleton />;
+  }
+
+  if (isError || !store) {
+    return (
+      <footer className="bg-sidebar border-t mt-8">
+        <div className="container max-w-5xl mx-auto px-2 py-8 text-center">
+          <p className="text-muted-foreground">
+            Could not load store information.
+          </p>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="bg-sidebar border-t mt-8">
@@ -95,12 +219,14 @@ export const Footer = ({ store }: { store: StoreDataFromHomePage }) => {
               {store.socials.map((social) => (
                 <a
                   href={social.link}
-                  className="hover:text-primary underline"
+                  className="hover:text-primary"
                   target="_blank"
                   rel="noopener noreferrer"
                   key={social.name}
                 >
-                  {social.name}
+                  {social.name.toLowerCase() === "facebook" && <Facebook />}
+                  {social.name.toLowerCase() === "instagram" && <Instagram />}
+                  {social.name.toLowerCase() === "twitter" && <Twitter />}
                 </a>
               ))}
             </div>

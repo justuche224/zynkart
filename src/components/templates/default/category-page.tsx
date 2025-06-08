@@ -128,7 +128,7 @@ function Index({ store, categoryInfo }: HomeProps) {
             <Banners banners={store.banners} />
           )}
         </section>
-        <Footer store={store} />
+        <Footer storeSlug={store.slug} />
       </div>
     </>
   );

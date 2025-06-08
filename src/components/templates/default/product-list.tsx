@@ -121,7 +121,7 @@ export default function ProductsList({ store }: ProductListPageProps) {
           </div>
         </div>
       </div>
-      <Footer store={store} />
+      <Footer storeSlug={store.slug} />
     </>
   );
 }
