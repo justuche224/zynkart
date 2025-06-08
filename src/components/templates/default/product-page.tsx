@@ -139,11 +139,11 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
               <div className="flex items-center gap-2 text-sm">
                 <span
                   className={`h-3 w-3 rounded-full ${
-                    product.inStock > 0 ? "bg-green-500" : "bg-red-500"
+                   product.trackQuantity ? (product.inStock > 0 ? "bg-green-500" : "bg-red-500") : "bg-green-500"
                   }`}
                 />
-                <span>{product.inStock > 0 ? "In Stock" : "Out of Stock"}</span>
-                {product.inStock > 0 && (
+                <span>{product.trackQuantity ? (product.inStock > 0 ? "In Stock" : "Out of Stock") : "In Stock"}</span>
+                {product.trackQuantity && product.inStock > 0 && (
                   <span className="text-muted-foreground">
                     ({product.inStock} units available)
                   </span>
@@ -158,7 +158,7 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
                   size="lg"
                   className="flex-1 gap-2"
                   onClick={handleAddToCart}
-                  disabled={!product.inStock}
+                  disabled={product.trackQuantity && !product.inStock}
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart
@@ -175,7 +175,7 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
                     size="lg"
                     variant="outline"
                     onClick={handleIncrement}
-                    disabled={cartItem.quantity >= product.inStock}
+                    disabled={product.trackQuantity && cartItem.quantity >= product.inStock}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
