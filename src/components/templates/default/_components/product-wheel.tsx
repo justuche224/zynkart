@@ -8,10 +8,18 @@ import {
 } from "@/components/ui/carousel";
 import formatPrice from "@/lib/price-formatter";
 import AddToCart from "@/components/add-to-cart";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getFeaturedProducts } from "@/actions/store/public/products/featured";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import {
+  getSavedProductIds,
+  saveProduct,
+  unsaveProduct,
+} from "@/actions/store/public/saved/products";
 
 function ProductWheelSkeleton() {
   return (
@@ -67,7 +75,7 @@ function ProductWheelSkeleton() {
 function ProductWheel({ storeId }: { storeId: string }) {
   const {
     data: productList,
-    isLoading,
+    isLoading: isLoadingProducts,
     error,
   } = useQuery({
     queryKey: ["featured-products"],
@@ -76,9 +84,65 @@ function ProductWheel({ storeId }: { storeId: string }) {
     refetchOnWindowFocus: false,
   });
 
+  const { data: savedProductIds, isLoading: isLoadingSavedIds } = useQuery({
+    queryKey: ["savedProductIds"],
+    queryFn: () => getSavedProductIds(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const [savedStatus, setSavedStatus] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [wishlistLoading, setWishlistLoading] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const products = productList || [];
+
+  useEffect(() => {
+    if (savedProductIds && products) {
+      const initialStatus = products.reduce((acc, product) => {
+        acc[product.id] = savedProductIds.includes(product.id);
+        return acc;
+      }, {} as { [key: string]: boolean });
+      setSavedStatus(initialStatus);
+    }
+  }, [savedProductIds, products]);
+
+  const handleWishlistClick = async (productId: string) => {
+    setWishlistLoading((prev) => ({ ...prev, [productId]: true }));
+    const isCurrentlySaved = savedStatus[productId];
+
+    try {
+      if (isCurrentlySaved) {
+        const result = await unsaveProduct(productId);
+        if (result.success) {
+          toast.success("Product removed from wishlist");
+          setSavedStatus((prev) => ({ ...prev, [productId]: false }));
+        } else {
+          toast.error(result.error || "Failed to remove from wishlist");
+        }
+      } else {
+        const result = await saveProduct(productId);
+        if (result.success) {
+          toast.success("Product added to wishlist");
+          setSavedStatus((prev) => ({ ...prev, [productId]: true }));
+        } else {
+          toast.error(result.error || "Failed to add to wishlist");
+        }
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setWishlistLoading((prev) => ({ ...prev, [productId]: false }));
+    }
+  };
+
+  const isLoading = isLoadingProducts || isLoadingSavedIds;
+
   if (isLoading) return <ProductWheelSkeleton />;
 
-  if (error || !productList || productList.length === 0) return null;
+  if (error || !products || products.length === 0) return null;
 
   return (
     <div className="relative w-full py-2 md:py-8 px-2 md:px-8">
@@ -93,90 +157,114 @@ function ProductWheel({ storeId }: { storeId: string }) {
         ]}
       >
         <CarouselContent>
-          {productList?.map((product) => (
-            <CarouselItem key={product.slug} className="lg:basis-full">
-              <div className="relative w-full overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-10 bg-gradient-to-br from-background to-muted/50 border border-border/40 shadow-lg">
-                <div className="flex flex-row justify-between items-center gap-4 sm:gap-8 lg:gap-12">
-                  {/* Product Details */}
-                  <div className="flex-1 space-y-3 sm:space-y-4 lg:space-y-6">
-                    <div className="space-y-1 sm:space-y-2">
-                      <Link
-                        href={`/products/${product.slug}`}
-                        className="group transition-all duration-300"
-                      >
-                        <h2 className="text-lg sm:text-xl lg:text-3xl font-bold tracking-tight group-hover:text-primary transition-colors">
-                          {product.name}
-                        </h2>
-
-                        <p className="text-muted-foreground line-clamp-2 sm:line-clamp-3 lg:line-clamp-4 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                          {product.description}
-                        </p>
-                      </Link>
-                    </div>
-
-                    <div className="flex items-baseline gap-2 sm:gap-3">
-                      <span className="text-lg sm:text-xl lg:text-3xl font-bold text-primary">
-                        {formatPrice(product.price, "en-NG", "NGN")}
-                      </span>
-                      {product.slashedFrom && (
-                        <span className="line-through text-muted-foreground text-xs sm:text-sm lg:text-base">
-                          {formatPrice(product.slashedFrom, "en-NG", "NGN")}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      {product.trackQuantity && (
-                        <span
-                          className={`inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
-                            product.inStock > 0
-                              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                              : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
-                          }`}
+          {products?.map((product) => {
+            const isSaved = savedStatus[product.id] ?? false;
+            const isWishlistActionLoading =
+              wishlistLoading[product.id] ?? false;
+            return (
+              <CarouselItem key={product.slug} className="lg:basis-full">
+                <div className="relative w-full overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-10 bg-gradient-to-br from-background to-muted/50 border border-border/40 shadow-lg">
+                  <div className="flex flex-row justify-between items-center gap-4 sm:gap-8 lg:gap-12">
+                    {/* Product Details */}
+                    <div className="flex-1 space-y-3 sm:space-y-4 lg:space-y-6">
+                      <div className="space-y-1 sm:space-y-2">
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="group transition-all duration-300"
                         >
-                          {product.inStock > 0 ? "In Stock" : "Out of Stock"}
-                        </span>
-                      )}
-                    </div>
+                          <h2 className="text-lg sm:text-xl lg:text-3xl font-bold tracking-tight group-hover:text-primary transition-colors">
+                            {product.name}
+                          </h2>
 
-                    <div className="flex flex-col gap-2 sm:gap-4 items-start">
-                      <div className="w-full max-w-[140px] sm:max-w-[160px] lg:min-w-[180px]">
-                        <AddToCart product={product} />
+                          <p className="text-muted-foreground line-clamp-2 sm:line-clamp-3 lg:line-clamp-4 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                            {product.description}
+                          </p>
+                        </Link>
                       </div>
 
+                      <div className="flex items-baseline gap-2 sm:gap-3">
+                        <span className="text-lg sm:text-xl lg:text-3xl font-bold text-primary">
+                          {formatPrice(product.price, "en-NG", "NGN")}
+                        </span>
+                        {product.slashedFrom && (
+                          <span className="line-through text-muted-foreground text-xs sm:text-sm lg:text-base">
+                            {formatPrice(product.slashedFrom, "en-NG", "NGN")}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {product.trackQuantity && (
+                          <span
+                            className={`inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
+                              product.inStock > 0
+                                ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                                : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                            }`}
+                          >
+                            {product.inStock > 0 ? "In Stock" : "Out of Stock"}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-2 sm:gap-4 items-start">
+                        <div className="w-full max-w-[140px] sm:max-w-[160px] lg:min-w-[180px]">
+                          <AddToCart product={product} />
+                        </div>
+
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="inline-flex items-center text-xs sm:text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                        >
+                          View Details
+                          <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Product Image */}
+                    <div className="relative flex-shrink-0">
                       <Link
                         href={`/products/${product.slug}`}
-                        className="inline-flex items-center text-xs sm:text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                        className="block group relative overflow-hidden rounded-lg sm:rounded-xl bg-background/50 p-1 sm:p-2 transition-all duration-300 hover:shadow-xl"
                       >
-                        View Details
-                        <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
+                        <div className="relative aspect-square w-28 sm:w-32 lg:w-[350px] overflow-hidden rounded-md sm:rounded-lg">
+                          <img
+                            src={product.images[0].url || "/placeholder.svg"}
+                            alt={product.name}
+                            width={400}
+                            height={400}
+                            className="object-cover object-center w-full h-full transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+
+                        <div className="absolute inset-0 rounded-lg sm:rounded-xl ring-1 ring-inset ring-black/10 dark:ring-white/10 group-hover:ring-primary/20 transition-all duration-300" />
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-white/80 text-black shadow-md transition-all hover:bg-white opacity-0 group-hover:opacity-100"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleWishlistClick(product.id);
+                          }}
+                          disabled={isWishlistActionLoading}
+                        >
+                          <Heart
+                            className={`h-4 w-4 transition-colors ${
+                              isSaved
+                                ? "fill-red-500 text-red-500"
+                                : "text-neutral-700"
+                            }`}
+                          />
+                        </Button>
                       </Link>
                     </div>
-                  </div>
-
-                  {/* Product Image */}
-                  <div className="relative flex-shrink-0">
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="block group relative overflow-hidden rounded-lg sm:rounded-xl bg-background/50 p-1 sm:p-2 transition-all duration-300 hover:shadow-xl"
-                    >
-                      <div className="relative aspect-square w-28 sm:w-32 lg:w-[350px] overflow-hidden rounded-md sm:rounded-lg">
-                        <img
-                          src={product.images[0].url || "/placeholder.svg"}
-                          alt={product.name}
-                          width={400}
-                          height={400}
-                          className="object-cover object-center w-full h-full transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      <div className="absolute inset-0 rounded-lg sm:rounded-xl ring-1 ring-inset ring-black/10 dark:ring-white/10 group-hover:ring-primary/20 transition-all duration-300" />
-                    </Link>
                   </div>
                 </div>
-              </div>
-            </CarouselItem>
-          ))}
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
 
         <CarouselPrevious className="hidden lg:flex -left-4 h-10 w-10 border-border/40 bg-background/80 backdrop-blur-sm hover:bg-background" />
@@ -185,7 +273,7 @@ function ProductWheel({ storeId }: { storeId: string }) {
 
       {/* Carousel Indicators */}
       <div className="flex justify-center mt-4 sm:mt-6 gap-1 sm:gap-1.5">
-        {productList?.map((_, index) => (
+        {products?.map((_, index) => (
           <div
             key={index}
             className={`h-1 sm:h-1.5 rounded-full transition-all duration-300 ${

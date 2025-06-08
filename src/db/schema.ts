@@ -151,6 +151,7 @@ export const customerRelations = relations(customer, ({ one, many }) => ({
     references: [store.id],
   }),
   sessions: many(customerSesssion),
+  savedProducts: many(customerSavedProduct),
 }));
 
 export const storeSocial = pgTable("store_social", {
@@ -650,6 +651,49 @@ export const shippingConditionRelations = relations(
     zone: one(shippingZone, {
       fields: [shippingCondition.shippingZoneId],
       references: [shippingZone.id],
+    }),
+  })
+);
+
+// -------------------------------------------------------
+// Customer Saved Products Table
+// -------------------------------------------------------
+
+export const customerSavedProduct = pgTable(
+  "customer_saved_product",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customer.id, { onDelete: "cascade" }),
+    productId: text("product_id")
+      .notNull()
+      .references(() => product.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure a customer can only save a product once
+    uniqueIndex("customer_saved_product_unique_idx").on(
+      table.customerId,
+      table.productId
+    ),
+    index("customer_saved_product_customer_id_idx").on(table.customerId),
+    index("customer_saved_product_product_id_idx").on(table.productId),
+  ]
+);
+
+export const customerSavedProductRelations = relations(
+  customerSavedProduct,
+  ({ one }) => ({
+    customer: one(customer, {
+      fields: [customerSavedProduct.customerId],
+      references: [customer.id],
+    }),
+    product: one(product, {
+      fields: [customerSavedProduct.productId],
+      references: [product.id],
     }),
   })
 );

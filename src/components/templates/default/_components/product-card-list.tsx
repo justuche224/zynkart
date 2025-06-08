@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
@@ -7,15 +8,25 @@ import type { ProductWithImages } from "@/types";
 import { useCartStore } from "@/store/cart";
 import formatPrice from "@/lib/price-formatter";
 import Link from "next/link";
+import {
+  saveProduct,
+  unsaveProduct,
+} from "@/actions/store/public/saved/products";
 
 interface ProductCardListProps {
   product: ProductWithImages;
+  isInitiallySaved?: boolean;
 }
 
-const ProductCardList = ({ product }: ProductCardListProps) => {
+const ProductCardList = ({
+  product,
+  isInitiallySaved = false,
+}: ProductCardListProps) => {
   const { items, addItem, removeItem, updateItemQuantity } = useCartStore();
   const cartItem = items.find((item) => item.id === product.slug);
   const isOnSale = product.slashedFrom && product.slashedFrom > product.price;
+  const [isSaved, setIsSaved] = useState(isInitiallySaved);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const handleAddToCart = () => {
     addItem({
@@ -50,15 +61,31 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
     }
   };
 
-  const handleWishlist = () => {
-    /*************  ✨ Codeium Command ⭐  *************/
-    /**
-     * Adds the product to the wishlist.
-     * @remarks This function is currently a no-op and will be replaced with a real implementation in the future.
-     */
-    /******  0373f79d-ad66-42af-b4c4-2784e8c890d7  *******/ toast.success(
-      "Item added to wishlist"
-    );
+  const handleWishlist = async () => {
+    setIsWishlistLoading(true);
+    try {
+      if (isSaved) {
+        const result = await unsaveProduct(product.id);
+        if (result.success) {
+          setIsSaved(false);
+          toast.success("Item removed from wishlist");
+        } else {
+          toast.error(result.error || "Failed to remove from wishlist");
+        }
+      } else {
+        const result = await saveProduct(product.id);
+        if (result.success) {
+          setIsSaved(true);
+          toast.success("Item added to wishlist");
+        } else {
+          toast.error(result.error || "Failed to add to wishlist");
+        }
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsWishlistLoading(false);
+    }
   };
 
   return (
@@ -99,8 +126,13 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
               size="icon"
               className="h-8 w-8"
               onClick={handleWishlist}
+              disabled={isWishlistLoading}
             >
-              <Heart className="h-4 w-4" />
+              <Heart
+                className={`h-4 w-4 ${
+                  isSaved ? "fill-red-500 text-red-500" : ""
+                }`}
+              />
               <span className="sr-only">Add to wishlist</span>
             </Button>
           </div>
@@ -130,11 +162,11 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
                   disabled={product.trackQuantity && product.inStock <= 0}
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  {product.trackQuantity ? (
-                    product.inStock > 0 ? "Add to Cart" : "Out of Stock"
-                  ) : (
-                    "Add to Cart"
-                  )}
+                  {product.trackQuantity
+                    ? product.inStock > 0
+                      ? "Add to Cart"
+                      : "Out of Stock"
+                    : "Add to Cart"}
                 </Button>
               ) : (
                 <div className="flex items-center gap-4">

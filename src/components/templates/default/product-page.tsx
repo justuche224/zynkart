@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, ShoppingCart, Heart, ArrowLeft } from "lucide-react";
 import { formatDate } from "@/lib/date-formatter";
@@ -12,6 +12,12 @@ import { SiteHeader } from "./_components/navbar";
 import { ProductInfoFromProductPage } from "@/app/store/[storeSlug]/products/[productSlug]/page";
 import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
 import { Footer } from "./_components/footer";
+import { useQuery } from "@tanstack/react-query";
+import {
+  isProductSaved,
+  saveProduct,
+  unsaveProduct,
+} from "@/actions/store/public/saved/products";
 
 interface ProductInfoPageProps {
   product: ProductInfoFromProductPage;
@@ -22,6 +28,48 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
   const { items, addItem, removeItem, updateItemQuantity } = useCartStore();
   const cartItem = items.find((item) => item.id === product.id);
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
+
+  const { data: isInitiallySaved } = useQuery({
+    queryKey: ["isProductSaved", product.id],
+    queryFn: () => isProductSaved(product.id),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const [isSaved, setIsSaved] = useState(false);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
+
+  useEffect(() => {
+    if (isInitiallySaved !== undefined) {
+      setIsSaved(isInitiallySaved);
+    }
+  }, [isInitiallySaved]);
+
+  const handleWishlist = async () => {
+    setIsWishlistLoading(true);
+    try {
+      if (isSaved) {
+        const result = await unsaveProduct(product.id);
+        if (result.success) {
+          setIsSaved(false);
+          toast.success("Item removed from wishlist");
+        } else {
+          toast.error(result.error || "Failed to remove from wishlist");
+        }
+      } else {
+        const result = await saveProduct(product.id);
+        if (result.success) {
+          setIsSaved(true);
+          toast.success("Item added to wishlist");
+        } else {
+          toast.error(result.error || "Failed to add to wishlist");
+        }
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsWishlistLoading(false);
+    }
+  };
 
   const handleAddToCart = () => {
     addItem({
@@ -64,7 +112,11 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
 
   return (
     <>
-      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
+      <SiteHeader
+        storeId={store.id}
+        storeSlug={store.slug}
+        storeName={store.name}
+      />
       <div className="container max-w-6xl mx-auto px-4 pb-8 mt-20">
         {/* back button */}
         <div className="mb-4">
@@ -139,10 +191,20 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
               <div className="flex items-center gap-2 text-sm">
                 <span
                   className={`h-3 w-3 rounded-full ${
-                   product.trackQuantity ? (product.inStock > 0 ? "bg-green-500" : "bg-red-500") : "bg-green-500"
+                    product.trackQuantity
+                      ? product.inStock > 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                      : "bg-green-500"
                   }`}
                 />
-                <span>{product.trackQuantity ? (product.inStock > 0 ? "In Stock" : "Out of Stock") : "In Stock"}</span>
+                <span>
+                  {product.trackQuantity
+                    ? product.inStock > 0
+                      ? "In Stock"
+                      : "Out of Stock"
+                    : "In Stock"}
+                </span>
                 {product.trackQuantity && product.inStock > 0 && (
                   <span className="text-muted-foreground">
                     ({product.inStock} units available)
@@ -175,14 +237,26 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
                     size="lg"
                     variant="outline"
                     onClick={handleIncrement}
-                    disabled={product.trackQuantity && cartItem.quantity >= product.inStock}
+                    disabled={
+                      product.trackQuantity &&
+                      cartItem.quantity >= product.inStock
+                    }
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
               )}
-              <Button size="lg" variant="outline">
-                <Heart className="h-5 w-5" />
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={handleWishlist}
+                disabled={isWishlistLoading}
+              >
+                <Heart
+                  className={`h-5 w-5 ${
+                    isSaved ? "fill-red-500 text-red-500" : ""
+                  }`}
+                />
               </Button>
             </div>
 

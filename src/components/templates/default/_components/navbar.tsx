@@ -108,6 +108,9 @@ export function SiteHeader({ storeId, storeSlug, storeName }: { storeId: string;
             />
           </SheetContent>
         </Sheet>
+        <Link href="/">
+          <h1 className="text-xl font-bold">{storeName}</h1>
+        </Link>
 
         <Separator
           orientation="vertical"

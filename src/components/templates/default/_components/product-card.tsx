@@ -8,16 +8,26 @@ import type { ProductWithImages } from "@/types";
 import { useCartStore } from "@/store/cart";
 import formatPrice from "@/lib/price-formatter";
 import Link from "next/link";
+import {
+  saveProduct,
+  unsaveProduct,
+} from "@/actions/store/public/saved/products";
 
 interface ProductCardProps {
   product: ProductWithImages;
+  isInitiallySaved?: boolean;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({
+  product,
+  isInitiallySaved = false,
+}: ProductCardProps) => {
   const { items, addItem, removeItem, updateItemQuantity } = useCartStore();
   const [isHovered, setIsHovered] = useState(false);
   const cartItem = items.find((item) => item.id === product.slug);
   const isOnSale = product.slashedFrom && product.slashedFrom > product.price;
+  const [isSaved, setIsSaved] = useState(isInitiallySaved);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const handleAddToCart = () => {
     addItem({
@@ -52,8 +62,31 @@ const ProductCard = ({ product }: ProductCardProps) => {
     }
   };
 
-  const handleWishlist = () => {
-    toast.success("Item added to wishlist");
+  const handleWishlist = async () => {
+    setIsWishlistLoading(true);
+    try {
+      if (isSaved) {
+        const result = await unsaveProduct(product.id);
+        if (result.success) {
+          setIsSaved(false);
+          toast.success("Item removed from wishlist");
+        } else {
+          toast.error(result.error || "Failed to remove from wishlist");
+        }
+      } else {
+        const result = await saveProduct(product.id);
+        if (result.success) {
+          setIsSaved(true);
+          toast.success("Item added to wishlist");
+        } else {
+          toast.error(result.error || "Failed to add to wishlist");
+        }
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsWishlistLoading(false);
+    }
   };
 
   return (
@@ -98,8 +131,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
           size="icon"
           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 bg-white/80 hover:bg-white text-black"
           onClick={handleWishlist}
+          disabled={isWishlistLoading}
         >
-          <Heart className="h-4 w-4" />
+          <Heart
+            className={`h-4 w-4 ${
+              isSaved ? "fill-red-500 text-red-500" : "text-black"
+            }`}
+          />
           <span className="sr-only">Add to wishlist</span>
         </Button>
       </div>
@@ -132,11 +170,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
             disabled={product.trackQuantity && product.inStock <= 0}
           >
             <ShoppingCart className="h-3 w-3" />
-            {product.trackQuantity ? (
-              product.inStock > 0 ? "Add to Cart" : "Out of Stock"
-            ) : (
-              "Add to Cart"
-            )}
+            {product.trackQuantity
+              ? product.inStock > 0
+                ? "Add to Cart"
+                : "Out of Stock"
+              : "Add to Cart"}
           </Button>
         ) : (
           <div className="flex items-center justify-between w-full">
@@ -155,8 +193,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               className="h-8 w-8 p-0"
               onClick={handleIncrement}
               disabled={
-                product.trackQuantity &&
-                cartItem.quantity >= product.inStock
+                product.trackQuantity && cartItem.quantity >= product.inStock
               }
             >
               <Plus className="h-3 w-3" />

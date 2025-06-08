@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 
 import { getProductsByStoreWithPagination } from "@/actions/store/public/products/get-with-pagination";
+import { getSavedProductIds } from "@/actions/store/public/saved/products";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ProductWithImages } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import ProductCard from "./product-card";
 import ProductCardList from "./product-card-list";
@@ -22,7 +22,11 @@ function ProductList({
   storeId,
   categoryId,
 }: ProductListProps) {
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: productData,
+    isLoading: isLoadingProducts,
+    error,
+  } = useQuery({
     queryKey: ["products", storeId, categoryId],
     queryFn: () =>
       getProductsByStoreWithPagination({
@@ -33,7 +37,13 @@ function ProductList({
       }),
   });
 
-  const products = data?.products || [];
+  const { data: savedProductIds, isLoading: isLoadingSavedIds } = useQuery({
+    queryKey: ["savedProductIds"],
+    queryFn: () => getSavedProductIds(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const products = productData?.products || [];
 
   const filteredProducts = useMemo(() => {
     if (searchQuery.trim() === "") {
@@ -43,6 +53,8 @@ function ProductList({
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [products, searchQuery]);
+
+  const isLoading = isLoadingProducts || isLoadingSavedIds;
 
   if (isLoading) {
     return (
@@ -121,9 +133,17 @@ function ProductList({
       >
         {filteredProducts.map((product) =>
           viewMode === "grid" ? (
-            <ProductCard key={product.slug} product={product} />
+            <ProductCard
+              key={product.slug}
+              product={product}
+              isInitiallySaved={savedProductIds?.includes(product.id)}
+            />
           ) : (
-            <ProductCardList key={product.slug} product={product} />
+            <ProductCardList
+              key={product.slug}
+              product={product}
+              isInitiallySaved={savedProductIds?.includes(product.id)}
+            />
           )
         )}
       </div>

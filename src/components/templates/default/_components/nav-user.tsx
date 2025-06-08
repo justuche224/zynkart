@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useCustomerSession } from "@/hooks/use-customer-session";
 import Link from "next/link";
-import { CreditCardIcon, UserCircleIcon, BellIcon } from "lucide-react";
+import { CreditCardIcon, UserCircleIcon, BellIcon, HeartIcon } from "lucide-react";
 import CustomerSignOutButton from "@/components/auth/customer-sign-out-button";
 
 const NavUser = ({ storeSlug }: { storeSlug: string }) => {
@@ -73,6 +73,12 @@ const NavUser = ({ storeSlug }: { storeSlug: string }) => {
             <Link href="/account?page=orders">
               <CreditCardIcon />
               Orders
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/account?page=saved-items">
+              <HeartIcon />
+              Saved Items
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
