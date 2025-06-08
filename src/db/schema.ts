@@ -129,6 +129,28 @@ export const customisationsRelations = relations(customisations, ({ one }) => ({
   }),
 }));
 
+export const customer = pgTable("customer", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  password: text("password").notNull(),
+  storeId: text("store_id")
+    .notNull()
+    .references(() => store.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const customerRelations = relations(customer, ({ one, many }) => ({
+  store: one(store, {
+    fields: [customer.storeId],
+    references: [store.id],
+  }),
+  sessions: many(customerSesssion),
+}));
+
 export const storeSocial = pgTable("store_social", {
   id: text("id")
     .primaryKey()
@@ -154,6 +176,7 @@ export const storeRelation = relations(store, ({ one, many }) => ({
     fields: [store.merchantId],
     references: [user.id],
   }),
+  customers: many(customer),
   categories: many(category),
   products: many(product),
   productSources: many(productSource),
@@ -517,6 +540,29 @@ export const productRelations = relations(product, ({ one, many }) => ({
     references: [productWeight.productId],
   }),
 }));
+
+export const customerSesssion = pgTable("customer_session", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customer.id, { onDelete: "cascade" }),
+});
+
+export const customerSesssionRelations = relations(
+  customerSesssion,
+  ({ one }) => ({
+    customer: one(customer, {
+      fields: [customerSesssion.customerId],
+      references: [customer.id],
+    }),
+  })
+);
 
 export const productImageRelations = relations(productImage, ({ one }) => ({
   product: one(product, {

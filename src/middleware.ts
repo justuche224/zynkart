@@ -44,16 +44,11 @@ export function middleware(req: NextRequest) {
 
   if (
     tenant &&
-    !pathname.startsWith("/store/auth") &&
     !pathname.startsWith("/api")
   ) {
     // Modify the pathname by injecting the tenant identifier.
     nextUrl.pathname = `/store/${tenant}${pathname}`;
     return NextResponse.rewrite(nextUrl);
-  }
-
-  if (pathname.startsWith("/store/auth")) {
-    return NextResponse.next();
   }
 
   //   ─────────────────────────────────────────────────────────────
@@ -70,18 +65,16 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // For auth routes on the main domain:
-  // if (isAuthRoute) {
-  //   // If the user is logged in, send them to the default redirect.
-  //   if (isLoggedIn) {
-  //     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-  //   }
-  //   return NextResponse.next();
-  // }
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return NextResponse.next();
+  }
 
   // For any other route on the main domain, if the user is not logged in, redirect to sign in.
   if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/auth/sign-in", nextUrl));
+    return NextResponse.redirect(new URL("/sign-in", nextUrl));
   }
 
   return NextResponse.next();

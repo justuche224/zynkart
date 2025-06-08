@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 const page = async () => {
   const data = await serverAuth();
   if (data?.session) {
+    console.log(data.session);
     return redirect(info.defaultRedirect);
   }
   return (
