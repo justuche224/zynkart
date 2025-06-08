@@ -19,8 +19,10 @@ import formatPrice from "@/lib/price-formatter";
 import { useCartStore } from "@/store/cart";
 import Link from "next/link";
 import { SiteHeader } from "./_components/navbar";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { Footer } from "./_components/footer";
 
-const CartPage = () => {
+const CartPage = ({ store }: { store: StoreDataFromHomePage }) => {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore();
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -31,24 +33,37 @@ const CartPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="container max-w-6xl mx-auto px-4 py-8">
-        <Card className="p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
-          <p className="text-gray-600 mb-4">
-            Add some items to your cart to get started!
-          </p>
-          <Link href="/">
-            <Button>Continue Shopping</Button>
-          </Link>
-        </Card>
-      </div>
+      <section className="flex flex-col min-h-screen">
+        <SiteHeader
+          storeId={store.id}
+          storeSlug={store.slug}
+          storeName={store.name}
+        />
+
+        <div className="container max-w-6xl mx-auto px-4 py-8 mt-16 flex-1">
+          <Card className="p-8 text-center">
+            <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
+            <p className="text-gray-600 mb-4">
+              Add some items to your cart to get started!
+            </p>
+            <Link href="/">
+              <Button>Continue Shopping</Button>
+            </Link>
+          </Card>
+        </div>
+        <Footer storeSlug={store.slug} />
+      </section>
     );
   }
 
   return (
-    <>
-      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
-      <div className="container max-w-6xl mx-auto px-4 py-8 mt-20">
+    <section className="flex flex-col min-h-screen">
+      <SiteHeader
+        storeId={store.id}
+        storeSlug={store.slug}
+        storeName={store.name}
+      />
+      <div className="container max-w-6xl mx-auto px-4 py-8 mt-20 flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="flex justify-between items-center mb-6">
@@ -143,7 +158,7 @@ const CartPage = () => {
                             <Plus className="w-4 h-4" />
                           </button>
                         </div>
-                        {item.inStock !== undefined && (
+                        {item.trackQuantity && item.inStock !== undefined && (
                           <span className="ml-4 text-sm text-gray-500">
                             {item.inStock} available
                           </span>
@@ -188,7 +203,8 @@ const CartPage = () => {
           </div>
         </div>
       </div>
-    </>
+      <Footer storeSlug={store.slug} />
+    </section>
   );
 };
 

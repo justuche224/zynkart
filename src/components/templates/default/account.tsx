@@ -4,7 +4,6 @@ import React from "react";
 import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
 import { SiteHeader } from "./_components/navbar";
 import { Footer } from "./_components/footer";
-import { Card, CardContent } from "@/components/ui/card";
 import AccountHome from "./_components/account/home";
 import Session from "./_components/account/session";
 import {

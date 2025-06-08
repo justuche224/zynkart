@@ -26,6 +26,7 @@ const ProductCardList = ({ product }: ProductCardListProps) => {
       image: product.images[0].url,
       inStock: product?.inStock,
       productSlug: product.slug,
+      trackQuantity: product.trackQuantity,
     });
     toast.success("Item added to cart");
   };

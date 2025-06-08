@@ -24,6 +24,7 @@ const AddToCart = ({ product }: { product: Product }) => {
       image: product.images[0].url,
       inStock: product?.inStock,
       productSlug: product.slug,
+      trackQuantity: product.trackQuantity,
     });
     toast.success("Item added to cart");
   };

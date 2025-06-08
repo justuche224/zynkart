@@ -1,12 +1,12 @@
 import React from "react";
-import type { Store } from "../../types";
 import dynamic from "next/dynamic";
 import Loader from "@/components/loader";
+import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
 
-const Cart = ({ store }: { store: Store }) => {
+const Cart = ({ store }: { store: StoreDataFromHomePage }) => {
   const { template } = store;
 
-  const CartPage = dynamic(() => import(`../templates/${template}/cart`), {
+  const CartPage = dynamic<{ store: StoreDataFromHomePage }>(() => import(`../templates/${template}/cart`), {
     loading: () => <Loader />,
   });
 
@@ -14,7 +14,7 @@ const Cart = ({ store }: { store: Store }) => {
     return <div>Template not found</div>;
   }
 
-  return <CartPage />;
+  return <CartPage store={store} />;
 };
 
 export default Cart;
