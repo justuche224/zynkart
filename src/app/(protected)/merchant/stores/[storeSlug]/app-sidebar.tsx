@@ -64,13 +64,13 @@ export function AppSidebar({
     ],
     navMain: [
       {
-        title: "Store",
+        title: "Store Management",
         url: "#",
         icon: ShoppingCart,
         isActive: true,
         items: [
           {
-            title: "Info",
+            title: "Overview",
             url: "/",
           },
           {
@@ -78,45 +78,53 @@ export function AppSidebar({
             url: "/dashboard",
           },
           {
-            title: "Banners",
+            title: "Banners & Promotions",
             url: "/banners",
           },
           {
-            title: "Customisation",
+            title: "Customization",
             url: "/customise",
           },
         ],
       },
       {
-        title: "Inventory",
+        title: "Catalog",
         url: "#",
         icon: Package,
         isActive: true,
         items: [
           {
-            title: "New Product",
-            url: "/products/new",
-          },
-          {
             title: "Products",
             url: "/products",
           },
           {
-            title: "Analytics",
-            url: "/products/analytics",
+            title: "Categories",
+            url: "/categories",
+          },
+          {
+            title: "Tags",
+            url: "/tags",
+          },
+          {
+            title: "New Product",
+            url: "/products/new",
           },
           {
             title: "New Category",
             url: "/categories/new",
           },
           {
-            title: "Categories",
-            url: "/categories",
+            title: "New Tag",
+            url: "/tags/new",
+          },
+          {
+            title: "Product Analytics",
+            url: "/products/analytics",
           },
         ],
       },
       {
-        title: "Orders",
+        title: "Orders & Fulfillment",
         url: "#",
         icon: User2,
         isActive: true,
@@ -130,8 +138,23 @@ export function AppSidebar({
             url: "/orders/pending",
           },
           {
-            title: "Shipped",
+            title: "Shipped Orders",
             url: "/orders/shipped",
+          },
+        ],
+      },
+      {
+        title: "Customers",
+        url: "#",
+        icon: User2,
+        items: [
+          {
+            title: "All Customers",
+            url: "/customers",
+          },
+          {
+            title: "Top Customers",
+            url: "/customers?sort=order_count",
           },
         ],
       },
@@ -142,39 +165,24 @@ export function AppSidebar({
         isActive: true,
         items: [
           {
-            title: "Info",
+            title: "Store Information",
             url: "/settings/store",
           },
           {
-            title: "Profile",
+            title: "Profile Settings",
             url: "/settings/profile",
           },
           {
-            title: "Shipping and Delivery",
-            url: "/settings/shipping-and-delivery",
-          },
-          {
-            title: "Receive Payments",
+            title: "Payment Methods",
             url: "/settings/bank",
           },
           {
-            title: "all",
+            title: "Shipping & Delivery",
+            url: "/settings/shipping-and-delivery",
+          },
+          {
+            title: "General Settings",
             url: "/settings",
-          },
-        ],
-      },
-      {
-        title: "Customers",
-        url: "#",
-        icon: User2,
-        items: [
-          {
-            title: "Customer List",
-            url: "/customers",
-          },
-          {
-            title: "Top customers",
-            url: "/customers?sort=order_count",
           },
         ],
       },
