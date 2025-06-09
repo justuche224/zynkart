@@ -26,9 +26,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { SiteHeader } from "./_components/navbar";
-import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import type { StoreDataFromHomePage } from "@/lib/store-utils";
 import Banners from "./_components/banners";
-import { CategoryInfoFromCategoryPage } from "@/app/store/[storeSlug]/categories/[categorySlug]/page";
+import {
+  CategoryInfoFromCategoryPage,
+} from "@/lib/store-utils";
 
 interface HomeProps {
   store: StoreDataFromHomePage;

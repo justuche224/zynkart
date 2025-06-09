@@ -19,8 +19,9 @@ import formatPrice from "@/lib/price-formatter";
 import { useCartStore } from "@/store/cart";
 import Link from "next/link";
 import { SiteHeader } from "./_components/navbar";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
 import { Footer } from "./_components/footer";
+import Image from "next/image";
 
 const CartPage = ({ store }: { store: StoreDataFromHomePage }) => {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore();
@@ -102,7 +103,7 @@ const CartPage = ({ store }: { store: StoreDataFromHomePage }) => {
                 <Card key={item.id} className="p-4">
                   <div className="flex gap-4">
                     <Link href={`/products/${item.productSlug}`}>
-                      <img
+                      <Image
                         width={96}
                         height={96}
                         src={item.image}

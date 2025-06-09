@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import StoreHome from "@/components/store-front/store-home";
 import { eq } from "drizzle-orm";
 import db from "@/db";
-import { banner, store } from "@/db/schema";
+import { store } from "@/db/schema";
 
 export async function generateMetadata({
   params,
@@ -56,39 +56,10 @@ export async function generateMetadata({
   };
 }
 
-export const getStoreForHomePage = async (storeSlug: string) => {
-  return db.query.store.findFirst({
-    where: eq(store.slug, storeSlug),
-    columns: {
-      id: true,
-      merchantId: true,
-      address: true,
-      description: true,
-      email: true,
-      name: true,
-      phone: true,
-      slug: true,
-      template: true,
-    },
-    with: {
-      banners: {
-        columns: {
-          imageUrl: true,
-          linkUrl: true,
-          description: true,
-          id: true,
-          title: true,
-        },
-        where: eq(banner.isActive, true),
-      },
-    },
-  });
-};
-
-export type StoreDataFromHomePage = NonNullable<
-  Awaited<ReturnType<typeof getStoreForHomePage>>
->;
-export type BannersFromHomePage = StoreDataFromHomePage["banners"];
+import {
+  getStoreForHomePage,
+  
+} from "@/lib/store-utils";
 
 const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   const { storeSlug } = await params;

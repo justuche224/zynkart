@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
 import { SiteHeader } from "./_components/navbar";
 import { Footer } from "./_components/footer";
 import AccountHome from "./_components/account/home";

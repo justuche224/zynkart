@@ -23,7 +23,7 @@ import {
 import { ProductFilters } from "./_components/product-filters";
 import ProductList from "./_components/product-list";
 import { SiteHeader } from "./_components/navbar";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
 import { Footer } from "./_components/footer";
 
 export interface ProductListPageProps {

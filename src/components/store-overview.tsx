@@ -522,7 +522,7 @@ export default function StoreOverview({
             <CardHeader>
               <CardTitle>Store Completion Checklist</CardTitle>
               <CardDescription>
-                Complete these steps to maximize your store's potential
+                Complete these steps to maximize your store&apos;s potential
               </CardDescription>
             </CardHeader>
             <CardContent>

@@ -12,6 +12,7 @@ export const getStoreSocials = async (storeId: string) => {
       .where(eq(storeSocial.storeId, storeId));
     return { data: storeSocials };
   } catch (error) {
+    console.error(error);
     throw new Error("Failed to get store socials!");
   }
 };

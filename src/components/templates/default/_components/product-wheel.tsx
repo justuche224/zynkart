@@ -12,7 +12,7 @@ import { ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getFeaturedProducts } from "@/actions/store/public/products/featured";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -20,6 +20,7 @@ import {
   saveProduct,
   unsaveProduct,
 } from "@/actions/store/public/saved/products";
+import Image from "next/image";
 
 function ProductWheelSkeleton() {
   return (
@@ -97,7 +98,7 @@ function ProductWheel({ storeId }: { storeId: string }) {
     [key: string]: boolean;
   }>({});
 
-  const products = productList || [];
+  const products = useMemo(() => productList || [], [productList]);
 
   useEffect(() => {
     if (savedProductIds && products) {
@@ -132,6 +133,7 @@ function ProductWheel({ storeId }: { storeId: string }) {
         }
       }
     } catch (error) {
+      console.error(error);
       toast.error("An unexpected error occurred.");
     } finally {
       setWishlistLoading((prev) => ({ ...prev, [productId]: false }));
@@ -229,12 +231,13 @@ function ProductWheel({ storeId }: { storeId: string }) {
                         className="block group relative overflow-hidden rounded-lg sm:rounded-xl bg-background/50 p-1 sm:p-2 transition-all duration-300 hover:shadow-xl"
                       >
                         <div className="relative aspect-square w-28 sm:w-32 lg:w-[350px] overflow-hidden rounded-md sm:rounded-lg">
-                          <img
+                          <Image
                             src={product.images[0].url || "/placeholder.svg"}
                             alt={product.name}
                             width={400}
                             height={400}
                             className="object-cover object-center w-full h-full transition-transform duration-500 group-hover:scale-105"
+                            priority
                           />
                         </div>
 

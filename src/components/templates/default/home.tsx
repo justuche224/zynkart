@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Filter, Grid3X3, List, ShoppingBag } from "lucide-react";
+import { Filter, Grid3X3, List } from "lucide-react";
 
 // import productsJson from "@/products.json";
 import ProductWheel from "./_components/product-wheel";
@@ -32,7 +32,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 // import Image from "next/image";
 import { SiteHeader } from "./_components/navbar";
-import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import type { StoreDataFromHomePage } from "@/lib/store-utils";
 import Banners from "./_components/banners";
 import ByCategories from "./_components/by-category";
 

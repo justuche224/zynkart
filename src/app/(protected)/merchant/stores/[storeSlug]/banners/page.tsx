@@ -42,7 +42,7 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
       <div className="container mx-auto p-4 flex flex-col items-center justify-center mt-28 gap-4">
         <h1 className="text-2xl font-bold">No banners found</h1>
         <p className="text-muted-foreground">
-          You don't have any banners for this store.
+          You don&apos;t have any banners for this store.
         </p>
         <Button asChild>
           <Link href={`/merchant/stores/${storeSlug}/banners/new`}>

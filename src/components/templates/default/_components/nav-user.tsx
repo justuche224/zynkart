@@ -15,6 +15,7 @@ import { useCustomerSession } from "@/hooks/use-customer-session";
 import Link from "next/link";
 import { CreditCardIcon, UserCircleIcon, BellIcon, HeartIcon } from "lucide-react";
 import CustomerSignOutButton from "@/components/auth/customer-sign-out-button";
+import Image from "next/image";
 
 const NavUser = ({ storeSlug }: { storeSlug: string }) => {
   const { customer } = useCustomerSession();
@@ -41,10 +42,12 @@ const NavUser = ({ storeSlug }: { storeSlug: string }) => {
           <div className="flex items-center gap-2">
             <div>
               {customer.image ? (
-                <img
+                <Image
                   src={customer.image}
                   alt="User"
                   className="h-16 w-16 rounded-full"
+                  width={500}
+                  height={500}
                 />
               ) : (
                 <Avatar className="h-16 w-16">

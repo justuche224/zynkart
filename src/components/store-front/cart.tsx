@@ -1,7 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import Loader from "@/components/loader";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
 
 const Cart = ({ store }: { store: StoreDataFromHomePage }) => {
   const { template } = store;

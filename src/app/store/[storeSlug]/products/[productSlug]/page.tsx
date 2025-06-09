@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Product from "@/components/store-front/product-page";
 import { and, eq } from "drizzle-orm";
 import db from "@/db";
-import { banner, category, product, store } from "@/db/schema";
+import { product, store } from "@/db/schema";
 
 export async function generateMetadata({
   params,
@@ -29,22 +29,24 @@ export async function generateMetadata({
   }
 
   const productData = await db.query.product.findFirst({
-    where: and(eq(product.slug, productSlug), eq(product.storeId, storeData.id), eq(product.status, "ACTIVE")),
+    where: and(
+      eq(product.slug, productSlug),
+      eq(product.storeId, storeData.id),
+      eq(product.status, "ACTIVE")
+    ),
     columns: {
       name: true,
       slug: true,
       description: true,
     },
     with: {
-      images: { 
+      images: {
         columns: {
           url: true,
         },
       },
-    }
+    },
   });
-
-
 
   if (!productData) {
     return {
@@ -84,57 +86,16 @@ export async function generateMetadata({
   };
 }
 
-const getStoreForHomePage = async (storeSlug: string) => {
-  return db.query.store.findFirst({
-    where: eq(store.slug, storeSlug),
-    columns: {
-      id: true,
-      merchantId: true,
-      address: true,
-      description: true,
-      email: true,
-      name: true,
-      phone: true,
-      slug: true,
-      template: true,
-    },
-    with: {
-      banners: {
-        columns: {
-          imageUrl: true,
-          linkUrl: true,
-          description: true,
-          id: true,
-          title: true,
-        },
-        where: eq(banner.isActive, true),
-      },
-    },
-  });
-};
+import {
+  getStoreForHomePage,
+  getProductInfoForProductPage,
+} from "@/lib/store-utils";
 
-const getProductInfoForProductPage = async (productSlug: string) => {
-  return db.query.product.findFirst({
-    where: eq(product.slug, productSlug),
-    with: {
-      images: {
-        columns: {
-          url: true,
-        },
-      },
-    },
-  });
-};
-
-export type StoreDataFromHomePage = NonNullable<
-  Awaited<ReturnType<typeof getStoreForHomePage>>
->;
-export type BannersFromHomePage = StoreDataFromHomePage["banners"];
-export type ProductInfoFromProductPage = NonNullable<
-  Awaited<ReturnType<typeof getProductInfoForProductPage>>
->;
-
-const page = async ({ params }: { params: Promise<{ storeSlug: string, productSlug: string }> }) => {
+const page = async ({
+  params,
+}: {
+  params: Promise<{ storeSlug: string; productSlug: string }>;
+}) => {
   const { storeSlug, productSlug } = await params;
   const storeData = await getStoreForHomePage(storeSlug);
   const productInfo = await getProductInfoForProductPage(productSlug);
@@ -146,7 +107,6 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string, productSl
   if (!productInfo) {
     return <div>Product not found</div>;
   }
-
 
   return <Product store={storeData} product={productInfo} />;
 };

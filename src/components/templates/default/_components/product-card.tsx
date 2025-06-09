@@ -12,6 +12,7 @@ import {
   saveProduct,
   unsaveProduct,
 } from "@/actions/store/public/saved/products";
+import Image from "next/image";
 
 interface ProductCardProps {
   product: ProductWithImages;
@@ -83,6 +84,7 @@ const ProductCard = ({
         }
       }
     } catch (error) {
+      console.error(error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsWishlistLoading(false);
@@ -100,16 +102,20 @@ const ProductCard = ({
           href={`/products/${product.slug}`}
           className="block aspect-square overflow-hidden"
         >
-          <img
+          <Image
             src={product.images[0]?.url || "/placeholder.png"}
             alt={product.images[0]?.alt || product.name}
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+            width={500}
+            height={500}
           />
           {product.images.length > 1 && isHovered && (
-            <img
+            <Image
               src={product.images[1]?.url || "/placeholder.png"}
               alt={product.images[1]?.alt || `${product.name} - alternate view`}
               className="object-cover w-full h-full absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+              width={500}
+              height={500}
             />
           )}
         </Link>

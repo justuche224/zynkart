@@ -12,6 +12,7 @@ import {
   saveProduct,
   unsaveProduct,
 } from "@/actions/store/public/saved/products";
+import Image from "next/image";
 
 interface ProductCardListProps {
   product: ProductWithImages;
@@ -82,6 +83,7 @@ const ProductCardList = ({
         }
       }
     } catch (error) {
+      console.error(error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsWishlistLoading(false);
@@ -93,10 +95,12 @@ const ProductCardList = ({
       <div className="flex flex-col sm:flex-row">
         <div className="relative w-full sm:w-48 h-48">
           <Link href={`/products/${product.slug}`} className="block h-full">
-            <img
+            <Image
               src={product.images[0]?.url || "/placeholder.png"}
               alt={product.images[0]?.alt || product.name}
               className="object-cover w-full h-full hover:scale-105 transition-transform duration-500 cursor-pointer"
+              width={500}
+              height={500}
             />
           </Link>
 

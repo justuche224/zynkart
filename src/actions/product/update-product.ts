@@ -7,7 +7,6 @@ import {
   product,
   productImage,
   productSource,
-  store,
   tag,
   productTag,
 } from "@/db/schema";

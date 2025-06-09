@@ -9,8 +9,10 @@ import { useCartStore } from "@/store/cart";
 import ReviewsSection from "./_components/reviews-section";
 import Link from "next/link";
 import { SiteHeader } from "./_components/navbar";
-import { ProductInfoFromProductPage } from "@/app/store/[storeSlug]/products/[productSlug]/page";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import {
+  ProductInfoFromProductPage,
+  StoreDataFromHomePage,
+} from "@/lib/store-utils";
 import { Footer } from "./_components/footer";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -18,6 +20,7 @@ import {
   saveProduct,
   unsaveProduct,
 } from "@/actions/store/public/saved/products";
+import Image from "next/image";
 
 interface ProductInfoPageProps {
   product: ProductInfoFromProductPage;
@@ -65,6 +68,7 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
         }
       }
     } catch (error) {
+      console.error(error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsWishlistLoading(false);
@@ -131,10 +135,12 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square overflow-hidden rounded-lg border">
-              <img
+              <Image
                 src={selectedImage.url}
                 alt={product.name || ""}
                 className="object-cover"
+                width={500}
+                height={500}
               />
             </div>
 
@@ -152,10 +158,12 @@ const ProductInfoPage = ({ product, store }: ProductInfoPageProps) => {
                         : "border-transparent"
                     }`}
                   >
-                    <img
+                    <Image
                       src={image.url}
                       alt={product.name || ""}
                       className="object-cover"
+                      width={500}
+                      height={500}
                     />
                   </button>
                 ))}

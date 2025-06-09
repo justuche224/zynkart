@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
 import { serverAuth } from "@/lib/server-auth";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: `Sign into ${info.name}`,
@@ -25,9 +26,11 @@ const page = async () => {
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">
-        <img
+        <Image
           src="/images/—Pngtree—daily shopping cart_5398373.png"
           alt="Image"
+          width={500}
+          height={500}
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>

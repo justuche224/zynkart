@@ -63,7 +63,7 @@ const itemVariants = {
   },
 };
 
-const Tags = ({ tags, storeSlug, merchantId }: Props) => {
+const Tags = ({ tags, storeSlug }: Props) => {
   const [initialTags, setInitialTags] = React.useState(tags);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const router = useRouter();
@@ -77,6 +77,7 @@ const Tags = ({ tags, storeSlug, merchantId }: Props) => {
       setInitialTags((prev) => prev.filter((tag) => tag.id !== tagId));
       toast.success("Tag deleted successfully");
     } catch (error) {
+      console.error(error);
       toast.error("Failed to delete tag");
     }
     setIsDeleting(false);

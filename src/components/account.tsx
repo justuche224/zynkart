@@ -143,6 +143,7 @@ export default function Account({
       if (error) throw error;
       setSessions(data);
     } catch (error) {
+      console.error(error);
       toast.error("Error fetching sessions", {
         description: "Please try again later.",
       });
@@ -165,6 +166,7 @@ export default function Account({
         description: "Your profile information has been updated successfully.",
       });
     } catch (error) {
+      console.error(error);
       toast.error("Error updating profile", {
         description: "Please try again later.",
       });
@@ -177,7 +179,7 @@ export default function Account({
     setLoading((prev) => ({ ...prev, password: true }));
 
     try {
-      const { data, error } = await authClient.changePassword({
+      const {  error } = await authClient.changePassword({
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
         revokeOtherSessions: true,
@@ -190,13 +192,14 @@ export default function Account({
           "Your password has been changed successfully. All other sessions have been revoked.",
       });
 
-      // Refresh sessions after revoking others
       fetchSessions();
     } catch (error) {
+      console.error(error);
       toast.error("Error changing password", {
         description:
-          // @ts-ignore
-          error.message || "Please check your current password and try again.",
+          error instanceof Error
+            ? error.message
+            : "Please check your current password and try again.",
       });
     } finally {
       setLoading((prev) => ({ ...prev, password: false }));
@@ -215,6 +218,7 @@ export default function Account({
 
       fetchSessions();
     } catch (error) {
+      console.error(error);
       toast.error("Error revoking session", {
         description: "Please try again later.",
       });
@@ -231,6 +235,7 @@ export default function Account({
 
       fetchSessions();
     } catch (error) {
+      console.error(error);
       toast.error("Error revoking sessions", {
         description: "Please try again later.",
       });

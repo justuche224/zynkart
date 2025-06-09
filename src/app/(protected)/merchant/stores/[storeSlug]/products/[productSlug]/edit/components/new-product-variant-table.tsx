@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { X, Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { useCurrentUser } from "@/hooks/use-current-user";
+// import { useCurrentUser } from "@/hooks/use-current-user";
 
 type Color = {
   id: string;
@@ -109,7 +109,11 @@ const ProductVariants: React.FC<ProductVariantsProps> = ({
   });
   const [colorError, setColorError] = useState<string>("");
   const [sizeError, setSizeError] = useState<string>("");
-  const merchant = useCurrentUser();
+  // const merchant = useCurrentUser();
+
+  // !WARNING: This is a temporary fix to avoid the error "useCurrentUser is not a function"
+  // TODO: Remove this once we have a proper way to get the merchant
+  const merchant = { id: "1" };
 
   const handleAddSize = async () => {
     try {

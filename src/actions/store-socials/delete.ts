@@ -22,6 +22,7 @@ export const deleteStoreSocial = async (id: string, storeId: string) => {
       .where(and(eq(storeSocial.id, id), eq(storeSocial.storeId, storeId)));
     return social;
   } catch (error) {
+    console.error(error);
     throw new Error("Failed to delete social");
   }
 };

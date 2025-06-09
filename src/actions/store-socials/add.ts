@@ -1,7 +1,6 @@
 "use server";
 import db from "@/db";
 import { storeSocial } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
 import { serverAuth } from "@/lib/server-auth";
 
 export const addStoreSocial = async (storeId: string, name: string, link: string) => {
@@ -17,6 +16,7 @@ export const addStoreSocial = async (storeId: string, name: string, link: string
     }).returning();
     return social[0];
    } catch (error) {
+    console.error(error);
    throw new Error("Failed to add social");
    }
 }

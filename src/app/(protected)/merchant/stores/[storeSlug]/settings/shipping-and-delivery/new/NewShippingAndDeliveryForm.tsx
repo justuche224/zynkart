@@ -137,8 +137,9 @@ const NewShippingAndDeliveryForm = ({
               <CardTitle>Shipping Zone Details</CardTitle>
               <CardDescription>
                 Set up a new shipping zone for deliveries in Nigeria. You can
-                create specific area zones (e.g., "Nsukka") and broader state
-                zones (e.g., "Enugu") as fallbacks for unlisted areas.
+                create specific area zones (e.g., &quot;Nsukka&quot;) and
+                broader state zones (e.g., &quot;Enugu&quot;) as fallbacks for
+                unlisted areas.
               </CardDescription>
             </CardHeader>
             <CardContent>

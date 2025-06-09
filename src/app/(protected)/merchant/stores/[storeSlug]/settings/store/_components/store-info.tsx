@@ -188,8 +188,8 @@ const StoreInfo = ({
                     </FormControl>
                     <FormDescription>
                       This phone number will be displayed to your customers. It
-                      is public, don't use your personal phone number if you
-                      don't want to receive spam calls.
+                      is public, don&apos;t use your personal phone number if
+                      you don&apos;t want to receive spam calls.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -221,8 +221,8 @@ const StoreInfo = ({
                     </FormControl>
                     <FormDescription>
                       This email will be displayed to your customers. It is
-                      public, don't use your personal email if you don't want to
-                      receive spam emails.
+                      public, don&apos;t use your personal email if you don&apos;t
+                      want to receive spam emails.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

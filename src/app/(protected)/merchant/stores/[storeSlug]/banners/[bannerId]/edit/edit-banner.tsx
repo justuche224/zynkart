@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Loader2, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -106,7 +106,7 @@ const EditBannerForm = ({
         imageUrl: finalImageUrl,
       };
 
-      const { success, error: updateError } = await updateBanner(
+      const { error: updateError } = await updateBanner(
         banner.id,
         finalValues,
         merchantId

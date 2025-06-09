@@ -7,7 +7,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -42,7 +41,6 @@ export function RegisterForm({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [done, setDone] = useState(false);
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackURL = searchParams.get("callbackURL") || info.defaultRedirect;
 

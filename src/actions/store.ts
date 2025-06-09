@@ -93,6 +93,7 @@ export const getStoreByMerchant = async (storeSlug?: string, id?: string) => {
     }
     return { error: "Please Specify store slug or ID" };
   } catch (error) {
+    console.error(error);
     return { error: "Failed to get store!" };
   }
 };
@@ -132,6 +133,7 @@ export const updateStore = async (
 
     return { data: updatedStore[0] };
   } catch (error) {
+    console.error(error);
     return { error: "Failed to update store!" };
   }
 };

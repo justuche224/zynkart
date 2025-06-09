@@ -43,16 +43,16 @@ function ProductList({
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const products = productData?.products || [];
-
   const filteredProducts = useMemo(() => {
+    const products = productData?.products || [];
+
     if (searchQuery.trim() === "") {
       return products;
     }
     return products.filter((product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [products, searchQuery]);
+  }, [productData?.products, searchQuery]);
 
   const isLoading = isLoadingProducts || isLoadingSavedIds;
 
@@ -105,8 +105,8 @@ function ProductList({
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-muted-foreground mb-4">No products found</div>
         <p className="text-sm text-muted-foreground max-w-md">
-          We couldn't find any products matching your search. Try adjusting your
-          filters or search terms.
+          We couldn&apos;t find any products matching your search. Try adjusting
+          your filters or search terms.
         </p>
       </div>
     );

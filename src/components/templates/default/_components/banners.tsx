@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Link from "next/link";
-import { BannersFromHomePage } from "@/app/store/[storeSlug]/page";
+import { BannersFromHomePage } from "@/lib/store-utils";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 

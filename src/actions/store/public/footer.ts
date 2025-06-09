@@ -31,6 +31,7 @@ export const getStoreFooter = async (storeSlug: string) => {
 
     return storeData;
   } catch (error) {
+    console.error(error);
     throw new Error("Failed to fetch store footer");
   }
 };

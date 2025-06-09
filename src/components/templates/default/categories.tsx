@@ -2,8 +2,10 @@
 
 import { Footer } from "./_components/footer";
 import { SiteHeader } from "./_components/navbar";
-import type { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
-import { CategoriesFromHomePage } from "@/app/store/[storeSlug]/categories/page";
+import {
+  StoreDataFromHomePage,
+  CategoriesFromHomePage,
+} from "@/lib/store-utils";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";

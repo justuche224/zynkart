@@ -46,7 +46,7 @@ export default function EnhancedHero() {
       setActiveFeature((prev) => (prev + 1) % features.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [features.length]);
 
   return (
     <div className="relative w-full min-h-screen bg-gradient-to-br from-white to-gray-50 dark:from-black dark:to-gray-900 overflow-hidden pt-10">
@@ -183,7 +183,7 @@ export default function EnhancedHero() {
           <div className="relative">
             <div className="relative animate-float">
               <Image
-                src="/images/—Pngtree—daily shopping cart_5398373.png"
+                src="/images/hero-image.png"
                 width={600}
                 height={600}
                 alt="Zynkart shopping experience with various products"

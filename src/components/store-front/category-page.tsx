@@ -1,8 +1,10 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import Loader from "@/components/loader";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
-import { CategoryInfoFromCategoryPage } from "@/app/store/[storeSlug]/categories/[categorySlug]/page";
+import {
+  StoreDataFromHomePage,
+  CategoryInfoFromCategoryPage,
+} from "@/lib/store-utils";
 
 interface CategoryProps {
   store: StoreDataFromHomePage;

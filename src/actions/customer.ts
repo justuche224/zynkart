@@ -39,6 +39,7 @@ export const getCurrentCustomer = async () => {
 
     return session.customer;
   } catch (error) {
+    console.error(error);
     return null;
   }
 };
@@ -238,6 +239,7 @@ export const getAllCustomerSession = async () => {
       sessions,
     };
   } catch (error) {
+    console.error(error);
     return null;
   }
 };

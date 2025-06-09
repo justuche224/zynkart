@@ -1,7 +1,7 @@
 import { serverCustomerAuth } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
 import Account from "@/components/store-front/account";
-import { getStoreForHomePage } from "../page";
+import { getStoreForHomePage } from "@/lib/store-utils";
 
 const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   const { storeSlug } = await params;

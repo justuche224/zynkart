@@ -1,6 +1,6 @@
 import React from "react";
 import Cart from "@/components/store-front/cart";
-import { getStoreForHomePage } from "../page";
+import { getStoreForHomePage } from "@/lib/store-utils";
 
 const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   const { storeSlug } = await params;

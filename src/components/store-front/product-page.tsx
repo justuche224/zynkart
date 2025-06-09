@@ -1,8 +1,10 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import Loader from "@/components/loader";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
-import { ProductInfoFromProductPage } from "@/app/store/[storeSlug]/products/[productSlug]/page";
+import {
+  StoreDataFromHomePage,
+  ProductInfoFromProductPage,
+} from "@/lib/store-utils";
 
 interface ProductDetailsPageProps {
   store: StoreDataFromHomePage;

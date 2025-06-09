@@ -1,7 +1,7 @@
 import React from "react";  
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
-import { StoreDataFromHomePage } from "@/app/store/[storeSlug]/page";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
 import type { ProductListPageProps } from "@/components/templates/default/product-list";
 
 const ProductsListPage = ({ store }: { store: StoreDataFromHomePage }) => {
