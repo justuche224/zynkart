@@ -279,7 +279,7 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
 
         <div className="flex justify-end space-x-4">
           <Link
-            href={`http://${productData.store.slug}.localhost:3000/products/${productData.slug}`}
+            href={`https://${productData.store.slug}.zynkart.store/products/${productData.slug}`}
             target="_blank"
           >
             <Button variant="outline">

@@ -82,7 +82,7 @@ export default function StoreOverview({
             <div className="flex gap-2">
               <Button variant="outline" size="sm" asChild>
                 <Link
-                  href={`http://${store.slug}.localhost:3000`}
+                  href={`https://${store.slug}.zynkart.store`}
                   target="_blank"
                 >
                   <Globe className="mr-2 h-4 w-4" />
