@@ -18,7 +18,7 @@ export function middleware(req: NextRequest) {
   const host = req.headers.get("host") || "";
 
   // Define which hosts should be considered the "main" domain.
-  const mainDomains = ["mysite.com", "www.mysite.com", "localhost:3000"];
+  const mainDomains = ["zynkart.vercel.app", "localhost:3000"];
 
   // Determine if we’re on a main domain or on a tenant subdomain.
   const isMainDomain = mainDomains.includes(host);
