@@ -31,7 +31,10 @@ const PublicNav = () => {
             </Link>
           </Button>
           <Button className="hidden md:inline-block" asChild variant={"link"}>
-            <Link href={"/pricing"}>Pricing</Link>
+            <Link href={"/#pricing"}>Pricing</Link>
+          </Button>
+          <Button className="hidden md:inline-block" asChild variant={"link"}>
+            <Link href={"/#features"}>Features</Link>
           </Button>
           <Button className="hidden md:inline-block" asChild variant={"link"}>
             <Link href={"/themes"}>Themes</Link>
@@ -76,7 +79,13 @@ const PublicNav = () => {
             </SheetHeader>
             <SheetDescription className="flex flex-col gap-2 px-10">
               <Button asChild variant={"link"}>
-                <Link href={"/pricing"}>Pricing</Link>
+                <Link href={"/#pricing"}>Pricing</Link>
+              </Button>
+              <Button asChild variant={"link"}>
+                <Link href={"/#features"}>Features</Link>
+              </Button>
+              <Button className="hidden md:inline-block" asChild variant={"link"}>
+                <Link href={"/themes"}>Themes</Link>
               </Button>
               <Button size={"sm"} variant={"outline"} asChild>
                 <Link href={"/sign-in"}>Sign In</Link>

@@ -42,7 +42,7 @@ const page = async () => {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <Image
-          src="/images/—Pngtree—daily shopping cart_5398373.png"
+          src="/images/hero-image.png"
           alt="Image"
           width={500}
           height={500}
