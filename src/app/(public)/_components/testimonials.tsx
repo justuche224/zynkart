@@ -162,7 +162,7 @@ export default function Testimonials() {
             viewport={{ once: true }}
           >
             Join thousands of successful entrepreneurs who have built thriving
-            businesses with Zynkart. Here's what they have to say about their
+            businesses with Zynkart. Here&apos;s what they have to say about their
             experience.
           </motion.p>
         </motion.div>
@@ -264,7 +264,7 @@ export default function Testimonials() {
                   transition={{ duration: 0.6, delay: 0.5 + index * 0.05 }}
                   viewport={{ once: true }}
                 >
-                  "{testimonial.content}"
+                  &quot;{testimonial.content}&quot;
                 </motion.p>
               </div>
 

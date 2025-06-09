@@ -278,7 +278,7 @@ export default function Pricing() {
 
               <div className="space-y-4">
                 <h4 className="font-semibold text-gray-900 dark:text-white">
-                  What's included:
+                  What&apos;s included:
                 </h4>
                 <motion.ul
                   className="space-y-3"

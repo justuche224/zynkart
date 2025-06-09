@@ -174,8 +174,8 @@ export default function Features() {
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            All the features you'd expect from a full-fledged eCommerce platform
-            — and then some. Built for scale, designed for simplicity.
+            All the features you&apos;d expect from a full-fledged eCommerce
+            platform — and then some. Built for scale, designed for simplicity.
           </motion.p>
         </motion.div>
 

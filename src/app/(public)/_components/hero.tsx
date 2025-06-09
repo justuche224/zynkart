@@ -15,7 +15,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function EnhancedHero() {
-  const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
 
   const features = [
@@ -48,7 +47,6 @@ export default function EnhancedHero() {
   ];
 
   useEffect(() => {
-    setIsVisible(true);
     const interval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length);
     }, 3000);
