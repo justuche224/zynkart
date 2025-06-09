@@ -16,8 +16,8 @@ import { Separator } from "@/components/ui/separator";
 const PublicNav = () => {
   return (
     <header className="fixed top-0 z-[99] w-full bg-background/50 backdrop-blur-md shadow">
-      <nav className="flex items-center justify-between w-full px-20 py-2">
-        <div className="flex gap-2">
+      <nav className="flex items-center justify-between w-full px-3 md:px-20 py-2">
+        <div className="flex gap-1">
           <Button
             asChild
             variant={"ghost"}
