@@ -28,6 +28,19 @@ export const createStore = async (
   const { name, email, phone, address } = validationResult.data;
 
   //   TODO subscription check
+  // check if they have a store already
+
+  const stores = await db
+    .select({ id: store.id })
+    .from(store)
+    .where(eq(store.merchantId, user.user.id));
+
+  if (stores.length) {
+    return {
+      error:
+        "You already have a store. upgrade to a paid plan to create a new store",
+    };
+  }
 
   const storeSlug = slugify(name);
   const existingStore = await db

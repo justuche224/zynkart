@@ -9,7 +9,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -19,7 +18,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
@@ -43,16 +41,20 @@ import { slugify } from "@/lib/utils";
 import { createStore } from "@/actions/store";
 import { useRouter } from "next/navigation";
 
-export function NewStore({ merchantId }: { merchantId: string }) {
-  const [open, setOpen] = useState(false);
+export function NewStore({
+  merchantId,
+  open,
+  setOpen,
+}: {
+  merchantId: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline">New Store</Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>New Store</DialogTitle>
@@ -69,9 +71,6 @@ export function NewStore({ merchantId }: { merchantId: string }) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button variant="outline">New Store</Button>
-      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>New Store</DrawerTitle>
