@@ -2,6 +2,8 @@ import {
   category,
   product,
   productImage,
+  productTag,
+  tag,
   shippingZone,
   banner,
   // shippingZone,
@@ -18,6 +20,9 @@ export type Category = InferSelectModel<typeof category>;
 
 export type ProductWithImages = InferSelectModel<typeof product> & {
   images: InferSelectModel<typeof productImage>[];
+  tags?: (InferSelectModel<typeof productTag> & {
+    tag: InferSelectModel<typeof tag>;
+  })[];
 };
 
 export type Store = {

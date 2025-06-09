@@ -352,7 +352,7 @@ const GenericProductList = <T extends BaseProduct>({
                         variant="default"
                         onClick={() =>
                           router.push(
-                            `/merchant/stores/${storeSlug}/products/${selectedProduct.id}/edit`
+                            `/merchant/stores/${storeSlug}/products/${selectedProduct.slug}/edit`
                           )
                         }
                       >

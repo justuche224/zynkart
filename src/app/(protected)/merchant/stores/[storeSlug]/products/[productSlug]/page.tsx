@@ -43,6 +43,11 @@ export default async function ProductPage({
       images: {
         orderBy: (images, { asc }) => [asc(images.position)],
       },
+      tags: {
+        with: {
+          tag: true,
+        },
+      },
     },
   });
 

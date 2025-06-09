@@ -37,7 +37,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { InferSelectModel } from "drizzle-orm";
-import { category, size, color, productSource } from "@/db/schema";
+import { category, size, color, productSource, tag } from "@/db/schema";
+import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
@@ -57,6 +58,7 @@ type Category = InferSelectModel<typeof category>;
 type Color = InferSelectModel<typeof color>;
 type Size = InferSelectModel<typeof size>;
 type ProductSource = InferSelectModel<typeof productSource>;
+type Tag = InferSelectModel<typeof tag>;
 
 type EditProductFormProps = {
   storeData: {
@@ -68,6 +70,7 @@ type EditProductFormProps = {
   colors?: Color[];
   sizes?: Size[];
   vendors?: ProductSource[];
+  tags?: Tag[];
   storeSlug: string;
   merchantId: string;
   product: ProductWithImages;
@@ -78,6 +81,7 @@ const EditProductForm = ({
   storeId,
   categories,
   vendors,
+  tags,
   merchantId,
   storeSlug,
   product,
@@ -91,6 +95,11 @@ const EditProductForm = ({
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState(product.images || []);
   const [imageError, setImageError] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    product.tags?.map((pt) => pt.tag.id) || []
+  );
+  const [newTagInput, setNewTagInput] = useState<string>("");
+  const [newTags, setNewTags] = useState<string[]>([]);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const router = useRouter();
@@ -98,7 +107,7 @@ const EditProductForm = ({
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   type NewProductFormInput = z.input<typeof NewProductSchema>;
-  type NewProductFormOutput = z.output<typeof NewProductSchema>
+  type NewProductFormOutput = z.output<typeof NewProductSchema>;
 
   const form = useForm<NewProductFormInput, any, NewProductFormOutput>({
     resolver: zodResolver(NewProductSchema),
@@ -114,6 +123,8 @@ const EditProductForm = ({
       productSourceId: product.productSourceId || "",
       newVendorName: "",
       storeId: storeId || product.storeId,
+      tagIds: product.tags?.map((pt) => pt.tag.id) || [],
+      newTags: [],
       variants: [],
     },
   });
@@ -131,6 +142,43 @@ const EditProductForm = ({
       setExistingImages(product.images);
     }
   }, [product.images]);
+
+  const handleTagSelect = (tagId: string) => {
+    if (!selectedTags.includes(tagId)) {
+      const updatedTags = [...selectedTags, tagId];
+      setSelectedTags(updatedTags);
+      form.setValue("tagIds", updatedTags);
+    }
+  };
+
+  const handleTagRemove = (tagId: string) => {
+    const updatedTags = selectedTags.filter((id) => id !== tagId);
+    setSelectedTags(updatedTags);
+    form.setValue("tagIds", updatedTags);
+  };
+
+  const handleNewTagAdd = () => {
+    const trimmedTag = newTagInput.trim();
+    if (trimmedTag && !newTags.includes(trimmedTag)) {
+      const updatedNewTags = [...newTags, trimmedTag];
+      setNewTags(updatedNewTags);
+      form.setValue("newTags", updatedNewTags);
+      setNewTagInput("");
+    }
+  };
+
+  const handleNewTagRemove = (tagName: string) => {
+    const updatedNewTags = newTags.filter((tag) => tag !== tagName);
+    setNewTags(updatedNewTags);
+    form.setValue("newTags", updatedNewTags);
+  };
+
+  const handleNewTagKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleNewTagAdd();
+    }
+  };
 
   const updateProductMutation = useMutation({
     mutationFn: async (values: z.infer<typeof NewProductSchema>) => {
@@ -208,7 +256,7 @@ const EditProductForm = ({
 
       // Optimistically update product list
       queryClient.setQueryData(
-          ["products", storeId, 1],
+        ["products", storeId, 1],
 
         (oldData: any) => {
           if (!oldData) return oldData;
@@ -769,6 +817,120 @@ const EditProductForm = ({
                         </FormItem>
                       )}
                     />
+
+                    {/* Tags Section */}
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-lg font-medium">Product Tags</h3>
+                        <p className="text-sm text-gray-500">
+                          Add tags to help customers find your product. Tags are
+                          a great way to organize your products. It can also be
+                          used to show certain products in custom pages.
+                        </p>
+                      </div>
+
+                      {/* Existing Tags */}
+                      {tags && tags.length > 0 && (
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-medium">
+                            Select from existing tags:
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {tags.map((tag) => (
+                              <Badge
+                                key={tag.id}
+                                variant={
+                                  selectedTags.includes(tag.id)
+                                    ? "default"
+                                    : "outline"
+                                }
+                                className="cursor-pointer hover:bg-primary/10 transition-colors"
+                                onClick={() =>
+                                  selectedTags.includes(tag.id)
+                                    ? handleTagRemove(tag.id)
+                                    : handleTagSelect(tag.id)
+                                }
+                              >
+                                {tag.name}
+                                {selectedTags.includes(tag.id) && (
+                                  <X className="w-3 h-3 ml-1" />
+                                )}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Add New Tags */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-medium">Add new tags:</h4>
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Enter a new tag..."
+                            value={newTagInput}
+                            onChange={(e) => setNewTagInput(e.target.value)}
+                            onKeyPress={handleNewTagKeyPress}
+                            disabled={updateProductMutation.isPending}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleNewTagAdd}
+                            disabled={
+                              !newTagInput.trim() ||
+                              updateProductMutation.isPending
+                            }
+                          >
+                            Add Tag
+                          </Button>
+                        </div>
+
+                        {/* New Tags Display */}
+                        {newTags.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {newTags.map((tagName) => (
+                              <Badge
+                                key={tagName}
+                                variant="secondary"
+                                className="cursor-pointer"
+                              >
+                                {tagName}
+                                <X
+                                  className="w-3 h-3 ml-1 cursor-pointer"
+                                  onClick={() => handleNewTagRemove(tagName)}
+                                />
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Selected Tags Summary */}
+                      {(selectedTags.length > 0 || newTags.length > 0) && (
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-medium">
+                            Selected tags:
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedTags.map((tagId) => {
+                              const tag = tags?.find((t) => t.id === tagId);
+                              return tag ? (
+                                <Badge key={tagId} variant="default">
+                                  {tag.name}
+                                </Badge>
+                              ) : null;
+                            })}
+                            {newTags.map((tagName) => (
+                              <Badge key={tagName} variant="secondary">
+                                {tagName} (new)
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     {/* <FormField
                       control={form.control}
                       name="variants"

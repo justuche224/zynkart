@@ -6,6 +6,7 @@ import {
   size,
   productSource,
   product,
+  tag,
 } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { redirect } from "next/navigation";
@@ -28,10 +29,12 @@ const page = async ({
       name: store.name,
     })
     .from(store)
-    .where(and(eq(store.slug, storeSlug), eq(store.merchantId, merchant.user.id)))
+    .where(
+      and(eq(store.slug, storeSlug), eq(store.merchantId, merchant.user.id))
+    )
     .limit(1);
 
-  if (!storeData) return redirect("/merchant");
+  if (!storeData) return <div>Store not found</div>;
 
   const existingProduct = await db.query.product.findFirst({
     where: and(
@@ -42,12 +45,17 @@ const page = async ({
       images: {
         orderBy: (images, { asc }) => [asc(images.position)],
       },
+      tags: {
+        with: {
+          tag: true,
+        },
+      },
     },
   });
 
   if (!existingProduct) return redirect(`/merchant/${storeSlug}/products`);
 
-  const [categories, colors, sizes, vendors] = await Promise.all([
+  const [categories, colors, sizes, vendors, tags] = await Promise.all([
     db.query.category.findMany({
       where: eq(category.storeId, storeData[0].id),
     }),
@@ -60,6 +68,9 @@ const page = async ({
     db.query.productSource.findMany({
       where: eq(productSource.storeId, storeData[0].id),
     }),
+    db.query.tag.findMany({
+      where: eq(tag.storeId, storeData[0].id),
+    }),
   ]);
 
   const info = {
@@ -69,11 +80,16 @@ const page = async ({
     colors: colors,
     sizes: sizes,
     vendors: vendors,
+    tags: tags,
     product: existingProduct,
   };
 
   return (
-    <EditProductForm {...info} storeSlug={storeSlug} merchantId={merchant.user.id} />
+    <EditProductForm
+      {...info}
+      storeSlug={storeSlug}
+      merchantId={merchant.user.id}
+    />
   );
 };
 

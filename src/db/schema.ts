@@ -186,6 +186,7 @@ export const storeRelation = relations(store, ({ one, many }) => ({
   colors: many(color),
   sizes: many(size),
   banners: many(banner),
+  tags: many(tag),
   bank: one(bank, {
     fields: [store.id],
     references: [bank.storeId],
@@ -542,6 +543,7 @@ export const productRelations = relations(product, ({ one, many }) => ({
     fields: [product.id],
     references: [productWeight.productId],
   }),
+  tags: many(productTag),
 }));
 
 export const customerSesssion = pgTable("customer_session", {
@@ -697,3 +699,67 @@ export const customerSavedProductRelations = relations(
     }),
   })
 );
+
+export const tag = pgTable(
+  "tag",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name").notNull(),
+    slug: text("slug").notNull(),
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure tag names are unique within a store
+    uniqueIndex("tag_name_store_id_idx").on(table.name, table.storeId),
+    // Ensure tag slugs are unique within a store
+    uniqueIndex("tag_slug_store_id_idx").on(table.slug, table.storeId),
+    index("tag_store_id_idx").on(table.storeId),
+  ]
+);
+
+export const productTag = pgTable(
+  "product_tag",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    productId: text("product_id")
+      .notNull()
+      .references(() => product.id, { onDelete: "cascade" }),
+    tagId: text("tag_id")
+      .notNull()
+      .references(() => tag.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure unique product-tag combinations
+    uniqueIndex("product_tag_unique_idx").on(table.productId, table.tagId),
+    index("product_tag_product_id_idx").on(table.productId),
+    index("product_tag_tag_id_idx").on(table.tagId),
+  ]
+);
+
+export const tagRelations = relations(tag, ({ one, many }) => ({
+  store: one(store, {
+    fields: [tag.storeId],
+    references: [store.id],
+  }),
+  products: many(productTag),
+}));
+
+export const productTagRelations = relations(productTag, ({ one }) => ({
+  product: one(product, {
+    fields: [productTag.productId],
+    references: [product.id],
+  }),
+  tag: one(tag, {
+    fields: [productTag.tagId],
+    references: [tag.id],
+  }),
+}));

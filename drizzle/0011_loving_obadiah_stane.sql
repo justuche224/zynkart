@@ -1,1 +1,0 @@
-ALTER TABLE "category" ADD COLUMN "image_url" text;

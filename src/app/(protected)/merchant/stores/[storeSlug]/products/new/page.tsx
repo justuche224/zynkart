@@ -1,5 +1,5 @@
 import db from "@/db";
-import { store, category, color, size, productSource } from "@/db/schema";
+import { store, category, color, size, productSource, tag } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -32,7 +32,7 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
       </div>
     );
 
-  const [categories, colors, sizes, vendors] = await Promise.all([
+  const [categories, colors, sizes, vendors, tags] = await Promise.all([
     db.query.category.findMany({
       where: eq(category.storeId, storeData[0].id),
     }),
@@ -45,6 +45,9 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
     db.query.productSource.findMany({
       where: eq(productSource.storeId, storeData[0].id),
     }),
+    db.query.tag.findMany({
+      where: eq(tag.storeId, storeData[0].id),
+    }),
   ]);
 
   const info = {
@@ -53,6 +56,7 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
     colors: colors,
     sizes: sizes,
     vendors: vendors,
+    tags: tags,
   };
 
   return (

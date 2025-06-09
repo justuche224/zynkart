@@ -49,6 +49,8 @@ export const NewProductSchema = z
     productSourceId: z.string().optional(),
     newVendorName: z.string().optional(),
     storeId: z.string().min(1, "Store profile is required").optional(),
+    tagIds: z.array(z.string()).optional(),
+    newTags: z.array(z.string()).optional(),
     images: z
       .array(
         z.object({
@@ -128,6 +130,29 @@ export const CreateCategorySchema = z.object({
   storeId: z.string(),
   merchantId: z.string(),
   imageUrl: z.string().optional(),
+});
+
+export const CreateTagSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message:
+        "Tag Name should be more than 2 characters but less than 30 characters",
+    })
+    .max(30, {
+      message:
+        "Tag Name should be more than 2 characters but less than 30 characters",
+    })
+    .regex(/^[a-zA-Z0-9\s-]+$/, {
+      message:
+        "Tag Name can only contain letters, numbers, spaces, and hyphens.",
+    }),
+  storeId: z.string(),
+  merchantId: z.string(),
+});
+
+export const UpdateTagSchema = CreateTagSchema.extend({
+  id: z.string(),
 });
 
 export const UpdateCategorySchema = CreateCategorySchema.extend({

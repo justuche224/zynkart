@@ -8,6 +8,8 @@ import {
   productImage,
   productSource,
   store,
+  tag,
+  productTag,
 } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { eq, and, ne } from "drizzle-orm";
@@ -208,6 +210,46 @@ export const updateProduct = async (
 
       // Add images to the product object
       (updatedProduct as any).images = productImages;
+    }
+
+    // Handle tags
+    const allTagIds = [...(values.tagIds || [])];
+
+    // Create new tags if any
+    if (values.newTags && values.newTags.length > 0) {
+      const newTagInserts = values.newTags.map((tagName) => ({
+        name: tagName.trim(),
+        slug: slugify(tagName.trim()),
+        storeId,
+      }));
+
+      const insertedTags = await db
+        .insert(tag)
+        .values(newTagInserts)
+        .returning();
+
+      // Add new tag IDs to the list
+      allTagIds.push(...insertedTags.map((t) => t.id));
+    }
+
+    // Handle product-tag relationships
+    // First, delete existing product-tag relationships
+    await db.delete(productTag).where(eq(productTag.productId, productId));
+
+    // Create new product-tag relationships
+    if (allTagIds.length > 0) {
+      const productTagInserts = allTagIds.map((tagId) => ({
+        productId: updatedProduct.id,
+        tagId,
+      }));
+
+      const insertedProductTags = await db
+        .insert(productTag)
+        .values(productTagInserts)
+        .returning();
+
+      // Add tags to the product object
+      (updatedProduct as any).tags = insertedProductTags;
     }
 
     // Update product variants if any

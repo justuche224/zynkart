@@ -16,7 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { product, productImage } from "@/db/schema";
+import type { product, productImage, productTag, tag } from "@/db/schema";
 import type { InferSelectModel } from "drizzle-orm";
 import { formatDate } from "@/lib/date-formatter";
 import formatPrice from "@/lib/price-formatter";
@@ -28,10 +28,10 @@ import Link from "next/link";
 
 type Image = InferSelectModel<typeof productImage>;
 type ProductWithRelations = InferSelectModel<typeof product> & {
-    store: {
-      merchantId: string;
-      slug: string;
-    };
+  store: {
+    merchantId: string;
+    slug: string;
+  };
   category: {
     id: string;
     name: string;
@@ -43,6 +43,9 @@ type ProductWithRelations = InferSelectModel<typeof product> & {
     slug: string;
   };
   images: Image[];
+  tags: (InferSelectModel<typeof productTag> & {
+    tag: InferSelectModel<typeof tag>;
+  })[];
 };
 
 const ProductInfoPage = (productData: ProductWithRelations) => {
@@ -63,9 +66,7 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
       if (result.error) {
         toast.error(result.error);
       } else {
-        router.push(
-          `/merchant/stores/${productData.store.slug}/products`
-        );
+        router.push(`/merchant/stores/${productData.store.slug}/products`);
         toast.success("Product deleted successfully");
       }
     } catch (error) {
@@ -201,6 +202,28 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
             </CardContent>
           </Card>
 
+          {/* Tags Section */}
+          <Card className="md:col-span-3">
+            <CardHeader>
+              <CardTitle>Tags</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {productData.tags && productData.tags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {productData.tags.map((productTag) => (
+                    <Badge key={productTag.tag.id} variant="secondary">
+                      {productTag.tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground">
+                  No tags assigned to this product
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Meta Information</CardTitle>
@@ -256,7 +279,7 @@ const ProductInfoPage = (productData: ProductWithRelations) => {
 
         <div className="flex justify-end space-x-4">
           <Link
-            href={`http://${productData.store.slug}.localhost:3000/${productData.slug}`}
+            href={`http://${productData.store.slug}.localhost:3000/products/${productData.slug}`}
             target="_blank"
           >
             <Button variant="outline">
