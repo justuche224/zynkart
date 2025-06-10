@@ -115,7 +115,7 @@ export default function EnhancedHero() {
       </div>
 
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 dark:opacity-20"></div>
+      <div className="absolute inset-0 bg-center opacity-10 dark:opacity-20"></div>
 
       <div className="container mx-auto px-4 py-16 flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
         <motion.div

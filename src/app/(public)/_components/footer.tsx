@@ -217,7 +217,7 @@ export default function Footer() {
       </div>
 
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-5 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-center opacity-5 pointer-events-none"></div>
     </footer>
   );
 }
