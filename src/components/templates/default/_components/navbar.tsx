@@ -23,14 +23,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { categoryList } from "@/actions/store/public/category/list";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import NavUser from "./nav-user";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Input } from "@/components/ui/input";
 
 const LIMIT = 5;
 
@@ -92,9 +93,99 @@ export function SiteHeader({
 }) {
   const currentPath = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedHistory = localStorage.getItem("searchHistory");
+    if (storedHistory) {
+      setSearchHistory(JSON.parse(storedHistory));
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener("keydown", handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [searchOpen]);
 
   return (
     <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear fixed top-0 right-0 left-0 z-10 bg-background/50 backdrop-blur-md">
+      {searchOpen && (
+        <div
+          className="fixed top-0 z-[999] left-0 h-screen w-full bg-background/90 backdrop-blur-lg"
+          onClick={() => setSearchOpen(false)}
+        >
+          <div
+            className="flex flex-col items-center justify-center mt-20 max-w-2xl mx-auto px-4 gap-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h1 className="text-2xl font-bold">
+              Search products, services, and more
+            </h1>
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-full max-w-md"
+              autoFocus
+            />
+            <Button
+              onClick={() => {
+                if (searchQuery.length > 0) {
+                  const newHistory = [
+                    searchQuery,
+                    ...searchHistory.filter((item) => item !== searchQuery),
+                  ].slice(0, 5);
+                  setSearchHistory(newHistory);
+                  localStorage.setItem(
+                    "searchHistory",
+                    JSON.stringify(newHistory)
+                  );
+                  router.push(`/search?q=${searchQuery}`);
+                  // setSearchOpen(false);
+                }
+              }}
+            >
+              Search
+            </Button>
+            {searchHistory.length > 0 && (
+              <div className="mt-4 w-full max-w-md">
+                <h2 className="text-sm font-semibold text-muted-foreground text-center mb-2">
+                  Recent Searches
+                </h2>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {searchHistory.map((item, index) => (
+                    <Button
+                      key={index}
+                      variant="secondary"
+                      className="cursor-pointer"
+                      onClick={() => {
+                        router.push(`/search?q=${item}`);
+                        // setSearchOpen(false);
+                      }}
+                    >
+                      {item}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <div className="flex w-full items-center justify-between gap-1 px-4 lg:gap-2 lg:px-6">
         <div className="flex items-center gap-4">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -141,6 +232,7 @@ export function SiteHeader({
             size="icon"
             className=""
             aria-label="Search"
+            onClick={() => setSearchOpen(true)}
           >
             <Search size={20} />
           </Button>
