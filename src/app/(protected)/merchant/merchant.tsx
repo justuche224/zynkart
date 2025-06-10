@@ -80,7 +80,7 @@ const Merchant = ({
             <h1 className="text-2xl font-bold">{merchant.name}</h1>
             <p className="text-sm text-muted-foreground">{merchant.email}</p>
             <p>+351 912 345 678</p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-center sm:justify-start">
               <p>Free Plan</p> <Button variant="outline">Upgrade</Button>
             </div>
           </div>

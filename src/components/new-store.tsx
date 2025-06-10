@@ -185,7 +185,7 @@ function ProfileForm({
             disabled={isPending}
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="email">Store contact address</FormLabel>
+                <FormLabel htmlFor="email">Store email address</FormLabel>
                 <FormControl>
                   <Input
                     {...field}

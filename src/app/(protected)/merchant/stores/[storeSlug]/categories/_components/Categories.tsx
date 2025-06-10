@@ -135,7 +135,7 @@ const Categories = ({ categories, storeSlug, merchantId }: Props) => {
             <motion.div key={category.id} variants={itemVariants}>
               <Card
                 className={`group hover:shadow-lg transition-all duration-300 bg-sidebar ${
-                  category.imageUrl ? "bg-cover bg-center" : ""
+                  category.imageUrl ? "bg-cover bg-center hover:scale-105" : ""
                 }`}
                 style={{
                   backgroundImage: category.imageUrl
