@@ -263,6 +263,7 @@ export default function Pricing() {
                 viewport={{ once: true }}
               >
                 <Button
+                  aria-label={`Get ${plan.name}`}
                   asChild
                   className={`w-full mb-8 h-12 ${
                     plan.featured
@@ -373,6 +374,7 @@ export default function Pricing() {
             transition={{ duration: 0.2 }}
           >
             <Button
+              aria-label="Contact Sales"
               variant="outline"
               size="lg"
               className="border-primary text-primary hover:bg-primary hover:text-white"

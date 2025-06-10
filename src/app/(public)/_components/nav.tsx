@@ -19,6 +19,7 @@ const PublicNav = () => {
       <nav className="flex items-center justify-between w-full px-5 md:px-20 py-2">
         <div className="flex gap-1">
           <Button
+            aria-label="Home"
             asChild
             variant={"ghost"}
             className="font-bold tracking-tigt flex gap-1"
@@ -30,31 +31,41 @@ const PublicNav = () => {
               </span>
             </Link>
           </Button>
-          <Button className="hidden md:inline-block" asChild variant={"link"}>
+          <Button
+            aria-label="Pricing"
+            className="hidden md:inline-block"
+            asChild
+            variant={"link"}
+          >
             <Link href={"/#pricing"}>Pricing</Link>
           </Button>
-          <Button className="hidden md:inline-block" asChild variant={"link"}>
+          <Button aria-label="Features" className="hidden md:inline-block" asChild variant={"link"}>
             <Link href={"/#features"}>Features</Link>
           </Button>
-          <Button className="hidden md:inline-block" asChild variant={"link"}>
+          <Button
+            aria-label="Themes"
+            className="hidden md:inline-block"
+            asChild
+            variant={"link"}
+          >
             <Link href={"/themes"}>Themes</Link>
           </Button>
         </div>
         <div className="gap-4 hidden md:flex">
-          <Button size={"sm"} variant={"outline"} asChild>
+          <Button aria-label="Sign In" size={"sm"} variant={"outline"} asChild>
             <Link href={"/sign-in"}>Sign In</Link>
           </Button>
-          <Button size={"sm"} variant={"outline"} asChild>
+          <Button aria-label="Contact" size={"sm"} variant={"outline"} asChild>
             <Link href={"/contact"}>Contact</Link>
           </Button>
-          <Button size={"sm"} asChild>
+          <Button aria-label="Get Started" size={"sm"} asChild>
             <Link href={"/sign-up"}>Get Started</Link>
           </Button>
           <ModeToggle />
         </div>
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant={"outline"}>
+            <Button aria-label="Menu" variant={"outline"}>
               <Menu />
             </Button>
           </SheetTrigger>
@@ -63,6 +74,7 @@ const PublicNav = () => {
               <div className="flex justify-between">
                 <SheetTitle>
                   <Button
+                    aria-label="Home"
                     asChild
                     variant={"ghost"}
                     className="font-bold tracking-tigt flex gap-1"
@@ -78,22 +90,19 @@ const PublicNav = () => {
               </div>
             </SheetHeader>
             <SheetDescription className="flex flex-col gap-2 px-10">
-              <Button asChild variant={"link"}>
-                <Link href={"/#pricing"}>Pricing</Link>
-              </Button>
-              <Button asChild variant={"link"}>
+              <Button aria-label="Features" asChild variant={"link"}>
                 <Link href={"/#features"}>Features</Link>
               </Button>
-              <Button className="hidden md:inline-block" asChild variant={"link"}>
+              <Button aria-label="Themes" className="hidden md:inline-block" asChild variant={"link"}>
                 <Link href={"/themes"}>Themes</Link>
               </Button>
-              <Button size={"sm"} variant={"outline"} asChild>
+              <Button aria-label="Sign In" size={"sm"} variant={"outline"} asChild>
                 <Link href={"/sign-in"}>Sign In</Link>
               </Button>
-              <Button size={"sm"} variant={"outline"} asChild>
+              <Button aria-label="Contact" size={"sm"} variant={"outline"} asChild>
                 <Link href={"/contact"}>Contact</Link>
               </Button>
-              <Button size={"sm"} asChild>
+              <Button aria-label="Get Started" size={"sm"} asChild>
                 <Link href={"/sign-up"}>Get Started</Link>
               </Button>
               <Separator />

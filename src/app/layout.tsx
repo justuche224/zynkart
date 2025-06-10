@@ -20,6 +20,28 @@ export const metadata: Metadata = {
   title: "Zynkart - Sell Without Limits",
   description:
     "Launch, manage, and scale your online business with our all-in-one platform. Create branded stores, process payments, and grow your customer base—all without technical expertise.",
+  icons: [
+    {
+      url: "/icons/web/favicon.ico",
+      type: "image/x-icon",
+      sizes: "16x16 32x32",
+    },
+    {
+      url: "/icons/web/icon-192.png",
+      type: "image/png",
+      sizes: "192x192",
+    },
+    {
+      url: "/icons/web/icon-192-maskable.png",
+      type: "image/png",
+      sizes: "192x192",
+    },
+    {
+      url: "/icons/web/icon-512-maskable.png",
+      type: "image/png",
+      sizes: "512x512",
+    },
+  ],
   openGraph: {
     title: "Zynkart - Sell Without Limits",
     description:

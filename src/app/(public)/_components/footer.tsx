@@ -9,6 +9,7 @@ import {
   Facebook,
 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Footer() {
   const footerLinks = {
@@ -182,9 +183,12 @@ export default function Footer() {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary"
               />
-              <button className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary hover:to-pink-500 px-6 py-3 rounded-lg font-medium transition-colors">
+              <Button
+                aria-label="Subscribe"
+                className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary hover:to-pink-500 px-6 py-3 rounded-lg font-medium transition-colors"
+              >
                 Subscribe
-              </button>
+              </Button>
             </div>
           </div>
         </div>

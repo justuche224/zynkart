@@ -202,7 +202,7 @@ export default function EnhancedHero() {
 
             <div className="flex justify-center mt-6">
               {features.map((_, index) => (
-                <button
+                <Button
                   key={index}
                   className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
                     activeFeature === index
@@ -223,6 +223,7 @@ export default function EnhancedHero() {
             <Button
               asChild
               size="lg"
+              aria-label="Start for free"
               className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary hover:to-pink-500 text-white border-0 h-14 px-8 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all"
             >
               <Link href={"/sign-in"}>
@@ -232,6 +233,7 @@ export default function EnhancedHero() {
             <Button
               size="lg"
               variant="outline"
+              aria-label="Watch demo"
               className="bg-white/30 dark:bg-transparent border-gray-300 dark:border-white/20 hover:bg-white/50 dark:hover:bg-white/10 text-gray-700 dark:text-white h-14 px-8 rounded-xl shadow-md"
             >
               <PlayCircle className="mr-2 h-5 w-5" /> Watch demo

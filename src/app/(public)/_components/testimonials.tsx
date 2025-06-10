@@ -345,6 +345,7 @@ export default function Testimonials() {
             viewport={{ once: true }}
           >
             <motion.button
+              aria-label="Start Free Trial"
               className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -353,6 +354,7 @@ export default function Testimonials() {
               Start Free Trial
             </motion.button>
             <motion.button
+              aria-label="View Demo"
               className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-xl font-semibold transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
