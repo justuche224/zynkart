@@ -42,7 +42,7 @@ import { category, size, color, productSource, tag } from "@/db/schema";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import ProductVariants from "./new-product-variant-table";
+// import ProductVariants from "./new-product-variant-table";
 import { toast } from "sonner";
 import { Alert } from "@/components/ui/alert";
 import { convertBlobUrlToFile } from "@/lib/convert-blob-url-to-file";
@@ -78,8 +78,8 @@ type NewProductFormProps = {
 const NewProductForm = ({
   storeData,
   categories,
-  colors,
-  sizes,
+  // colors,
+  // sizes,
   vendors,
   tags,
   merchantId,
@@ -350,60 +350,60 @@ const NewProductForm = ({
 
   // VARIATION
 
-  const handleAddSize = async (newSize: {
-    name: string;
-    value: string;
-    storeId?: string;
-    merchantId: string;
-  }) => {
-    const response = await fetch("/api/store/sizes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: newSize.name,
-        value: newSize.value,
-        merchantId: newSize.merchantId,
-        storeId: newSize.storeId,
-      }),
-    });
+  // const handleAddSize = async (newSize: {
+  //   name: string;
+  //   value: string;
+  //   storeId?: string;
+  //   merchantId: string;
+  // }) => {
+  //   const response = await fetch("/api/store/sizes", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       name: newSize.name,
+  //       value: newSize.value,
+  //       merchantId: newSize.merchantId,
+  //       storeId: newSize.storeId,
+  //     }),
+  //   });
 
-    if (!response.ok) {
-      toast.error("Failed to create size");
-      throw new Error("Failed to create size");
-    }
+  //   if (!response.ok) {
+  //     toast.error("Failed to create size");
+  //     throw new Error("Failed to create size");
+  //   }
 
-    const size = await response.json();
-    return size;
-  };
-  const handleAddColor = async (newColor: {
-    name: string;
-    value: string;
-    storeId?: string;
-    merchantId: string;
-  }) => {
-    const response = await fetch("/api/store/colors", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: newColor.name,
-        value: newColor.value,
-        merchantId: newColor.merchantId,
-        storeId: newColor.storeId,
-      }),
-    });
+  //   const size = await response.json();
+  //   return size;
+  // };
+  // const handleAddColor = async (newColor: {
+  //   name: string;
+  //   value: string;
+  //   storeId?: string;
+  //   merchantId: string;
+  // }) => {
+  //   const response = await fetch("/api/store/colors", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       name: newColor.name,
+  //       value: newColor.value,
+  //       merchantId: newColor.merchantId,
+  //       storeId: newColor.storeId,
+  //     }),
+  //   });
 
-    if (!response.ok) {
-      toast.error("Failed to create color");
-      throw new Error("Failed to create color");
-    }
+  //   if (!response.ok) {
+  //     toast.error("Failed to create color");
+  //     throw new Error("Failed to create color");
+  //   }
 
-    const color = await response.json();
-    return color;
-  };
+  //   const color = await response.json();
+  //   return color;
+  // };
 
   return (
     <div className="min-h-screen bg-background">
@@ -1027,7 +1027,7 @@ const NewProductForm = ({
                       )}
                     </div>
 
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="variants"
                       render={({ field }) => (
@@ -1047,7 +1047,7 @@ const NewProductForm = ({
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </div>
                   <FormError message={error} />
                   <FormSuccess message={success} />
