@@ -71,7 +71,7 @@ export function LoginForm({
         },
         {
           onSuccess: () => {
-            console.log("login success");
+            // console.log("login success");
             router.push(callbackURL);
           },
           onError(context) {
