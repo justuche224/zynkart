@@ -1,13 +1,13 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { useCartStore } from "@/store/cart";
 import {
   HelpCircleIcon,
   Menu,
   PackageIcon,
   PercentIcon,
+  Search,
   SearchIcon,
   SettingsIcon,
   ShoppingCart,
@@ -81,55 +81,70 @@ const data = {
   ],
 };
 
-export function SiteHeader({ storeId, storeSlug, storeName }: { storeId: string; storeSlug: string; storeName: string }) {
+export function SiteHeader({
+  storeId,
+  storeSlug,
+  storeName,
+}: {
+  storeId: string;
+  storeSlug: string;
+  storeName: string;
+}) {
   const currentPath = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear fixed top-0 right-0 left-0 z-10 bg-background/50 backdrop-blur-md">
-      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="cursor-pointer">
-              <Menu />
-              <span className="sr-only">Toggle navigation menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left">
-            <SheetHeader>
-              <Link href="/">
-                <SheetTitle>{storeName}</SheetTitle>
-              </Link>
-            </SheetHeader>
-            <NavigationMenu
-              pathname={currentPath}
-              onItemClick={() => setIsOpen(false)}
-              storeId={storeId}
-            />
-          </SheetContent>
-        </Sheet>
-        <Link href="/">
-          <h1 className="text-xl font-bold">{storeName}</h1>
-        </Link>
-
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4"
-        />
-        <div className="text-base font-medium flex-1">
-          <Input
-            type="search"
-            placeholder="Search products..."
-            className="max-w-2xl mx-auto"
-          />
-        </div>
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4"
-        />
+      <div className="flex w-full items-center justify-between gap-1 px-4 lg:gap-2 lg:px-6">
         <div className="flex items-center gap-4">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="cursor-pointer">
+                <Menu />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <SheetHeader>
+                <Link href="/">
+                  <SheetTitle>{storeName}</SheetTitle>
+                </Link>
+              </SheetHeader>
+              <NavigationMenu
+                pathname={currentPath}
+                onItemClick={() => setIsOpen(false)}
+                storeId={storeId}
+              />
+            </SheetContent>
+          </Sheet>
+          <Link href="/" className="sm:hidden">
+            <h1 className="text-xl font-bold">
+              {storeName.length > 10
+                ? storeName.slice(0, 10) + "..."
+                : storeName}
+            </h1>
+          </Link>
+          <Link href="/" className="hidden sm:flex md:hidden">
+            <h1 className="text-xl font-bold">
+              {storeName.length > 25
+                ? storeName.slice(0, 25) + "..."
+                : storeName}
+            </h1>
+          </Link>
+          <Link href="/" className="hidden md:flex">
+            <h1 className="text-xl font-bold">{storeName}</h1>
+          </Link>
+        </div>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="icon"
+            className=""
+            aria-label="Search"
+          >
+            <Search size={20} />
+          </Button>
           <Cart />
-          <ModeToggle />
           <NavUser storeSlug={storeSlug} />
         </div>
       </div>
@@ -247,6 +262,13 @@ function NavigationMenu({
             </Link>
           );
         })}
+      </div>
+
+      <Separator className="my-4" />
+
+      <div className="flex items-center gap-2 px-3 justify-center">
+        <p className="text-base font-bold text-muted-foreground">Theme</p>
+        <ModeToggle />
       </div>
     </ScrollArea>
   );

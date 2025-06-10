@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useCustomerSession } from "@/hooks/use-customer-session";
 import Link from "next/link";
-import { CreditCardIcon, UserCircleIcon, BellIcon, HeartIcon } from "lucide-react";
+import { CreditCardIcon, UserCircleIcon, BellIcon, HeartIcon, User } from "lucide-react";
 import CustomerSignOutButton from "@/components/auth/customer-sign-out-button";
 import Image from "next/image";
 
@@ -23,7 +23,7 @@ const NavUser = ({ storeSlug }: { storeSlug: string }) => {
   if (!customer)
     return (
       <Button variant="outline" asChild>
-        <Link href="/sign-in">Sign In</Link>
+        <Link href="/sign-in"><User/></Link>
       </Button>
     );
 
