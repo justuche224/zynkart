@@ -21,9 +21,7 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
     redirect(`/merchant/`);
   }
 
-  return (
-    <Customise />
-  );
+  return <Customise store={storeInfo} />;
 };
 
 export default page;

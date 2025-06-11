@@ -9,12 +9,18 @@ import { product } from "@/db/schema";
 export async function getFeaturedProducts({
   storeId,
   limit = 5,
+  categoryId = "all",
 }: {
   storeId: string;
   limit?: number;
+  categoryId?: string;
 }) {
   const products = await db.query.product.findMany({
-    where: and(eq(product.storeId, storeId), eq(product.status, "ACTIVE")),
+    where: and(
+      eq(product.storeId, storeId),
+      eq(product.status, "ACTIVE"),
+      categoryId === "all" ? undefined : eq(product.categoryId, categoryId)
+    ),
     limit,
     with: {
       images: {

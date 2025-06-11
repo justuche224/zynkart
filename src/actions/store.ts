@@ -1,6 +1,11 @@
 "use server";
 import db from "@/db";
-import { store } from "@/db/schema";
+import {
+  bannerSettings,
+  customisations,
+  productWheelSettings,
+  store,
+} from "@/db/schema";
 import { serverAuth } from "@/lib/server-auth";
 import { slugify } from "@/lib/utils";
 import { StoreSchema } from "@/schemas";
@@ -27,7 +32,7 @@ export const createStore = async (
   }
   const { name, email, phone, address } = validationResult.data;
 
-  //   TODO subscription check
+  // TODO subscription check
   // check if they have a store already
 
   const stores = await db
@@ -55,20 +60,45 @@ export const createStore = async (
   }
 
   try {
-    const newStore = await db
-      .insert(store)
-      .values({
-        name: name,
-        slug: storeSlug,
-        merchantId: user.user.id,
-        template: "default",
-        phone,
-        email,
-        address,
-      })
-      .returning();
+    const trx = await db.transaction(async (tx) => {
+      const newStore = await tx
+        .insert(store)
+        .values({
+          name: name,
+          slug: storeSlug,
+          merchantId: user.user.id,
+          template: "default",
+          phone,
+          email,
+          address,
+        })
+        .returning();
 
-    return { data: newStore[0] };
+      const newCustomisation = await tx
+        .insert(customisations)
+        .values({
+          storeId: newStore[0].id,
+          template: "default",
+        })
+        .returning();
+
+      await tx.insert(productWheelSettings).values({
+        customisationId: newCustomisation[0].id,
+        show: true,
+        circleTime: 3,
+        productCount: 6,
+        categoryId: "all",
+      });
+
+      await tx.insert(bannerSettings).values({
+        customisationId: newCustomisation[0].id,
+        show: true,
+      });
+
+      return { data: newStore[0] };
+    });
+
+    return trx;
   } catch (error) {
     console.error("Failed to create store:", error);
     return { error: "Failed to create store." };

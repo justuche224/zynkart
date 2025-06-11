@@ -26,6 +26,7 @@ import ProductCard from "./_components/product-card";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StoreDataFromHomePage } from "@/lib/store-utils";
+import Image from "next/image";
 
 type SearchPageStoreInfo = NonNullable<
   Awaited<ReturnType<typeof getSearchPageStoreInfo>>
@@ -310,9 +311,11 @@ const SearchPageComponent = ({ store }: { store: SearchPageStoreInfo }) => {
                           className="group block"
                         >
                           <div className="aspect-square w-full overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 group-hover:opacity-75">
-                            <img
+                            <Image
                               src={category.imageUrl || "/placeholder.svg"}
                               alt={category.name}
+                              width={500}
+                              height={500}
                               className="h-full w-full object-cover object-center"
                             />
                           </div>

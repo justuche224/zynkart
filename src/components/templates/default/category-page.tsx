@@ -28,9 +28,7 @@ import Link from "next/link";
 import { SiteHeader } from "./_components/navbar";
 import type { StoreDataFromHomePage } from "@/lib/store-utils";
 import Banners from "./_components/banners";
-import {
-  CategoryInfoFromCategoryPage,
-} from "@/lib/store-utils";
+import { CategoryInfoFromCategoryPage } from "@/lib/store-utils";
 
 interface HomeProps {
   store: StoreDataFromHomePage;
@@ -45,11 +43,14 @@ export default Home;
 
 function Index({ store, categoryInfo }: HomeProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const useProductWheel = true;
 
   return (
     <>
-      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
+      <SiteHeader
+        storeId={store.id}
+        storeSlug={store.slug}
+        storeName={store.name}
+      />
       <div className="max-w-7xl xl:mx-auto mt-20">
         <section className="container max-w-5xl mx-auto px-4 py-16">
           <div className="flex flex-col items-center text-center mb-12">
@@ -115,7 +116,11 @@ function Index({ store, categoryInfo }: HomeProps) {
             </div>
           </div>
 
-          <ProductList viewMode={viewMode} storeId={store.id} categoryId={categoryInfo.id} />
+          <ProductList
+            viewMode={viewMode}
+            storeId={store.id}
+            categoryId={categoryInfo.id}
+          />
 
           <div className="flex justify-center mt-8">
             <Button variant="outline" size="lg" asChild>
@@ -124,9 +129,22 @@ function Index({ store, categoryInfo }: HomeProps) {
           </div>
         </section>
         <section className="py-8">
-          {useProductWheel ? (
-            <ProductWheel storeId={store.id} />
-          ) : (
+          {store.customisations[0].productWheelSettings.show && (
+            <ProductWheel
+              storeId={store.id}
+              circleTime={
+                store.customisations[0].productWheelSettings.circleTime || 3
+              }
+              productCount={
+                store.customisations[0].productWheelSettings.productCount || 6
+              }
+              categoryId={
+                store.customisations[0].productWheelSettings.categoryId || "all"
+              }
+            />
+          )}
+          <Separator className="my-8" />
+          {store.customisations[0].bannerSettings.show && (
             <Banners banners={store.banners} />
           )}
         </section>

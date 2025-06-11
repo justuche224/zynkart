@@ -95,6 +95,7 @@ export const store = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
+    logoUrl: text("logo_url"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 
@@ -111,21 +112,81 @@ export const store = pgTable(
   ]
 );
 
-export const customisations = pgTable("customisations", {
+export const customisations = pgTable(
+  "customisations",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    template: text("template").notNull(), // e.g., 'default', 'modern', etc.
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("customisations_unique_template_per_store_idx").on(
+      table.storeId,
+      table.template
+    ),
+  ]
+);
+
+export const productWheelSettings = pgTable("product_wheel_settings", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  storeId: text("store_id")
+  show: boolean("show").default(true).notNull(),
+  circleTime: integer("circle_time").default(3).notNull(),
+  productCount: integer("product_count").default(6).notNull(),
+  categoryId: text("category_id").default("all"), // Can reference category.id or be 'all'
+  customisationId: text("customisation_id")
     .notNull()
-    .references(() => store.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    .unique()
+    .references(() => customisations.id, { onDelete: "cascade" }),
+});
+
+export const bannerSettings = pgTable("banner_settings", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  show: boolean("show").default(true).notNull(),
+  customisationId: text("customisation_id")
+    .notNull()
+    .unique()
+    .references(() => customisations.id, { onDelete: "cascade" }),
 });
 
 export const customisationsRelations = relations(customisations, ({ one }) => ({
   store: one(store, {
     fields: [customisations.storeId],
     references: [store.id],
+  }),
+  productWheelSettings: one(productWheelSettings, {
+    fields: [customisations.id],
+    references: [productWheelSettings.customisationId],
+  }),
+  bannerSettings: one(bannerSettings, {
+    fields: [customisations.id],
+    references: [bannerSettings.customisationId],
+  }),
+}));
+
+export const productWheelSettingsRelations = relations(
+  productWheelSettings,
+  ({ one }) => ({
+    customisation: one(customisations, {
+      fields: [productWheelSettings.customisationId],
+      references: [customisations.id],
+    }),
+  })
+);
+
+export const bannerSettingsRelations = relations(bannerSettings, ({ one }) => ({
+  customisation: one(customisations, {
+    fields: [bannerSettings.customisationId],
+    references: [customisations.id],
   }),
 }));
 
@@ -193,10 +254,7 @@ export const storeRelation = relations(store, ({ one, many }) => ({
   }),
   shippingZones: many(shippingZone),
   socials: many(storeSocial),
-  customisations: one(customisations, {
-    fields: [store.id],
-    references: [customisations.storeId],
-  }),
+  customisations: many(customisations),
 }));
 
 export const bank = pgTable("bank", {

@@ -27,6 +27,12 @@ export const getStoreForHomePage = async (storeSlug: string) => {
         },
         where: eq(banner.isActive, true),
       },
+      customisations: {
+        with: {
+          productWheelSettings: true,
+          bannerSettings: true,
+        },
+      },
     },
   });
 };

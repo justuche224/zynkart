@@ -119,13 +119,12 @@ function ProfileForm({
     setError(undefined);
     setSuccess(undefined);
     startTransition(async () => {
-      const { data, error } = await createStore(merchantId, values);
-      if (error) {
-        setError(error);
-      }
-      if (data) {
+      const result = await createStore(merchantId, values);
+      if ("data" in result) {
         setSuccess("Store Created, redirecting to dashboard...");
-        router.push(`/merchant/stores/${data.slug}`);
+        router.push(`/merchant/stores/${result.data.slug}`);
+      } else {
+        setError(result.error);
       }
     });
   }

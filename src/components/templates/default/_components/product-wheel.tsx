@@ -73,14 +73,25 @@ function ProductWheelSkeleton() {
   );
 }
 
-function ProductWheel({ storeId }: { storeId: string }) {
+function ProductWheel({
+  storeId,
+  circleTime = 3,
+  productCount = 6,
+  categoryId = "all",
+}: {
+  storeId: string;
+  circleTime: number;
+  productCount: number;
+  categoryId: string;
+}) {
   const {
     data: productList,
     isLoading: isLoadingProducts,
     error,
   } = useQuery({
     queryKey: ["featured-products"],
-    queryFn: () => getFeaturedProducts({ storeId, limit: 5 }),
+    queryFn: () =>
+      getFeaturedProducts({ storeId, limit: productCount, categoryId }),
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
@@ -154,7 +165,7 @@ function ProductWheel({ storeId }: { storeId: string }) {
         className="w-full max-w-7xl mx-auto"
         plugins={[
           Autoplay({
-            delay: 5000,
+            delay: circleTime * 1000,
           }),
         ]}
       >

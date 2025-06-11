@@ -17,6 +17,7 @@ export async function generateMetadata({
       name: true,
       description: true,
       slug: true,
+      logoUrl: true,
     },
   });
 
@@ -26,9 +27,17 @@ export async function generateMetadata({
       description: "The requested store could not be found.",
     };
   }
+  console.log("store logo url");
+  console.log(storeData.logoUrl);
 
   return {
     title: `${storeData.name} - Online Store`,
+    icons: [
+      {
+        rel: "icon",
+        url: storeData.logoUrl ?? "/favicon.ico",
+      },
+    ],
     description:
       storeData.description ||
       `Shop at ${storeData.name} for the best products and deals.`,
@@ -56,10 +65,7 @@ export async function generateMetadata({
   };
 }
 
-import {
-  getStoreForHomePage,
-  
-} from "@/lib/store-utils";
+import { getStoreForHomePage } from "@/lib/store-utils";
 
 const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   const { storeSlug } = await params;

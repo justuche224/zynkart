@@ -48,7 +48,7 @@ export default Home;
 
 function Index({ store }: HomeProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const useProductWheel = true;
+  const useProductWheel = store.customisations[0].productWheelSettings.show;
   // const newArrivals = productsJson.slice(4, 8);
   // const bestSellers = [...productsJson]
   //   .sort(() => Math.random() - 0.5)
@@ -56,14 +56,15 @@ function Index({ store }: HomeProps) {
 
   return (
     <>
-      <SiteHeader storeId={store.id} storeSlug={store.slug} storeName={store.name} />
+      <SiteHeader
+        storeId={store.id}
+        storeSlug={store.slug}
+        storeName={store.name}
+      />
       <div className="max-w-7xl xl:mx-auto mt-20">
         {/* Hero Section */}
-        {useProductWheel ? (
-          <ProductWheel storeId={store.id} />
-        ) : (
-          <Banners banners={store.banners} />
-        )}
+        {store.customisations[0].bannerSettings.show &&
+          store.banners.length > 0 && <Banners banners={store.banners} />}
 
         {/* Featured Categories */}
         <section>
@@ -80,7 +81,7 @@ function Index({ store }: HomeProps) {
         </section>
 
         {/* Featured Products Carousel */}
-        {!useProductWheel && (
+        {useProductWheel && (
           <section className="py-8">
             <div className="container max-w-7xl mx-auto px-4 mb-8">
               <h2 className="text-3xl font-bold tracking-tight mb-4">
@@ -90,7 +91,18 @@ function Index({ store }: HomeProps) {
                 Discover our handpicked selection of premium products
               </p>
             </div>
-            <ProductWheel storeId={store.id} />
+            <ProductWheel
+              storeId={store.id}
+              circleTime={
+                store.customisations[0].productWheelSettings.circleTime || 3
+              }
+              productCount={
+                store.customisations[0].productWheelSettings.productCount || 6
+              }
+              categoryId={
+                store.customisations[0].productWheelSettings.categoryId || "all"
+              }
+            />
           </section>
         )}
 
