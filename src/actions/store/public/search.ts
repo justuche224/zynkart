@@ -67,7 +67,7 @@ export const searchStore = async (params: SearchAndFilterParams) => {
           )
       : Promise.resolve([]),
     // 4. Find product IDs for a specific tag filter
-    tagId
+    tagId && tagId !== "all"
       ? db
           .select({ productId: productTag.productId })
           .from(productTag)
@@ -113,7 +113,7 @@ export const searchStore = async (params: SearchAndFilterParams) => {
     whereConditions.push(inArray(product.id, productIdsScope));
   }
 
-  if (categoryId) {
+  if (categoryId && categoryId !== "all") {
     whereConditions.push(eq(product.categoryId, categoryId));
   }
 

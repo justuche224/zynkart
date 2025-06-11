@@ -115,7 +115,6 @@ const SearchPageComponent = ({ store }: { store: SearchPageStoreInfo }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Local state for immediate input feedback
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [categoryId, setCategoryId] = useState(
     searchParams.get("categoryId") || ""
@@ -125,7 +124,6 @@ const SearchPageComponent = ({ store }: { store: SearchPageStoreInfo }) => {
     Number(searchParams.get("maxPrice")) || store.maxPrice,
   ]);
 
-  // Debounce the search input and price range
   const [debouncedSearch] = useDebounce(search, 500);
   const [debouncedPrice] = useDebounce(priceRange, 500);
 
@@ -164,7 +162,6 @@ const SearchPageComponent = ({ store }: { store: SearchPageStoreInfo }) => {
     store.maxPrice,
   ]);
 
-  // Read final parameters from URL for the query
   const finalParams = {
     storeId: store.id,
     q: searchParams.get("q"),
@@ -197,7 +194,7 @@ const SearchPageComponent = ({ store }: { store: SearchPageStoreInfo }) => {
       (!!finalParams.q ||
         !!finalParams.categoryId ||
         !!finalParams.tagId ||
-        finalParams.maxPrice !== undefined), // Only run query if store data is available
+        finalParams.maxPrice !== undefined),
   });
 
   const clearFilters = () => {

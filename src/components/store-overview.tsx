@@ -270,7 +270,7 @@ export default function StoreOverview({
             <Card className="lg:col-span-2">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Products Overview</CardTitle>
-                <Link href={`/merchant/${store.slug}/products`}>
+                <Link href={`/merchant/stores/${store.slug}/products`}>
                   <Button variant="ghost" size="sm">
                     View All
                     <ExternalLink className="ml-2 h-4 w-4" />
@@ -290,7 +290,7 @@ export default function StoreOverview({
                           No products added yet
                         </p>
                         <Link
-                          href={`/merchant/${store.slug}/products/new`}
+                          href={`/merchant/stores/${store.slug}/products/new`}
                           className="mt-4 inline-block"
                         >
                           <Button size="sm" variant="outline">
@@ -330,7 +330,7 @@ export default function StoreOverview({
 
                       <div className="mt-6">
                         <Link
-                          href={`/merchant/${store.slug}/products/new`}
+                          href={`/merchant/stores/${store.slug}/products/new`}
                           className="block w-full"
                         >
                           <Button className="w-full">
@@ -550,7 +550,9 @@ export default function StoreOverview({
                     size="sm"
                     asChild
                   >
-                    <Link href={`/merchant/${store.slug}/settings/payments`}>
+                    <Link
+                      href={`/merchant/stores/${store.slug}/settings/payments`}
+                    >
                       {health.hasAccountDetails ? "View" : "Set up"}
                     </Link>
                   </Button>
@@ -579,7 +581,9 @@ export default function StoreOverview({
                     size="sm"
                     asChild
                   >
-                    <Link href={`/merchant/${store.slug}/products/new`}>
+                    <Link
+                      href={`/merchant/stores/${store.slug}/products/new`}
+                    >
                       {health.hasProducts ? "Add more" : "Add product"}
                     </Link>
                   </Button>
@@ -608,7 +612,9 @@ export default function StoreOverview({
                     size="sm"
                     asChild
                   >
-                    <Link href={`/merchant/${store.slug}/settings/shipping`}>
+                    <Link
+                      href={`/merchant/stores/${store.slug}/settings/shipping`}
+                    >
                       {health.hasShippingZones ? "Manage" : "Set up"}
                     </Link>
                   </Button>
@@ -638,7 +644,7 @@ export default function StoreOverview({
                     asChild
                   >
                     <Link
-                      href={`/merchant/${store.slug}/settings/verification`}
+                      href={`/merchant/stores/${store.slug}/settings/verification`}
                     >
                       {health.hasOwnerDoneKYC ? "View" : "Complete"}
                     </Link>
@@ -668,7 +674,9 @@ export default function StoreOverview({
                     size="sm"
                     asChild
                   >
-                    <Link href={`/merchant/${store.slug}/settings/appearance`}>
+                    <Link
+                      href={`/merchant/stores/${store.slug}/settings/appearance`}
+                    >
                       {health.customised ? "Edit" : "Customize"}
                     </Link>
                   </Button>
