@@ -38,6 +38,7 @@ export const CustomerSignUpForm = ({
     id: string;
     name: string;
     slug: string;
+    template: string;
   };
 }) => {
   const router = useRouter();

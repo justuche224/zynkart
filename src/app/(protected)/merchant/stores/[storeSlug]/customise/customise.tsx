@@ -29,8 +29,10 @@ import { updateStoreLogo } from "@/actions/store/logo";
 import { store as storeSchema } from "@/db/schema";
 import { getCustomisation } from "@/actions/store/customisation/get";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/loader";
 import { updateCustomisation } from "@/actions/store/customisation/update";
+import { changeTemplate } from "@/actions/store/customisation/change-template";
+import { info } from "@/constants";
+import { Loader } from "lucide-react";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const MAX_FILES = 1;
@@ -67,6 +69,12 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
   const [initialBannerSettingsState, setInitialBannerSettingsState] =
     useState(bannerSettingsState);
 
+  const [templateState, setTemplateState] = useState({
+    current: store.template || "default",
+  });
+  const [initialTemplateState, setInitialTemplateState] =
+    useState(templateState);
+
   useEffect(() => {
     if (customisationsData?.data) {
       if (customisationsData.data.productWheelSettings) {
@@ -82,8 +90,13 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
         setBannerSettingsState(customisationsData.data.bannerSettings);
         setInitialBannerSettingsState(customisationsData.data.bannerSettings);
       }
+
+      const currentTemplate = store.template || "default";
+      const newTemplateState = { current: currentTemplate };
+      setTemplateState(newTemplateState);
+      setInitialTemplateState(newTemplateState);
     }
-  }, [customisationsData]);
+  }, [customisationsData, store.template]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -187,6 +200,25 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
     });
   };
 
+  const handleTemplateSave = () => {
+    startTransition(async () => {
+      try {
+        const result = await changeTemplate(store.id, templateState.current);
+        if (result.success) {
+          toast.success("Template updated successfully");
+          setInitialTemplateState(templateState);
+          refetch();
+          window.location.reload();
+        } else {
+          toast.error(result.error || "Failed to update template");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred.");
+      }
+    });
+  };
+
   const productWheelHasChanged =
     JSON.stringify(productWheelState) !==
     JSON.stringify(initialProductWheelState);
@@ -195,8 +227,17 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
     JSON.stringify(bannerSettingsState) !==
     JSON.stringify(initialBannerSettingsState);
 
-  if (isLoading) return <Loader />;
+  const templateHasChanged =
+    JSON.stringify(templateState) !== JSON.stringify(initialTemplateState);
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader className="animate-spin" />
+      </div>
+    );
   if (isError) return <div>Error</div>;
+  console.log("customisationsData", customisationsData);
 
   return (
     <section className="px-5 mt-10 grid gap-5">
@@ -215,6 +256,78 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5">
+          <div className="grid gap-4 border rounded-lg p-4 border-dashed border-gray-300">
+            <h2 className="text-lg font-medium">Store Template</h2>
+            <p className="text-sm text-muted-foreground">
+              Select a template for your store. This will change the overall
+              look and feel of your storefront.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-medium mb-2">
+                  Current Template: {store.template || "default"}
+                </h3>
+                <Select
+                  onValueChange={(template) =>
+                    setTemplateState((s) => ({ ...s, current: template }))
+                  }
+                  value={templateState.current}
+                  disabled={isPending}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Select a template" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {info.templates.map((template) => (
+                      <SelectItem key={template} value={template}>
+                        {template.charAt(0).toUpperCase() + template.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {info.templates.map((template) => (
+                  <div
+                    key={template}
+                    className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                      templateState.current === template
+                        ? "border-blue-500 bg-blue-50 border-4"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setTemplateState((s) => ({ ...s, current: template }))
+                    }
+                  >
+                    <div
+                      className="aspect-video rounded mb-2 flex items-center justify-center"
+                      style={{
+                        backgroundImage: `url(/images/templates/${template}.png)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <span className="text-sm text-gray-500">Preview</span>
+                    </div>
+                    <h4 className="font-medium capitalize">{template}</h4>
+                    <p className="text-xs text-muted-foreground">
+                      {template === "default" && "Clean and minimal design"}
+                      {template === "sapphire" && "Modern and vibrant layout"}
+                      {template === "glassy" && "Elegant glass-like interface"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <Button
+                onClick={handleTemplateSave}
+                disabled={isPending || !templateHasChanged}
+                className="w-fit"
+                variant={templateHasChanged ? "default" : "outline"}
+              >
+                {isPending ? "Saving..." : "Save Template"}
+              </Button>
+            </div>
+          </div>
           <div>
             <div className="flex flex-col gap-4 border rounded-lg p-4 border-dashed border-gray-300">
               <div className="flex flex-col items-center justify-between gap-4">
@@ -284,6 +397,7 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
             </div>
           </div>
           <div className="grid gap-4 border rounded-lg p-4 border-dashed border-gray-300">
+            {/* TODO: Add actual template image */}
             <h2 className="text-lg font-medium">Product Wheel</h2>
             <Image
               src="https://afakpghdgtblnxinpzgy.supabase.co/storage/v1/object/public/zynkart-product-images//Screenshot%202025-06-11%20110835.png"
@@ -389,6 +503,7 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
           </div>
           <div className="grid gap-4 border rounded-lg p-4 border-dashed border-gray-300">
             <h2 className="text-lg font-medium">Banners</h2>
+            {/* TODO: Add actual template image */}
             <Image
               src="https://afakpghdgtblnxinpzgy.supabase.co/storage/v1/object/public/zynkart-product-images//Screenshot%202025-06-11%20112635.png"
               alt="Banners"

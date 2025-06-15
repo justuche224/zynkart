@@ -73,18 +73,26 @@ const AddToCart = ({ product }: { product: Product }) => {
         <div className="flex items-center justify-between w-full">
           <Button
             size="sm"
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={handleDecrement}
+            variant="secondary"
+            className="h-8 w-8 p-0 text-black"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleDecrement();
+            }}
           >
             <Minus className="h-3 w-3" />
           </Button>
           <span className="text-sm font-medium">{cartItem.quantity}</span>
           <Button
             size="sm"
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={handleIncrement}
+            variant="secondary"
+            className="h-8 w-8 p-0 text-black"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleIncrement();
+            }}
             disabled={
               product.trackQuantity && cartItem.quantity >= product.inStock
             }

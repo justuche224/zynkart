@@ -1,19 +1,15 @@
-import React from "react";  
+import React from "react";
 import dynamic from "next/dynamic";
-import { Loader2 } from "lucide-react";
 import { StoreDataFromHomePage } from "@/lib/store-utils";
 import type { ProductListPageProps } from "@/components/templates/default/product-list";
+import Loader from "@/components/loader";
 
 const ProductsListPage = ({ store }: { store: StoreDataFromHomePage }) => {
   const { template } = store;
   const ProductsList = dynamic<ProductListPageProps>(
     () => import(`../templates/${template}/product-list`),
     {
-      loading: () => (
-        <div>
-          <Loader2 className="animate-spin" />
-        </div>
-      ),
+      loading: () => <Loader />,
     }
   );
 

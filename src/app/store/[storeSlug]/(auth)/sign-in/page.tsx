@@ -17,8 +17,11 @@ const CustomerSignInPage = async ({
       id: true,
       name: true,
       slug: true,
+      template: true,
     },
   });
+
+  // TODO implement template
 
   if (!storeData) {
     return <div>Store not found</div>;

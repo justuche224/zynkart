@@ -14,7 +14,7 @@ export const saveProduct = async (productId: string) => {
   const customer = await serverCustomerAuth();
   if (!customer) {
     return {
-      error: "Unauthorized",
+      error: "Please login to save products",
     };
   }
 
@@ -59,7 +59,7 @@ export const unsaveProduct = async (productId: string) => {
   const customer = await serverCustomerAuth();
   if (!customer) {
     return {
-      error: "Unauthorized",
+      error: "Please login to unsave products",
     };
   }
 
@@ -89,7 +89,7 @@ export const getSavedProducts = async () => {
   const customer = await serverCustomerAuth();
   if (!customer) {
     return {
-      error: "Unauthorized",
+      error: "Please login to get saved products",
     };
   }
 

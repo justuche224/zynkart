@@ -1,11 +1,11 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import db from "@/db";
-import { banner, category, product, store } from "@/db/schema";
+import { banner, category, customisations, product, store } from "@/db/schema";
 
 export const getStoreForHomePage = async (storeSlug: string) => {
-  return db.query.store.findFirst({
+  const storeData = await db.query.store.findFirst({
     where: eq(store.slug, storeSlug),
     columns: {
       id: true,
@@ -29,14 +29,26 @@ export const getStoreForHomePage = async (storeSlug: string) => {
         },
         where: eq(banner.isActive, true),
       },
-      customisations: {
-        with: {
-          productWheelSettings: true,
-          bannerSettings: true,
-        },
-      },
     },
   });
+
+  if (!storeData) return null;
+
+  const customisation = await db.query.customisations.findFirst({
+    where: and(
+      eq(customisations.storeId, storeData.id),
+      eq(customisations.template, storeData.template)
+    ),
+    with: {
+      productWheelSettings: true,
+      bannerSettings: true,
+    },
+  });
+
+  return {
+    ...storeData,
+    customisations: customisation ? [customisation] : [],
+  };
 };
 
 const getCategoriesForHomePage = async (storeId: string) => {

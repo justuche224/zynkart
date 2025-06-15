@@ -1,6 +1,6 @@
 "use client";
 
-import { SiteHeader } from "./_components/navbar";
+import Navbar from "./_components/navbar";
 import { Footer } from "./_components/footer";
 import { useQuery } from "@tanstack/react-query";
 import { getSearchPageStoreInfo } from "@/actions/store/public/search";
@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StoreDataFromHomePage } from "@/lib/store-utils";
 import { ResultsSkeleton, StoreSearch } from "@/components/store/search";
 
+// Skeleton for the entire search page during initial load
 const SearchPageSkeleton = () => (
   <section className="flex flex-col min-h-screen">
     <Skeleton className="h-16 w-full" />
@@ -66,12 +67,8 @@ const SearchPageComponent = ({
   store: NonNullable<Awaited<ReturnType<typeof getSearchPageStoreInfo>>>;
 }) => {
   return (
-    <section className="flex flex-col min-h-screen mt-16">
-      <SiteHeader
-        storeId={store.id}
-        storeSlug={store.slug}
-        storeName={store.name}
-      />
+    <section className="flex flex-col min-h-screen mt-16 dark:bg-[#1e1b4b] dark:text-white bg-white">
+      <Navbar storeSlug={store.slug} storeName={store.name} />
       <StoreSearch store={store} ProductCard={ProductCard} />
       <Footer storeSlug={store.slug} />
     </section>

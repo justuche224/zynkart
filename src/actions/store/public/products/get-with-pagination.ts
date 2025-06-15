@@ -30,7 +30,7 @@ export const getProductsByStoreWithPagination = async ({
     if (active) {
       conditions.push(eq(product.status, "ACTIVE"));
     }
-    if (categoryId) {
+    if (categoryId && categoryId !== "all") {
       conditions.push(eq(product.categoryId, categoryId));
     }
 
