@@ -2,7 +2,7 @@
 
 import db from "@/db";
 import { count, eq } from "drizzle-orm";
-import { bank, product, shippingZone } from "@/db/schema";
+import { bank, product, shippingZone, store } from "@/db/schema";
 
 interface HealthCheck {
   hasAccountDetails: boolean;
@@ -27,7 +27,7 @@ const getRecommendations = (health: HealthCheck, slug: string) => {
   if (!health.hasAccountDetails) {
     recommendations.push({
       info: "Add your bank account details to receive payments from customers",
-      link: `/merchant/stores/${slug}/settings/payments`,
+      link: `/merchant/stores/${slug}/settings/bank`,
     });
   }
 
@@ -46,7 +46,7 @@ const getRecommendations = (health: HealthCheck, slug: string) => {
   if (!health.hasShippingZones) {
     recommendations.push({
       info: "Set up shipping zones to define delivery fees for different locations",
-      link: `/merchant/stores/${slug}/settings/shipping`,
+      link: `/merchant/stores/${slug}/settings/shipping-and-delivery`,
     });
   }
 
@@ -60,7 +60,7 @@ const getRecommendations = (health: HealthCheck, slug: string) => {
   if (!health.customised) {
     recommendations.push({
       info: "Customize your store with a logo, banner, and theme to attract more customers",
-      link: `/merchant/stores/${slug}/settings/appearance`,
+      link: `/merchant/stores/${slug}/customise`,
     });
   }
 
@@ -84,7 +84,7 @@ export const getStoreHealth = async (
   storeId: string,
   storeSlug: string
 ): Promise<StoreHealth> => {
-  const [bankDetails, productCountResult, shippingZoneDetails] =
+  const [bankDetails, productCountResult, shippingZoneDetails, storeDetails] =
     await Promise.all([
       db.query.bank.findFirst({
         where: eq(bank.storeId, storeId),
@@ -98,6 +98,10 @@ export const getStoreHealth = async (
         where: eq(shippingZone.storeId, storeId),
         columns: { id: true },
       }),
+      db.query.store.findFirst({
+        where: eq(store.id, storeId),
+        columns: { logoUrl: true },
+      }),
     ]);
 
   const totalProducts = productCountResult[0].value;
@@ -108,7 +112,7 @@ export const getStoreHealth = async (
     hasProducts: totalProducts > 0,
     hasShippingZones: !!shippingZoneDetails,
     hasOwnerDoneKYC: false,
-    customised: false,
+    customised: !!storeDetails?.logoUrl,
   };
 
   const healthScore = calculateHealthScore(healthCheck);
