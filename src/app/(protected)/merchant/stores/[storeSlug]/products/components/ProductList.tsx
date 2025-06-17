@@ -22,14 +22,14 @@ interface ProductListProps {
 }
 const ProductList = ({ products, storeData }: ProductListProps) => {
   return (
-    <div className="mt-20 w-full px-5 max-w-7xl mx-auto">
+    <div className="mt-10 w-full px-5 max-w-7xl mx-auto">
       <GenericProductList
         storeId={storeData.id}
         storeSlug={storeData.slug}
         products={products}
         header={
           <div className="flex items-center justify-between">
-            <h1 className="text-4xl font-bold mb-4">{storeData.name}</h1>
+            <h1 className="text-4xl font-bold mb-4">Manage Products</h1>
             <Link href={`/merchant/stores/${storeData.slug}/products/new`}>
               <Button variant="outline" className="gap-2">
                 <Plus size={20} />

@@ -107,7 +107,7 @@ const ProductsPage = ({ storeData }: ProductsPageProps) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4">
       <motion.div
         initial="hidden"
         animate="visible"

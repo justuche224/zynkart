@@ -81,7 +81,7 @@ const Categories = ({ categories, storeSlug, merchantId }: Props) => {
   };
 
   return (
-    <div className="mt-20 w-full px-5 max-w-7xl mx-auto space-y-8">
+    <div className="mt-10 w-full px-5 max-w-7xl mx-auto space-y-8">
       {isDeleting && (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 bg-sidebar/50 z-50 backdrop-blur-sm">
           <Loader className="animate-spin" color="blue" size={60} />
