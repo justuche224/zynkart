@@ -107,9 +107,14 @@ export default function Navbar({
       <nav className="flex items-center justify-between gap-5">
         <div>
           <Link href="/">
-            <h1 className="text-2xl font-bold">
-              {storeName.length > 20
-                ? storeName.slice(0, 25) + "..."
+            <h1 className="md:text-2xl font-bold text-base text-nowrap sm:hidden">
+              {storeName.length > 10 ? storeName.slice(0, 10) + "..." : storeName}
+            </h1>
+          </Link>
+          <Link href="/" className="hidden sm:block">
+            <h1 className="text-xl font-bold">
+              {storeName.length > 10
+                ? storeName.slice(0, 10) + "..."
                 : storeName}
             </h1>
           </Link>
