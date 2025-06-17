@@ -17,6 +17,7 @@ export const getStoreForHomePage = async (storeSlug: string) => {
       phone: true,
       slug: true,
       template: true,
+      logoUrl: true,
     },
     with: {
       banners: {

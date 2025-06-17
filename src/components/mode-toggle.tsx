@@ -12,13 +12,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function ModeToggle() {
+export function ModeToggle({
+  variant = "outline",
+}: {
+  variant?:
+    | "outline"
+    | "ghost"
+    | "link"
+    | "default"
+    | "destructive"
+    | "secondary"
+    | null
+    | undefined;
+}) {
   const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button aria-label="Toggle theme" variant="outline" size="icon">
+        <Button aria-label="Toggle theme" variant={variant} size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
@@ -31,7 +43,10 @@ export function ModeToggle() {
         <DropdownMenuItem aria-label="Dark" onClick={() => setTheme("dark")}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem aria-label="System" onClick={() => setTheme("system")}>
+        <DropdownMenuItem
+          aria-label="System"
+          onClick={() => setTheme("system")}
+        >
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
