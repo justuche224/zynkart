@@ -1,8 +1,19 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
 import { User } from "better-auth";
-import { ArrowRight, ShoppingCart } from "lucide-react";
+import { 
+  ArrowRight, 
+  ShoppingCart, 
+  TrendingUp, 
+  Users, 
+  Package, 
+  Store,
+  Crown,
+  AlertCircle,
+  Plus,
+  Eye,
+  BarChart3
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { NewStore } from "@/components/new-store";
@@ -15,6 +26,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const Merchant = ({
   merchant,
@@ -54,127 +66,223 @@ const Merchant = ({
     return stores.reduce((acc, store) => acc + store.customerCount, 0);
   }, [stores]);
 
+
   return (
-    <section className="max-w-5xl mx-auto min-h-screen p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
       <NewStore merchantId={merchant.id} open={open} setOpen={setOpen} />
-      <section className="flex flex-col text-center sm:text-left sm:flex-row items-center gap-4">
-        <div>
-          {merchant.image ? (
-            <div className="w-[200px] h-[200px] bg-primary rounded-full flex items-center justify-center font-bold text-6xl">
-              <Image
-                src={merchant.image}
-                alt={merchant.name}
-                width={200}
-                height={200}
-                className="rounded-full w-[200px] h-[200px]"
-              />
+      
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="relative">
+                {merchant.image ? (
+                  <div className="relative">
+                    <Image
+                      src={merchant.image}
+                      alt={merchant.name}
+                      width={120}
+                      height={120}
+                      className="rounded-2xl w-[120px] h-[120px] object-cover shadow-lg"
+                    />
+                    <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2">
+                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-[120px] h-[120px] bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center font-bold text-3xl text-white shadow-lg">
+                    {merchant.name.charAt(0) + merchant.name.charAt(1)}
+                  </div>
+                )}
+              </div>
+              
+              <div className="text-center sm:text-left">
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900">{merchant.name}</h1>
+                  <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
+                    <Crown className="w-3 h-3 mr-1" />
+                    Free Plan
+                  </Badge>
+                </div>
+                <p className="text-gray-600 mb-1">{merchant.email}</p>
+                <p className="text-gray-500 text-sm">+351 912 345 678</p>
+                <Button variant="outline" className="mt-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 border-0">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Upgrade Plan
+                </Button>
+              </div>
             </div>
-          ) : (
-            <div className="w-[200px] h-[200px] bg-primary rounded-full flex items-center justify-center font-bold text-6xl">
-              {merchant.name.charAt(0) + merchant.name.charAt(1)}
+
+            <div className="flex-1 w-full lg:w-auto">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <Store className="w-8 h-8 text-blue-600" />
+                    <Badge variant="outline" className="text-xs">Active</Badge>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-900">{stores.length}</div>
+                  <div className="text-blue-700 text-sm font-medium">
+                    Store{stores.length !== 1 ? "s" : ""}
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <Package className="w-8 h-8 text-green-600" />
+                    <Badge variant="outline" className="text-xs">+12%</Badge>
+                  </div>
+                  <div className="text-2xl font-bold text-green-900">{totalProducts}</div>
+                  <div className="text-green-700 text-sm font-medium">
+                    Product{totalProducts !== 1 ? "s" : ""}
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <Users className="w-8 h-8 text-purple-600" />
+                    <Badge variant="outline" className="text-xs">+8%</Badge>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-900">{totalCustomers}</div>
+                  <div className="text-purple-700 text-sm font-medium">
+                    Customer{totalCustomers !== 1 ? "s" : ""}
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <BarChart3 className="w-8 h-8 text-orange-600" />
+                    <Badge variant="outline" className="text-xs bg-orange-500 text-white">2 New</Badge>
+                  </div>
+                  <div className="text-2xl font-bold text-orange-900">765</div>
+                  <div className="text-orange-700 text-sm font-medium">Orders</div>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
         </div>
-        <div className="flex flex-col md:flex-row justify-center md:justify-between gap-2 w-full">
+      </div>
+
+      {showKycWarning && (
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="bg-gradient-to-r from-red-500 to-pink-600 text-white p-6 rounded-xl shadow-lg">
+            <div className="flex items-center gap-4">
+              <AlertCircle className="w-8 h-8 flex-shrink-0" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg mb-1">Account Verification Required</h3>
+                <p className="text-red-100">
+                  Your merchant account needs verification before customers can place orders. 
+                  Complete the verification process to unlock full functionality.
+                </p>
+              </div>
+              <Button className="bg-white text-red-600 hover:bg-red-50 font-semibold">
+                Verify Now
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold">{merchant.name}</h1>
-            <p className="text-sm text-muted-foreground">{merchant.email}</p>
-            <p>+351 912 345 678</p>
-            <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <p>Free Plan</p> <Button variant="outline">Upgrade</Button>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Stores</h2>
+            <p className="text-gray-600">Manage and monitor your store performance</p>
           </div>
-          <div className="flex items-center justify-center sm:justify-start  gap-4">
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">{stores.length}</div>
-              <div className="text-primary">
-                store{stores.length > 1 ? "s" : ""}
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">{totalProducts}</div>
-              <div className="text-primary">
-                product{totalProducts > 1 ? "s" : ""}
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">{totalCustomers}</div>
-              <div className="text-primary">
-                customer{totalCustomers > 1 ? "s" : ""}
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold relative">
-                765
-                <span className="absolute -top-3 -right-3 bg-primary text-white rounded-full px-2 py-1 text-xs">
-                  2
-                </span>
-              </div>
-              <div className="text-primary">orders</div>
-            </div>
-          </div>
+          <Button 
+            onClick={() => setOpen(true)}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Create Store
+          </Button>
         </div>
-      </section>
-     {showKycWarning && <div className="bg-red-500 text-white p-4 rounded-lg mt-4 flex flex-col items-center justify-center gap-4">
-        <h1 className="text-center">
-          Your haven&apos;t verified your merchant account yet. customers
-          won&apos;t be able to place orders till you verify your account
-        </h1>
-        <Button>
-          Verify Account <ArrowRight size={16} />
-        </Button>
-      </div>}
-      <Separator className="my-4" />
-      <section>
-        <div className="flex justify-end mb-4">
-          <Button onClick={() => setOpen(true)}>Create Store</Button>
-        </div>
+
         {stores.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4">
-            <ShoppingCart size={150} className="text-primary -rotate-12" />
-            <div className="text-2xl font-bold text-center">
-              <h1>you don&apos;t have any stores yet.</h1>
-              <p>create a store to start selling</p>
-              <Button onClick={() => setOpen(true)}>Create Store</Button>
+          <div className="bg-white rounded-2xl shadow-sm border p-12 text-center">
+            <div className="max-w-md mx-auto">
+              <div className="bg-gradient-to-br from-blue-100 to-purple-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6">
+                <ShoppingCart size={60} className="text-blue-600 -rotate-12" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">No stores yet</h3>
+              <p className="text-gray-600 mb-6">Create your first store to start selling and managing your products</p>
+              <Button 
+                onClick={() => setOpen(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Create Your First Store
+              </Button>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-            {stores.map((store) => (
-              <Card className="" key={store.id}>
-                <CardHeader className="text-2xl font-bold">
-                  {store.name}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {stores.map((store, index) => (
+              <Card key={store.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white rounded-2xl overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {store.name}
+                    </h3>
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      Active
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-500">Store ID: {store.slug}</p>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-4">
-                    <div className="flex flex-col items-center">
-                      <div className="text-2xl font-bold">
-                        {store.customerCount}
+
+                <CardContent className="pb-6">
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="text-center">
+                      <div className="bg-blue-50 rounded-lg p-3 mb-2">
+                        <Users className="w-5 h-5 text-blue-600 mx-auto" />
                       </div>
-                      <div className="text-primary">customers</div>
+                      <div className="text-lg font-bold text-gray-900">{store.customerCount}</div>
+                      <div className="text-xs text-gray-500">Customers</div>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <div className="text-2xl font-bold">
-                        {store.productCount}
+                    
+                    <div className="text-center">
+                      <div className="bg-green-50 rounded-lg p-3 mb-2">
+                        <Package className="w-5 h-5 text-green-600 mx-auto" />
                       </div>
-                      <div className="text-primary">products</div>
+                      <div className="text-lg font-bold text-gray-900">{store.productCount}</div>
+                      <div className="text-xs text-gray-500">Products</div>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <div className="text-2xl font-bold relative">
-                        765
-                        <span className="absolute -top-3 -right-3 bg-primary text-white rounded-full px-2 py-1 text-xs">
+                    
+                    <div className="text-center">
+                      <div className="bg-orange-50 rounded-lg p-3 mb-2 relative">
+                        <BarChart3 className="w-5 h-5 text-orange-600 mx-auto" />
+                        <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
                           2
-                        </span>
+                        </Badge>
                       </div>
-                      <div className="text-primary">orders</div>
+                      <div className="text-lg font-bold text-gray-900">765</div>
+                      <div className="text-xs text-gray-500">Orders</div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Performance</span>
+                      <span className="text-green-600 font-medium">+12% this month</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                      <div className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" style={{width: '68%'}}></div>
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter>
-                  <Button asChild>
+
+                <CardFooter className="pt-0">
+                  <Button 
+                    asChild 
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl group-hover:shadow-lg transition-all duration-200"
+                  >
                     <Link href={`/merchant/stores/${store.slug}`}>
+                      <Eye className="w-4 h-4 mr-2" />
                       View Store
-                      <ArrowRight size={16} />
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
                 </CardFooter>
@@ -182,8 +290,8 @@ const Merchant = ({
             ))}
           </div>
         )}
-      </section>
-    </section>
+      </div>
+    </div>
   );
 };
 
