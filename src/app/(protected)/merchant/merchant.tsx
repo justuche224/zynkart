@@ -67,10 +67,10 @@ const Merchant = ({
   }, [stores]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800">
+    <div className="min-h-screen">
       <NewStore merchantId={merchant.id} open={open} setOpen={setOpen} />
 
-      <div className="bg-white shadow-sm border-b dark:bg-gray-900 dark:border-gray-700">
+      <div className="bg-card shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
             <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -114,10 +114,7 @@ const Merchant = ({
                 <p className="text-gray-500 dark:text-gray-400 text-sm">
                   +351 912 345 678
                 </p>
-                <Button
-                  variant="outline"
-                  className="mt-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 border-0"
-                >
+                <Button variant="default" className="mt-3">
                   <TrendingUp className="w-4 h-4 mr-2" />
                   Upgrade Plan
                 </Button>
@@ -267,7 +264,7 @@ const Merchant = ({
             {stores.map((store) => (
               <Card
                 key={store.id}
-                className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white rounded-2xl overflow-hidden dark:bg-gray-800"
+                className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-card rounded-2xl overflow-hidden"
               >
                 <div className="h-2 bg-gradient-to-r from-blue-500 to-purple-600"></div>
 

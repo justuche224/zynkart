@@ -1,4 +1,3 @@
-
 import { serverAuth } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -17,19 +16,18 @@ const page = async () => {
       id: store.id,
       name: store.name,
       slug: store.slug,
-      productCount: sql<number>`(
-        SELECT COUNT(*)::int 
-        FROM ${product} 
-        WHERE ${product.storeId} = ${store.id}
-      )`,
-      customerCount: sql<number>`(
-        SELECT COUNT(*)::int 
-        FROM ${customer} 
-        WHERE ${customer.storeId} = ${store.id}
-      )`,
+      productCount: sql<number>`count(distinct ${product.id})`.mapWith(Number),
+      customerCount: sql<number>`count(distinct ${customer.id})`.mapWith(
+        Number
+      ),
     })
     .from(store)
-    .where(eq(store.merchantId, data.user.id));
+    .leftJoin(product, eq(product.storeId, store.id))
+    .leftJoin(customer, eq(customer.storeId, store.id))
+    .where(eq(store.merchantId, data.user.id))
+    .groupBy(store.id, store.name, store.slug);
+
+  console.log(stores);
 
   return (
     <div suppressHydrationWarning>
