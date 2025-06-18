@@ -192,13 +192,13 @@ export function ProductWheel({
                     <span className="sr-only">Add to wishlist</span>
                   </Button>
                   <div className="mt-auto">
-                    <h3 className="font-semibold text-white mb-1 md:mb-2 line-clamp-2">
+                    <h3 className=" text-white mb-1 md:mb-2 line-clamp-2 text-balance text-md">
                       {product.name}
                     </h3>
 
                     <div className="flex items-center justify-between mb-1 md:mb-4">
                       <div className="flex flex-col items-start space-x-2">
-                        <span className="text-sm md:text-lg font-bold text-white">
+                        <span className="text-sm md:text-base font-bold text-white">
                           {formatPrice(product.price)}
                         </span>
                         {product.slashedFrom && (

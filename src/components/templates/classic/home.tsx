@@ -16,11 +16,15 @@ interface HomeProps {
 export default function Home({ store }: HomeProps) {
   return (
     <section className="min-h-screen bg-[#fff] md:pt-16 pt-24 flex flex-col dark:bg-[#252525]">
-      <Navbar storeSlug={store.slug} storeName={store.name} storeId={store.id} />
+      <Navbar
+        storeSlug={store.slug}
+        storeName={store.name}
+        storeId={store.id}
+      />
       <section className="flex-1 flex flex-col gap-10 lg:justify-between lg:min-h-[calc(100vh-5rem)]">
         {store.customisations[0].bannerSettings.show && (
-          <div className="container mx-auto">
-            <div className="lg:border-0 border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-transparent/50 backdrop-blur-lg">
+          <div className="container mx-auto pt-0 md:pt-5">
+            <div className="bg-transparent/50 backdrop-blur-lg">
               <Banners banners={store.banners} />
             </div>
           </div>

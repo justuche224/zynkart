@@ -142,7 +142,7 @@ export default function ByCategories({ storeId }: { storeId: string }) {
             <ScrollArea>
               <div className="flex space-x-4 pb-4">
                 {category.products.map((product) => (
-                  <div key={product.id} className="w-64 flex-shrink-0">
+                  <div key={product.id} className="w-44 flex-shrink-0">
                     <Card
                       className="cursor-pointer hover:shadow-lg transition-all aspect-[1/1] bg-cover duration-300 relative"
                       style={{
