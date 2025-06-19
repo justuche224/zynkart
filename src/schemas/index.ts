@@ -194,3 +194,37 @@ export const NewBannerSchema = z.object({
   storeId: z.string(),
   imageUrl: z.string().optional(),
 });
+
+const shippingInfoSchema = z.object({
+  country: z.string().min(1, "Country is required"),
+  state: z.string().min(1, "State is required"),
+  area: z.string().min(1, "Area is required"),
+  address: z.string().min(1, "Address is required"),
+  phoneNumber: z.string().min(1, "Phone number is required"),
+  secondaryPhoneNumber: z.string().optional(),
+  additionalInfo: z.string().optional(),
+});
+
+const itemSchema = z.object({
+  productId: z.string().min(1, "Product ID is required"),
+  name: z.string().min(1, "Product name is required"),
+  quantity: z.number().int().positive("Quantity must be a positive integer"),
+  price: z.number().positive("Price must be positive"),
+  variantId: z.string().optional(),
+});
+
+export const orderInfoSchema = z
+  .object({
+    customerId: z.string().min(1, "Customer ID is required"),
+    storeSlug: z.string().min(1, "Store slug is required"),
+    storeId: z.string().min(1, "Store ID is required"),
+    subtotal: z.number().positive("Subtotal must be positive"),
+    shippingCost: z.number().nonnegative("Shipping cost must be non-negative"),
+    totalAmount: z.number().positive("Total amount must be positive"),
+    shippingInfo: shippingInfoSchema,
+    items: z.array(itemSchema).min(1, "At least one item is required"),
+  })
+  .refine((data) => data.totalAmount === data.subtotal + data.shippingCost, {
+    message: "Total amount must equal subtotal plus shipping cost",
+    path: ["totalAmount"],
+  });

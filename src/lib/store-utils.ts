@@ -2,7 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 import db from "@/db";
-import { banner, category, customisations, product, store } from "@/db/schema";
+import { banner, category, customisations, product, shippingZone, store } from "@/db/schema";
 
 export const getStoreForHomePage = async (storeSlug: string) => {
   const storeData = await db.query.store.findFirst({
@@ -110,3 +110,15 @@ export {
   getCategoryInfoForCategoryPage,
   getProductInfoForProductPage,
 };
+
+export const getShippingZonesForStore = async (storeId: string) => {
+  const shippingZones = await db.query.shippingZone.findMany({
+    where: eq(shippingZone.storeId, storeId),
+  });
+
+  return shippingZones;
+};
+
+export type ShippingZonesFromStore = NonNullable<
+  Awaited<ReturnType<typeof getShippingZonesForStore>>
+>;

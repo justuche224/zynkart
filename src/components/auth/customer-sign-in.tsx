@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useTransition } from "react";
 import { Loader } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -42,6 +42,8 @@ export const CustomerSignInForm = ({
   };
 }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/account";
   const [isPending, startTransition] = useTransition();
   const form = useForm<TCustomerSignInSchema>({
     resolver: zodResolver(customerSignInSchema),
@@ -61,7 +63,7 @@ export const CustomerSignInForm = ({
       if (success) {
         toast.success(success);
         form.reset();
-        router.push(`/account`);
+        router.push(callbackUrl);
       }
 
       if (error) {
@@ -129,7 +131,7 @@ export const CustomerSignInForm = ({
           </div>
           <div className="text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/sign-up" className="underline underline-offset-4">
+            <Link href={`/sign-up?callbackUrl=${callbackUrl}`} className="underline underline-offset-4">
               Sign up
             </Link>
           </div>

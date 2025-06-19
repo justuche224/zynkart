@@ -9,6 +9,7 @@ import {
   uniqueIndex,
   integer,
   numeric,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 // -------------------------------------------------------
@@ -255,6 +256,8 @@ export const storeRelation = relations(store, ({ one, many }) => ({
   shippingZones: many(shippingZone),
   socials: many(storeSocial),
   customisations: many(customisations),
+  orders: many(order),
+  orderItems: many(orderItem),
 }));
 
 export const bank = pgTable("bank", {
@@ -819,5 +822,123 @@ export const productTagRelations = relations(productTag, ({ one }) => ({
   tag: one(tag, {
     fields: [productTag.tagId],
     references: [tag.id],
+  }),
+}));
+
+
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "PENDING",
+  "PAID",
+  "FAILED",
+  "REFUNDED",
+]);
+
+export const fulfillmentStatusEnum = pgEnum("fulfillment_status", [
+  "PROCESSING",
+  "SHIPPED",
+  "DELIVERED",
+  "CANCELLED",
+]);
+
+export const order = pgTable(
+  "order",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customer.id, { onDelete: "cascade" }),
+    paymentStatus: paymentStatusEnum("payment_status")
+      .default("PENDING")
+      .notNull(),
+    fulfillmentStatus: fulfillmentStatusEnum("fulfillment_status")
+      .default("PROCESSING")
+      .notNull(),
+    paymentReference: text("payment_reference").notNull().unique(),
+    paymentAccessCode: text("payment_access_code").notNull().unique(),
+    subtotal: integer("subtotal").notNull(),
+    total: integer("total").notNull(),
+    shippingCost: integer("shipping_cost").notNull(),
+    shippingInfo: jsonb("shipping_info").notNull(),
+    trackingNumber: text("tracking_number"),
+    shippingProvider: text("shipping_provider"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    shippedAt: timestamp("shipped_at"),
+    deliveredAt: timestamp("delivered_at"),
+  },
+  (table) => [
+    uniqueIndex("order_payment_reference_idx").on(table.paymentReference),
+    uniqueIndex("order_payment_access_code_idx").on(table.paymentAccessCode),
+    index("order_store_id_idx").on(table.storeId),
+    index("order_customer_id_idx").on(table.customerId),
+    index("order_payment_status_idx").on(table.paymentStatus),
+    index("order_fulfillment_status_idx").on(table.fulfillmentStatus),
+    index("payment_reference_idx").on(table.paymentReference),
+  ]
+);
+
+export const orderItem = pgTable(
+  "order_item",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    orderId: text("order_id")
+      .notNull()
+      .references(() => order.id, { onDelete: "cascade" }),
+    productId: text("product_id")
+      .notNull()
+      .references(() => product.id),
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    variantId: text("variant_id").references(() => productVariant.id),
+    quantity: integer("quantity").notNull(),
+    productName: text("product_name").notNull(),
+    variantDetails: text("variant_details"),
+    price: integer("price").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("order_item_order_id_idx").on(table.orderId),
+    index("order_item_product_id_idx").on(table.productId),
+    index("order_item_variant_id_idx").on(table.variantId),
+  ]
+);
+
+export const orderRelations = relations(order, ({ one, many }) => ({
+  customer: one(customer, {
+    fields: [order.customerId],
+    references: [customer.id],
+  }),
+  store: one(store, {
+    fields: [order.storeId],
+    references: [store.id],
+  }),
+  items: many(orderItem),
+}));
+
+export const orderItemRelations = relations(orderItem, ({ one }) => ({
+  order: one(order, {
+    fields: [orderItem.orderId],
+    references: [order.id],
+  }),
+  product: one(product, {
+    fields: [orderItem.productId],
+    references: [product.id],
+  }),
+  variant: one(productVariant, {
+    fields: [orderItem.variantId],
+    references: [productVariant.id],
+  }),
+  store: one(store, {
+    fields: [orderItem.storeId],
+    references: [store.id],
   }),
 }));
