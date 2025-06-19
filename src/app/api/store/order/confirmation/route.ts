@@ -48,7 +48,8 @@ export async function GET(req: Request) {
       console.log("Payment verified");
       return NextResponse.redirect(
         new URL(
-          `http://${storeSlug}.localhost:3000/checkout/confirmed?orderId=${orderId}`,
+          `https://${storeSlug}.zynkart.store/checkout/confirmed?orderId=${orderId}`,
+          // `http://${storeSlug}.localhost:3000/checkout/confirmed?orderId=${orderId}`,
           req.url
         )
       );

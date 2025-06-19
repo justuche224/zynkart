@@ -60,7 +60,8 @@ export async function POST(req: Request) {
       email: user.email,
       amount: orderInfo.totalAmount * 100,
       subaccount: storeInfo.bank.subaccountCode,
-      callback_url: `http://${storeInfo.slug}.localhost:3000/api/store/order/confirmation?orderId=${orderId}&storeSlug=${storeInfo.slug}`,
+      callback_url: `https://${storeInfo.slug}.zynkart.store/api/store/order/confirmation?orderId=${orderId}&storeSlug=${storeInfo.slug}`,
+      // callback_url: `http://${storeInfo.slug}.localhost:3000/api/store/order/confirmation?orderId=${orderId}&storeSlug=${storeInfo.slug}`,
       metadata: {
         storeId: orderInfo.storeId,
         customerId: user.id,
