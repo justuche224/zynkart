@@ -19,6 +19,7 @@ const Checkout = ({
     email: string;
   };
 }) => {
+  const { template } = store;
   const CheckoutPage = dynamic<{
     store: StoreDataFromHomePage;
     shippingZones: ShippingZonesFromStore;
@@ -27,7 +28,7 @@ const Checkout = ({
       name: string;
       email: string;
     };
-  }>(() => import(`../templates/classic/checkout`), {
+  }>(() => import(`../templates/${template}/checkout`), {
     loading: () => <Loader />,
   });
 
