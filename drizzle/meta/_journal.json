@@ -15,6 +15,13 @@
       "when": 1749646873011,
       "tag": "0001_hesitant_purifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750397379908,
+      "tag": "0002_safe_king_cobra",
+      "breakpoints": true
     }
   ]
 }
