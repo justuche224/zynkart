@@ -56,6 +56,7 @@ const NewCategoryForm = ({
 
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageError, setImageError] = useState<string>("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof CreateCategorySchema>>({
@@ -67,26 +68,55 @@ const NewCategoryForm = ({
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const filesArray = Array.from(files);
-
-    if (imageUrls.length + filesArray.length > MAX_FILES) {
+  const processFiles = (files: File[]) => {
+    if (imageUrls.length + files.length > MAX_FILES) {
       setImageError(`Maximum ${MAX_FILES} image allowed`);
       return;
     }
 
-    const invalidFiles = filesArray.filter((file) => file.size > MAX_FILE_SIZE);
+    const invalidFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
     if (invalidFiles.length > 0) {
       setImageError(`Image exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`);
       return;
     }
 
+    const invalidTypes = files.filter((file) => !file.type.startsWith('image/'));
+    if (invalidTypes.length > 0) {
+      setImageError("Please select only image files");
+      return;
+    }
+
     setImageError("");
-    const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+    const newImageUrls = files.map((file) => URL.createObjectURL(file));
     setImageUrls([...imageUrls, ...newImageUrls]);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const filesArray = Array.from(files);
+    processFiles(filesArray);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    processFiles(files);
   };
 
   const removeImage = (indexToRemove: number) => {
@@ -184,14 +214,53 @@ const NewCategoryForm = ({
                         disabled={isPending || imageUrls.length >= MAX_FILES}
                       />
 
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => imageInputRef.current?.click()}
-                        disabled={isPending || imageUrls.length >= MAX_FILES}
+                      <div
+                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                          isDragOver
+                            ? "border-primary bg-primary/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        } ${
+                          isPending || imageUrls.length >= MAX_FILES
+                            ? "opacity-50 cursor-not-allowed"
+                            : "cursor-pointer"
+                        }`}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={() => {
+                          if (!isPending && imageUrls.length < MAX_FILES) {
+                            imageInputRef.current?.click();
+                          }
+                        }}
                       >
-                        Select Image
-                      </Button>
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-6 h-6 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                              />
+                            </svg>
+                          </div>
+                          <div className="text-sm">
+                            <p className="font-medium text-gray-900">
+                              {isDragOver
+                                ? "Drop category image here"
+                                : "Drag and drop category image here"}
+                            </p>
+                            <p className="text-gray-500">
+                              or click to select file (optional)
+                            </p>
+                          </div>
+                        </div>
+                      </div>
 
                       {imageError && (
                         <Alert variant="destructive">{imageError}</Alert>

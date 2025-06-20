@@ -62,6 +62,7 @@ const EditBannerForm = ({
   const [imageError, setImageError] = useState<string>("");
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
@@ -127,9 +128,8 @@ const EditBannerForm = ({
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  const processFiles = (files: File[]) => {
+    if (files.length === 0) return;
 
     const file = files[0];
 
@@ -138,10 +138,44 @@ const EditBannerForm = ({
       return;
     }
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setImageError("Please select only image files");
+      return;
+    }
+
     setImageError("");
     const newImageUrl = URL.createObjectURL(file);
     setImageUrl(newImageUrl);
     setIsNewImageSelected(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const filesArray = Array.from(files);
+    processFiles(filesArray);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    processFiles(files);
   };
 
   const revertImage = () => {
@@ -184,35 +218,76 @@ const EditBannerForm = ({
                   disabled={isPending}
                 />
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-                  <div key={imageUrl} className="relative group">
-                    <Image
-                      src={imageUrl}
-                      width={500}
-                      height={375}
-                      alt={`Banner image`}
-                      className="object-cover rounded-lg aspect-[4/3] w-full h-full"
-                    />
-                    {isNewImageSelected && (
-                      <button
-                        type="button"
-                        onClick={revertImage}
-                        className="absolute top-2 right-2 p-1 bg-red-500 rounded-full text-white opacity-70 hover:opacity-100 transition-opacity"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    )}
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+                    <div key={imageUrl} className="relative group">
+                      <Image
+                        src={imageUrl}
+                        width={500}
+                        height={375}
+                        alt={`Banner image`}
+                        className="object-cover rounded-lg aspect-[4/3] w-full h-full"
+                      />
+                      {isNewImageSelected && (
+                        <button
+                          type="button"
+                          onClick={revertImage}
+                          className="absolute top-2 right-2 p-1 bg-red-500 rounded-full text-white opacity-70 hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                      isDragOver
+                        ? "border-primary bg-primary/5"
+                        : "border-gray-300 hover:border-gray-400"
+                    } ${
+                      isPending
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => {
+                      if (!isPending) {
+                        imageInputRef.current?.click();
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center">
+                        <svg
+                          className="w-6 h-6 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                          />
+                        </svg>
+                      </div>
+                      <div className="text-sm">
+                        <p className="font-medium text-gray-900">
+                          {isDragOver
+                            ? "Drop new banner image here"
+                            : "Drag and drop new banner image here"}
+                        </p>
+                        <p className="text-gray-500">
+                          or click to select file
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => imageInputRef.current?.click()}
-                  disabled={isPending}
-                >
-                  Change Image
-                </Button>
 
                 {imageError && (
                   <Alert variant="destructive">{imageError}</Alert>

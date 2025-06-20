@@ -61,6 +61,7 @@ const EditCategoryForm = ({
   );
   const [isNewImageSelected, setIsNewImageSelected] = useState(false);
   const [imageError, setImageError] = useState<string>("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof UpdateCategorySchema>>({
@@ -73,9 +74,8 @@ const EditCategoryForm = ({
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  const processFiles = (files: File[]) => {
+    if (files.length === 0) return;
 
     const file = files[0];
 
@@ -84,10 +84,44 @@ const EditCategoryForm = ({
       return;
     }
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setImageError("Please select only image files");
+      return;
+    }
+
     setImageError("");
     const newImageUrl = URL.createObjectURL(file);
     setImageUrl(newImageUrl);
     setIsNewImageSelected(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const filesArray = Array.from(files);
+    processFiles(filesArray);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    processFiles(files);
   };
 
   const removeImage = () => {
@@ -190,32 +224,81 @@ const EditCategoryForm = ({
                       disabled={isPending}
                     />
 
-                    {imageUrl && (
-                      <div className="relative group w-48 h-36">
-                        <Image
-                          src={imageUrl}
-                          fill
-                          alt="Category image"
-                          className="object-cover rounded-lg"
-                        />
-                        <button
+                    {imageUrl ? (
+                      <div className="space-y-4">
+                        <div className="relative group w-48 h-36">
+                          <Image
+                            src={imageUrl}
+                            fill
+                            alt="Category image"
+                            className="object-cover rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={removeImage}
+                            className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-80 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <Button
                           type="button"
-                          onClick={removeImage}
-                          className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-80 group-hover:opacity-100 transition-opacity"
+                          variant="outline"
+                          onClick={() => imageInputRef.current?.click()}
+                          disabled={isPending}
                         >
-                          <X className="h-4 w-4" />
-                        </button>
+                          Change Image
+                        </Button>
+                      </div>
+                    ) : (
+                      <div
+                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                          isDragOver
+                            ? "border-primary bg-primary/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        } ${
+                          isPending
+                            ? "opacity-50 cursor-not-allowed"
+                            : "cursor-pointer"
+                        }`}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={() => {
+                          if (!isPending) {
+                            imageInputRef.current?.click();
+                          }
+                        }}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-6 h-6 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                              />
+                            </svg>
+                          </div>
+                          <div className="text-sm">
+                            <p className="font-medium text-gray-900">
+                              {isDragOver
+                                ? "Drop category image here"
+                                : "Drag and drop category image here"}
+                            </p>
+                            <p className="text-gray-500">
+                              or click to select file (optional)
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     )}
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => imageInputRef.current?.click()}
-                      disabled={isPending}
-                    >
-                      {imageUrl ? "Change Image" : "Select Image"}
-                    </Button>
 
                     {imageError && (
                       <Alert variant="destructive">{imageError}</Alert>

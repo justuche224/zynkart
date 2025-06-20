@@ -27,11 +27,11 @@ export const NewProductSchema = z
     name: z
       .string()
       .min(1, "Product name is required")
-      .max(50, "Product name can not be longer than 50 characters"),
+      .max(150, "Product name can not be longer than 150 characters"),
     description: z
       .string()
       .min(1, "Description is required")
-      .max(500, "Description can not be longer than 500 characters"),
+      .max(1000, "Description can not be longer than 1000 characters"),
     status: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
     categoryId: z.string().optional(),
     newCategoryName: z.string().optional(),

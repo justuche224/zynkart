@@ -102,6 +102,7 @@ const EditProductForm = ({
   const [newTags, setNewTags] = useState<string[]>([]);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -299,31 +300,58 @@ const EditProductForm = ({
     updateProductMutation.mutate(values);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const filesArray = Array.from(files);
-
+  const processFiles = (files: File[]) => {
     // Validate total number of images (existing + new)
-    if (
-      existingImages.length + imageUrls.length + filesArray.length >
-      MAX_FILES
-    ) {
+    if (existingImages.length + imageUrls.length + files.length > MAX_FILES) {
       setImageError(`Maximum ${MAX_FILES} images allowed`);
       return;
     }
 
     // Validate file sizes
-    const invalidFiles = filesArray.filter((file) => file.size > MAX_FILE_SIZE);
+    const invalidFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
     if (invalidFiles.length > 0) {
       setImageError("Some files exceed 4MB limit");
       return;
     }
 
+    // Validate file types
+    const invalidTypes = files.filter((file) => !file.type.startsWith('image/'));
+    if (invalidTypes.length > 0) {
+      setImageError("Please select only image files");
+      return;
+    }
+
     setImageError("");
-    const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+    const newImageUrls = files.map((file) => URL.createObjectURL(file));
     setImageUrls([...imageUrls, ...newImageUrls]);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const filesArray = Array.from(files);
+    processFiles(filesArray);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    processFiles(files);
   };
 
   const removeNewImage = (indexToRemove: number) => {
@@ -389,18 +417,62 @@ const EditProductForm = ({
                           }
                         />
 
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => imageInputRef.current?.click()}
-                          disabled={
+                        <div
+                          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                            isDragOver
+                              ? "border-primary bg-primary/5"
+                              : "border-gray-300 hover:border-gray-400"
+                          } ${
                             updateProductMutation.isPending ||
-                            existingImages.length + imageUrls.length >=
-                              MAX_FILES
-                          }
+                            existingImages.length + imageUrls.length >= MAX_FILES
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                          }`}
+                          onDragOver={handleDragOver}
+                          onDragLeave={handleDragLeave}
+                          onDrop={handleDrop}
+                          onClick={() => {
+                            if (
+                              !updateProductMutation.isPending &&
+                              existingImages.length + imageUrls.length <
+                                MAX_FILES
+                            ) {
+                              imageInputRef.current?.click();
+                            }
+                          }}
                         >
-                          Add More Images
-                        </Button>
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center">
+                              <svg
+                                className="w-6 h-6 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                />
+                              </svg>
+                            </div>
+                            <div className="text-sm">
+                              <p className="font-medium text-gray-900">
+                                {isDragOver
+                                  ? "Drop images here"
+                                  : "Drag and drop more images here"}
+                              </p>
+                              <p className="text-gray-500">
+                                or click to select files
+                              </p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                {existingImages.length + imageUrls.length} of{" "}
+                                {MAX_FILES} images selected
+                              </p>
+                            </div>
+                          </div>
+                        </div>
 
                         {imageError && (
                           <Alert variant="destructive">{imageError}</Alert>
