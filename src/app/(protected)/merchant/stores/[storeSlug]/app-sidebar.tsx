@@ -12,6 +12,7 @@ import {
   PieChart,
   Settings2,
   ShoppingCart,
+  Truck,
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
@@ -88,7 +89,7 @@ export function AppSidebar({
         ],
       },
       {
-        title: "Catalog",
+        title: "Catalogue",
         url: "#",
         icon: Package,
         isActive: true,
@@ -126,7 +127,7 @@ export function AppSidebar({
       {
         title: "Orders & Fulfillment",
         url: "#",
-        icon: User2,
+        icon: Truck,
         isActive: true,
         items: [
           {
@@ -147,14 +148,11 @@ export function AppSidebar({
         title: "Customers",
         url: "#",
         icon: User2,
+        isActive: true,
         items: [
           {
             title: "All Customers",
             url: "/customers",
-          },
-          {
-            title: "Top Customers",
-            url: "/customers?sort=order_count",
           },
         ],
       },
@@ -167,10 +165,6 @@ export function AppSidebar({
           {
             title: "Store Information",
             url: "/settings/store",
-          },
-          {
-            title: "Profile Settings",
-            url: "/settings/profile",
           },
           {
             title: "Payment Methods",
