@@ -402,14 +402,14 @@ export const CustomerOrders = ({ store }: { store: StoreDataFromHomePage }) => {
                           size="sm"
                           variant="button"
                         />
-                        <Button variant="outline" size="sm" asChild>
+                        {/* <Button variant="outline" size="sm" asChild>
                           <Link
                             href={`/store/${store.slug}/account/orders/${order.id}`}
                           >
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </Link>
-                        </Button>
+                        </Button> */}
                       </div>
                     </div>
                   </CardContent>

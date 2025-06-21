@@ -103,7 +103,7 @@ export default function OrderConfirmation({
             </p>
           </CardContent>
           <CardFooter className="flex justify-center gap-4">
-            <Link href={`/account/orders/${orderId}`}>
+            <Link href={`/account?page=orders`}>
               <Button
                 variant="outline"
                 className="dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
