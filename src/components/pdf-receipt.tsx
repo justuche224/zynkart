@@ -350,7 +350,7 @@ const ReceiptDocument = ({
           </View>
 
           {/* Table Rows */}
-          {order.items.map((item, index) => (
+          {order.items.map((item) => (
             <View key={item.id} style={styles.tableRow}>
               <View style={styles.productCol}>
                 <Text style={styles.tableCell}>{item.productName}</Text>
