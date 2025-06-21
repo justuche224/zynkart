@@ -12,15 +12,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 
 import type {
   ShippingZonesFromStore,
@@ -84,6 +79,14 @@ export default function Checkout({
     0
   );
 
+  // Transform shipping zones for SearchableSelect
+  const shippingZoneOptions = shippingZones.map((zone) => ({
+    value: zone.id,
+    label: `${zone.area ? `${zone.area}, ` : ""}${
+      zone.state ? `${zone.state}, ` : ""
+    }${zone.country} - ${formatPrice(zone.shippingCost)}`,
+  }));
+
   const selectedZone = shippingZones.find((zone) => zone.id === selectedZoneId);
   const shippingFee = selectedZone ? selectedZone.shippingCost : 0;
   const total = subtotal + shippingFee;
@@ -98,8 +101,8 @@ export default function Checkout({
       totalAmount: subtotal + shippingFee,
       shippingInfo: {
         address: values.address,
-        area: selectedZone?.area || "",
-        state: selectedZone?.state || "",
+        area: selectedZone?.area || undefined,
+        state: selectedZone?.state || undefined,
         country: selectedZone?.country || "",
         phoneNumber: values.primaryPhone,
         secondaryPhoneNumber: values.secondaryPhone || undefined,
@@ -144,7 +147,7 @@ export default function Checkout({
   }
 
   return (
-    <section className="container mx-auto py-8 px-4 md:px-6">
+    <section className="container mx-auto py-8 px-4 md:px-6 mt-10">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-6">
           <Card className={cn(cardBg)}>
@@ -157,24 +160,15 @@ export default function Checkout({
             </CardHeader>
             <CardContent>
               {shippingZones.length > 0 ? (
-                <Select
-                  onValueChange={setSelectedZoneId}
+                <SearchableSelect
+                  options={shippingZoneOptions}
                   value={selectedZoneId}
+                  onChange={setSelectedZoneId}
+                  placeholder="Select a shipping zone"
+                  searchPlaceholder="Search shipping zones..."
+                  emptyMessage="No shipping zones found"
                   disabled={isPending}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a shipping zone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {shippingZones.map((zone) => (
-                      <SelectItem key={zone.id} value={zone.id}>
-                        {zone.area ? `${zone.area}, ` : ""}
-                        {zone.state ? `${zone.state}, ` : ""}
-                        {zone.country} - {formatPrice(zone.shippingCost)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               ) : (
                 <div className="text-center p-4 border rounded-md bg-muted/20">
                   <p className="text-muted-foreground">
@@ -314,7 +308,7 @@ export default function Checkout({
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Shipping</span>
+                  <span>Shipping Fee</span>
                   <span>{formatPrice(shippingFee)}</span>
                 </div>
               </div>

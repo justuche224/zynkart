@@ -197,8 +197,8 @@ export const NewBannerSchema = z.object({
 
 export const shippingInfoSchema = z.object({
   country: z.string().min(1, "Country is required"),
-  state: z.string().min(1, "State is required"),
-  area: z.string().min(1, "Area is required"),
+  state: z.string().optional(),
+  area: z.string().optional(),
   address: z.string().min(1, "Address is required"),
   phoneNumber: z.string().min(1, "Phone number is required"),
   secondaryPhoneNumber: z.string().optional(),
