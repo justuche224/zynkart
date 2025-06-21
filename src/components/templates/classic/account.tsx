@@ -69,7 +69,7 @@ const Account = ({ store, user }: AccountProps) => {
       case "saved-items":
         return <SavedItems />;
       case "orders":
-        return <Orders />;
+        return <Orders store={store} />;
       case "addresses":
         return <MyAddresses />;
       case "home":
@@ -88,7 +88,11 @@ const Account = ({ store, user }: AccountProps) => {
 
   return (
     <section className="flex flex-col min-h-screen bg-[#fff] md:pt-16 pt-24 dark:bg-[#252525]">
-      <Navbar storeSlug={store.slug} storeName={store.name} storeId={store.id} />
+      <Navbar
+        storeSlug={store.slug}
+        storeName={store.name}
+        storeId={store.id}
+      />
       <div className="md:hidden mt-16 container">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

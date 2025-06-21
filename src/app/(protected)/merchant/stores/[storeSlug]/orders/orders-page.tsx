@@ -125,7 +125,6 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
   const [shippingProvider, setShippingProvider] = useState("");
 
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
-  const [isBulkActionsOpen, setIsBulkActionsOpen] = useState(false);
 
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [exportType, setExportType] = useState<"selected" | "filtered" | "all">(
@@ -355,7 +354,6 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
       toast.success(data.message || "Bulk operation completed successfully");
       queryClient.invalidateQueries({ queryKey: ["store-orders", storeId] });
       setSelectedOrders(new Set());
-      setIsBulkActionsOpen(false);
     },
     onError: (error: Error) => {
       toast.error(error.message || "Bulk operation failed");
@@ -1418,8 +1416,8 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
             (!ordersData?.orders || ordersData.orders.length === 0) && (
               <div className="p-8 text-center">
                 <p className="text-muted-foreground">
-                  No orders found. When customers place orders, they'll appear
-                  here.
+                  No orders found. When customers place orders, they&apos;ll
+                  appear here.
                 </p>
               </div>
             )}
@@ -1798,7 +1796,8 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
               {trackingAction === "add" && (
                 <div className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
                   Adding tracking information will automatically update the
-                  order status to "Shipped" if it's currently "Processing".
+                  order status to &quot;Shipped&quot; if it&apos;s currently
+                  &quot;Processing&quot;.
                 </div>
               )}
             </div>

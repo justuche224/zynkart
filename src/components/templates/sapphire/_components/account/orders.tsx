@@ -1,15 +1,17 @@
 "use client";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
+import { CustomerOrders } from "@/components/store/orders";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
 
-const Orders = () => {
+interface OrdersProps {
+  store: StoreDataFromHomePage;
+}
+
+const Orders = ({ store }: OrdersProps) => {
   return (
-    <Card className="bg-gradient-to-r from-blue-900/40 via-purple-800/40 to-purple-900/40 backdrop-blur-md text-white">
-      <CardHeader>
-        <CardTitle>Orders</CardTitle>
-        <CardDescription>View and manage your orders</CardDescription>
-      </CardHeader>
-    </Card>
+    <div>
+      <CustomerOrders storeId={store.id} storeSlug={store.slug} />
+    </div>
   );
 };
 

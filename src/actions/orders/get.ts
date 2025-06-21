@@ -96,7 +96,6 @@ export async function getStoreOrders(
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log("getStoreOrders", params);
   try {
     const {
       storeId,
@@ -160,7 +159,6 @@ export async function getStoreOrders(
       whereConditions.push(eq(order.customerId, customerId));
     }
 
-    console.log("whereConditions", whereConditions);
     const buildSearchConditions = (baseConditions: any[]) => {
       if (search && search.trim()) {
         const searchTerm = `%${search.trim()}%`;
@@ -208,21 +206,15 @@ export async function getStoreOrders(
         orderByClause = sortDirection(order.createdAt);
     }
 
-    console.log("orderByClause", orderByClause);
-
     const [totalResult] = await db
       .select({ count: count() })
       .from(order)
       .leftJoin(customer, eq(order.customerId, customer.id))
       .where(buildSearchConditions(whereConditions));
 
-    console.log("totalResult", totalResult);
-
     const total = totalResult.count;
     const totalPages = Math.ceil(total / limitNum);
 
-    console.log("total", total);
-    console.log("totalPages", totalPages);
 
     const orders = await db
       .select({
@@ -255,8 +247,6 @@ export async function getStoreOrders(
       .orderBy(orderByClause)
       .limit(limitNum)
       .offset(offset);
-
-    console.log("orders", orders.length);
 
     const orderIds = orders.map((o) => o.order.id);
     let orderItemsMap: Record<string, Array<any>> = {};
@@ -299,8 +289,6 @@ export async function getStoreOrders(
       }, {} as Record<string, Array<any>>);
     }
 
-    console.log("orderItemsMap", orderItemsMap.length);
-
     const [summaryResult] = await db
       .select({
         totalOrders: count(),
@@ -313,8 +301,6 @@ export async function getStoreOrders(
       })
       .from(order)
       .where(eq(order.storeId, storeId));
-
-    console.log("summaryResult", summaryResult);
 
     const formattedOrders: OrderResult[] = orders.map((orderData) => ({
       id: orderData.order.id,
@@ -339,8 +325,6 @@ export async function getStoreOrders(
       },
       items: orderItemsMap[orderData.order.id] || [],
     }));
-
-    console.log("formattedOrders", formattedOrders.length);
 
     return {
       orders: formattedOrders,

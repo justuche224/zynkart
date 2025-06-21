@@ -69,7 +69,7 @@ const Account = ({ store, user }: AccountProps) => {
       case "saved-items":
         return <SavedItems />;
       case "orders":
-        return <Orders />;
+        return <Orders store={store} />;
       case "addresses":
         return <MyAddresses />;
       case "home":
