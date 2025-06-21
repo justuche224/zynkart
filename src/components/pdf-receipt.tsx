@@ -445,6 +445,8 @@ export const PDFReceipt = ({
       fileName={filename}
     >
       {({ blob, url, loading, error }) => {
+        // TODO: Remove this
+        console.log(blob, url);
         if (variant === "link") {
           return (
             <span
