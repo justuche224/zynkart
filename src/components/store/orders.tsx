@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { CalendarDays, Package, Search, Eye, RefreshCw } from "lucide-react";
+import { CalendarDays, Package, Search, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
