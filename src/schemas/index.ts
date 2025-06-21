@@ -195,7 +195,7 @@ export const NewBannerSchema = z.object({
   imageUrl: z.string().optional(),
 });
 
-const shippingInfoSchema = z.object({
+export const shippingInfoSchema = z.object({
   country: z.string().min(1, "Country is required"),
   state: z.string().min(1, "State is required"),
   area: z.string().min(1, "Area is required"),
@@ -205,7 +205,7 @@ const shippingInfoSchema = z.object({
   additionalInfo: z.string().optional(),
 });
 
-const itemSchema = z.object({
+export const itemSchema = z.object({
   productId: z.string().min(1, "Product ID is required"),
   name: z.string().min(1, "Product name is required"),
   quantity: z.number().int().positive("Quantity must be a positive integer"),

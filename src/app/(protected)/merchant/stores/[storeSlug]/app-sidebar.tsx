@@ -135,11 +135,11 @@ export function AppSidebar({
           },
           {
             title: "Pending Orders",
-            url: "/orders/pending",
+            url: "/orders?fulfillmentStatus=PROCESSING",
           },
           {
             title: "Shipped Orders",
-            url: "/orders/shipped",
+            url: "/orders?fulfillmentStatus=SHIPPED",
           },
         ],
       },
