@@ -57,6 +57,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 import { getStoreOrders, getOrderById } from "@/actions/orders";
+import { PDFReceipt } from "@/components/pdf-receipt";
 import { updateOrderStatus } from "@/actions/orders/update-status";
 import {
   updateTrackingInfo,
@@ -77,11 +78,17 @@ import { useEffect } from "react";
 
 interface OrdersPageProps {
   storeId: string;
+  storeSlug: string;
+  storeName: string;
 }
 
 type ShippingInfo = z.infer<typeof shippingInfoSchema>;
 
-export const OrdersPage = ({ storeId }: OrdersPageProps) => {
+export const OrdersPage = ({
+  storeId,
+  storeSlug,
+  storeName,
+}: OrdersPageProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -406,7 +413,7 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
         window.URL.revokeObjectURL(url);
 
         toast.success(`Exported ${data.count} orders to CSV`);
-      } else if ("data" in data) {  
+      } else if ("data" in data) {
         const blob = new Blob([JSON.stringify(data.data, null, 2)], {
           type: "application/json",
         });
@@ -1175,6 +1182,21 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
                                   </DropdownMenuItem>
                                 </DropdownMenuSubContent>
                               </DropdownMenuSub>
+
+                              <DropdownMenuSeparator />
+
+                              <DropdownMenuItem>
+                                <PDFReceipt
+                                  order={order}
+                                  store={{
+                                    id: storeId,
+                                    name: storeName,
+                                    slug: storeSlug,
+                                  }}
+                                  variant="link"
+                                  className="w-full justify-start text-sm"
+                                />
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -1401,6 +1423,21 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
                                 </DropdownMenuItem>
                               </DropdownMenuSubContent>
                             </DropdownMenuSub>
+
+                            <DropdownMenuSeparator />
+
+                            <DropdownMenuItem>
+                              <PDFReceipt
+                                order={order}
+                                store={{
+                                  id: storeId,
+                                  name: storeName,
+                                  slug: storeSlug,
+                                }}
+                                variant="link"
+                                className="w-full justify-start text-sm"
+                              />
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -1489,6 +1526,31 @@ export const OrdersPage = ({ storeId }: OrdersPageProps) => {
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       )}
                       Export as JSON
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <div className="w-full">
+                        <PDFReceipt
+                          order={{
+                            ...orderDetails,
+                            items: orderDetails.items.map((item) => ({
+                              ...item,
+                              product: item.product || {
+                                id: "",
+                                name: item.productName,
+                                slug: "",
+                              },
+                            })),
+                          }}
+                          store={{
+                            id: storeId,
+                            name: storeName,
+                            slug: storeSlug,
+                          }}
+                          variant="link"
+                          className="w-full justify-start text-sm"
+                        />
+                      </div>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

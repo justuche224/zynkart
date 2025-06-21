@@ -26,24 +26,23 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import { PDFReceipt } from "@/components/pdf-receipt";
+import { StoreDataFromHomePage } from "@/lib/store-utils";
+import { useCustomerSession } from "@/hooks/use-customer-session";
 
-interface CustomerOrdersProps {
-  storeId: string;
-  storeSlug: string;
-}
-
-export const CustomerOrders = ({ storeId, storeSlug }: CustomerOrdersProps) => {
+export const CustomerOrders = ({ store }: { store: StoreDataFromHomePage }) => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<string>("");
   const [fulfillmentStatus, setFulfillmentStatus] = useState<string>("");
   const [sort, setSort] = useState("createdAt");
   const [orderBy, setOrderBy] = useState<"asc" | "desc">("desc");
+  const { customer } = useCustomerSession();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [
       "customer-orders",
-      storeId,
+      store.id,
       page,
       search,
       paymentStatus,
@@ -53,7 +52,7 @@ export const CustomerOrders = ({ storeId, storeSlug }: CustomerOrdersProps) => {
     ],
     queryFn: () =>
       getCustomerOrders({
-        storeId,
+        storeId: store.id,
         page,
         limit: 10,
         search: search || undefined,
@@ -63,7 +62,7 @@ export const CustomerOrders = ({ storeId, storeSlug }: CustomerOrdersProps) => {
         sort,
         orderBy,
       }),
-    enabled: !!storeId,
+    enabled: !!store.id,
   });
 
   const getPaymentStatusColor = (status: string) => {
@@ -272,7 +271,7 @@ export const CustomerOrders = ({ storeId, storeSlug }: CustomerOrdersProps) => {
                 You haven&apos;t placed any orders yet.
               </p>
               <Button asChild className="mt-4">
-                <Link href={`/store/${storeSlug}`}>Start Shopping</Link>
+                <Link href={`/store/${store.slug}`}>Start Shopping</Link>
               </Button>
             </div>
           ) : (
@@ -381,14 +380,37 @@ export const CustomerOrders = ({ storeId, storeSlug }: CustomerOrdersProps) => {
                         Subtotal: {formatCurrency(order.subtotal)} + Shipping:{" "}
                         {formatCurrency(order.shippingCost)}
                       </div>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link
-                          href={`/store/${storeSlug}/account/orders/${order.id}`}
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                          View Details
-                        </Link>
-                      </Button>
+                      <div className="flex gap-2">
+                        <PDFReceipt
+                          order={{
+                            ...order,
+                            customer: {
+                              id: customer?.id || "",
+                              name: customer?.name || "",
+                              email: customer?.email || "",
+                              phone: customer?.phone || "",
+                            },
+                          }}
+                          store={{
+                            id: store.id,
+                            name: store.name,
+                            slug: store.slug,
+                            description: store.description || "",
+                            logo: store.logoUrl || "",
+                          }}
+                          watermark={store.name}
+                          size="sm"
+                          variant="button"
+                        />
+                        <Button variant="outline" size="sm" asChild>
+                          <Link
+                            href={`/store/${store.slug}/account/orders/${order.id}`}
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

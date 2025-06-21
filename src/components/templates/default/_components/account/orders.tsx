@@ -10,7 +10,7 @@ interface OrdersProps {
 const Orders = ({ store }: OrdersProps) => {
   return (
     <div>
-      <CustomerOrders storeId={store.id} storeSlug={store.slug} />
+      <CustomerOrders store={store} />
     </div>
   );
 };
