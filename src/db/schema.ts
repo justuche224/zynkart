@@ -258,6 +258,7 @@ export const storeRelation = relations(store, ({ one, many }) => ({
   customisations: many(customisations),
   orders: many(order),
   orderItems: many(orderItem),
+  visits: many(storeVisit),
 }));
 
 export const bank = pgTable("bank", {
@@ -825,7 +826,6 @@ export const productTagRelations = relations(productTag, ({ one }) => ({
   }),
 }));
 
-
 export const paymentStatusEnum = pgEnum("payment_status", [
   "PENDING",
   "PAID",
@@ -939,6 +939,46 @@ export const orderItemRelations = relations(orderItem, ({ one }) => ({
   }),
   store: one(store, {
     fields: [orderItem.storeId],
+    references: [store.id],
+  }),
+}));
+
+// -------------------------------------------------------
+// Store Analytics Table
+// -------------------------------------------------------
+
+export const storeVisit = pgTable(
+  "store_visit",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    storeSlug: text("store_slug").notNull(), // For easier querying
+    userAgent: text("user_agent"),
+    ipAddress: text("ip_address"),
+    referrer: text("referrer"),
+    country: text("country"),
+    city: text("city"),
+    device: text("device"), // mobile, desktop, tablet
+    browser: text("browser"),
+    os: text("os"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("store_visit_store_id_idx").on(table.storeId),
+    index("store_visit_store_slug_idx").on(table.storeSlug),
+    index("store_visit_created_at_idx").on(table.createdAt),
+    index("store_visit_country_idx").on(table.country),
+    index("store_visit_device_idx").on(table.device),
+  ]
+);
+
+export const storeVisitRelations = relations(storeVisit, ({ one }) => ({
+  store: one(store, {
+    fields: [storeVisit.storeId],
     references: [store.id],
   }),
 }));

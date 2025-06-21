@@ -22,6 +22,13 @@
       "when": 1750397379908,
       "tag": "0002_safe_king_cobra",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1750536065355,
+      "tag": "0003_giant_aqueduct",
+      "breakpoints": true
     }
   ]
 }
