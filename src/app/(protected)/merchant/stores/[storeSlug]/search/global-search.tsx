@@ -3,18 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   globalSearch,
-  type SearchResults,
 } from "@/actions/store/global-search";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Package,
   FolderOpen,
@@ -31,6 +27,7 @@ import {
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import Image from "next/image";
 
 interface StoreInfo {
   id: string;
@@ -115,8 +112,8 @@ const GlobalSearch = ({
           <Search className="mx-auto h-12 w-12 text-muted-foreground" />
           <h2 className="mt-4 text-lg font-semibold">No results found</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            No matches found for "{searchQuery}". Try adjusting your search
-            terms.
+            No matches found for &quot;{searchQuery}&quot;. Try adjusting your
+            search terms.
           </p>
         </div>
       </div>
@@ -129,7 +126,7 @@ const GlobalSearch = ({
         <h1 className="text-2xl font-bold">Search Results</h1>
         <div className="flex items-center gap-2 mt-1">
           <p className="text-muted-foreground">
-            Results for "{searchQuery}" in {storeInfo.name}
+            Results for &quot;{searchQuery}&quot; in {storeInfo.name}
           </p>
           {searchResults && (
             <Badge variant="outline">
@@ -157,10 +154,12 @@ const GlobalSearch = ({
                     <CardContent className="p-4">
                       <div className="flex gap-3">
                         {product.imageUrl && (
-                          <img
+                          <Image
                             src={product.imageUrl}
                             alt={product.name}
                             className="h-16 w-16 rounded-lg object-cover flex-shrink-0"
+                            width={64}
+                            height={64}
                           />
                         )}
                         <div className="flex-1 min-w-0">
@@ -214,10 +213,12 @@ const GlobalSearch = ({
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
                         {category.imageUrl ? (
-                          <img
+                          <Image
                             src={category.imageUrl}
                             alt={category.name}
                             className="h-12 w-12 rounded-lg object-cover flex-shrink-0"
+                            width={48}
+                            height={48}
                           />
                         ) : (
                           <div className="h-12 w-12 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
