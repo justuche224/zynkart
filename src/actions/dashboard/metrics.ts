@@ -67,8 +67,8 @@ export const totalRevenue = async (storeId: string, days: number) => {
       )
     );
 
-  const currentValue = Number(currentRevenue[0]?.total || 0) / 100;
-  const previousValue = Number(previousRevenue[0]?.total || 0) / 100;
+  const currentValue = Number(currentRevenue[0]?.total || 0);
+  const previousValue = Number(previousRevenue[0]?.total || 0);
   const change = calculatePercentageChange(currentValue, previousValue);
 
   return {
@@ -255,11 +255,11 @@ export const avgOrderValue = async (storeId: string, days: number) => {
       )
     );
 
-  const currentRevenue = Number(currentData[0]?.totalRevenue || 0) / 100;
+  const currentRevenue = Number(currentData[0]?.totalRevenue || 0);
   const currentOrders = currentData[0]?.orderCount || 0;
   const currentAOV = currentOrders > 0 ? currentRevenue / currentOrders : 0;
 
-  const previousRevenue = Number(previousData[0]?.totalRevenue || 0) / 100;
+  const previousRevenue = Number(previousData[0]?.totalRevenue || 0);
   const previousOrders = previousData[0]?.orderCount || 0;
   const previousAOV = previousOrders > 0 ? previousRevenue / previousOrders : 0;
 

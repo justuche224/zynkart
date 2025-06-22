@@ -78,7 +78,7 @@ export const getSalesChartData = async (storeId: string, days: number) => {
 
     chartData.push({
       date: dateString,
-      sales: salesForDate ? Number(salesForDate.totalSales) / 100 : 0,
+      sales: salesForDate ? Number(salesForDate.totalSales) : 0,
       orders: salesForDate ? Number(salesForDate.orderCount) : 0,
       visitors: visitorsMap.get(dateString) || 0,
     });
@@ -131,7 +131,7 @@ export const getCategoryPerformanceData = async (
   );
 
   const chartData = categoryPerformance.map((category) => {
-    const sales = Number(category.totalSales || 0) / 100;
+    const sales = Number(category.totalSales || 0);
     const percentage =
       totalSales > 0
         ? (Number(category.totalSales || 0) / totalSales) * 100
@@ -198,7 +198,7 @@ export const getRecentOrdersData = async (
     id: order.id,
     customer: order.customerName,
     email: order.customerEmail,
-    total: Number(order.total) / 100,
+    total: Number(order.total),
     status: order.fulfillmentStatus,
     paymentStatus: order.paymentStatus,
     date: order.createdAt.toISOString().split("T")[0], // Format as YYYY-MM-DD
@@ -266,7 +266,7 @@ export const getTopProductsData = async (
     category: product.categoryName,
     trackQuantity: product.productTrackQuantity,
     sales: Number(product.totalQuantitySold || 0),
-    revenue: Number(product.totalRevenue || 0) / 100,
+    revenue: Number(product.totalRevenue || 0),
     orders: Number(product.orderCount || 0),
     inStock: product.inStock,
     rank: index + 1,

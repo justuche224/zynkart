@@ -3,11 +3,11 @@
 import type * as React from "react";
 import {
   AudioWaveform,
+  Book,
   User2,
   Command,
   Frame,
   GalleryVerticalEnd,
-  Map,
   Package,
   PieChart,
   Settings2,
@@ -102,22 +102,10 @@ export function AppSidebar({
             title: "Tags",
             url: "/tags",
           },
-          {
-            title: "New Product",
-            url: "/products/new",
-          },
-          {
-            title: "New Category",
-            url: "/categories/new",
-          },
-          {
-            title: "New Tag",
-            url: "/tags/new",
-          },
-          {
-            title: "Product Analytics",
-            url: "/products/analytics",
-          },
+          // {
+          //   title: "Analytics",
+          //   url: "/products/analytics",
+          // },
         ],
       },
       {
@@ -159,20 +147,16 @@ export function AppSidebar({
         isActive: true,
         items: [
           {
-            title: "Store Information",
-            url: "/settings/store",
+            title: "General Settings",
+            url: "/settings",
           },
           {
-            title: "Payment Methods",
+            title: "Recieve Payments",
             url: "/settings/bank",
           },
           {
             title: "Shipping & Delivery",
             url: "/settings/shipping-and-delivery",
-          },
-          {
-            title: "General Settings",
-            url: "/settings",
           },
         ],
       },
@@ -189,9 +173,9 @@ export function AppSidebar({
         icon: PieChart,
       },
       {
-        name: "Travel",
+        name: "Tutorials",
         url: "#",
-        icon: Map,
+        icon: Book,
       },
     ],
   };
