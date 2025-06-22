@@ -244,7 +244,7 @@ const Customise = ({ store }: { store: typeof storeSchema.$inferSelect }) => {
       <div>
         <Button variant="link" size="sm" asChild>
           <Link href={`/merchant/stores/${store.slug}`}>
-            <ArrowLeft /> Back to Store Overview
+            <ArrowLeft /> Back to Store Dashboard
           </Link>
         </Button>
       </div>

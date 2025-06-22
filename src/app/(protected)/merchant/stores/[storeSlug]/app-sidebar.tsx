@@ -71,12 +71,8 @@ export function AppSidebar({
         isActive: true,
         items: [
           {
-            title: "Overview",
-            url: "/",
-          },
-          {
             title: "Dashboard",
-            url: "/dashboard",
+            url: "/",
           },
           {
             title: "Banners & Promotions",

@@ -111,7 +111,8 @@ export const getStoreHealth = async (
     totalProducts: totalProducts,
     hasProducts: totalProducts > 0,
     hasShippingZones: !!shippingZoneDetails,
-    hasOwnerDoneKYC: false,
+    // TODO: check if owner has done kyc
+    hasOwnerDoneKYC: true,
     customised: !!storeDetails?.logoUrl,
   };
 

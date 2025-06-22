@@ -1,35 +1,42 @@
-import { getStoreByMerchant } from "@/actions/store";
-import StoreOverview from "@/components/store-overview";
+import db from "@/db";
+import { store } from "@/db/schema";
 import { serverAuth } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
-import React from "react";
+import { and, eq } from "drizzle-orm";
+import StoreDashboard from "./store-dashboard";
 import { getStoreHealth } from "@/actions/store/health";
 
 const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
-  const user = await serverAuth();
-  if (!user?.session || !user?.user) {
-    return redirect("/sign-in?callbackURL=/merchant");
-  }
   const { storeSlug } = await params;
-  const { data, error } = await getStoreByMerchant(storeSlug);
+  const session = await serverAuth();
 
-  if (error || !data) {
-    return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold">Store not found</h1>
-        <p className="text-muted-foreground">
-          The store you are looking for does not exist or you do not have access
-          to it.
-        </p>
-      </div>
+  if (!session?.user?.id)
+    return redirect(
+      `/sign-in?callbackUrl=/merchant/stores/${storeSlug}/dashboard`
     );
-  }
 
-  const storeHealth = await getStoreHealth(data.id, data.slug);
+  const storeData = await db.query.store.findFirst({
+    columns: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      address: true,
+      slug: true,
+    },
+    where: and(
+      eq(store.slug, storeSlug),
+      eq(store.merchantId, session.user.id)
+    ),
+  });
+
+  if (!storeData) return redirect("/merchant");
+
+  const storeHealth = await getStoreHealth(storeData.id, storeData.slug);
 
   return (
-    <div>
-      <StoreOverview store={data} health={storeHealth} />
+    <div className="max-w-7xl mx-auto mt-10 px-4">
+      <StoreDashboard storeInfo={storeData} storeHealth={storeHealth} />
     </div>
   );
 };
