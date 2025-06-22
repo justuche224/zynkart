@@ -40,7 +40,7 @@ function SearchBar({
   };
   return (
     <form
-      className={cn("flex flex-1 items-center gap-2", className)}
+      className={cn("flex flex-1 items-center gap-2 max-w-3xl mx-auto", className)}
       onSubmit={onSubmit}
     >
       <Input
