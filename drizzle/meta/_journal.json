@@ -29,6 +29,13 @@
       "when": 1750536065355,
       "tag": "0003_giant_aqueduct",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1750588895040,
+      "tag": "0004_goofy_starbolt",
+      "breakpoints": true
     }
   ]
 }

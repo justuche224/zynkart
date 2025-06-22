@@ -191,21 +191,31 @@ export const bannerSettingsRelations = relations(bannerSettings, ({ one }) => ({
   }),
 }));
 
-export const customer = pgTable("customer", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone"),
-  image: text("image"),
-  password: text("password").notNull(),
-  storeId: text("store_id")
-    .notNull()
-    .references(() => store.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+export const customer = pgTable(
+  "customer",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone"),
+    image: text("image"),
+    password: text("password").notNull(),
+    storeId: text("store_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("customer_store_name_idx").on(table.storeId, table.name),
+    index("customer_store_email_idx").on(table.storeId, table.email),
+    index("customer_name_search_idx").on(table.name),
+    index("customer_email_search_idx").on(table.email),
+    index("customer_store_created_idx").on(table.storeId, table.createdAt),
+  ]
+);
 
 export const customerRelations = relations(customer, ({ one, many }) => ({
   store: one(store, {
@@ -309,6 +319,7 @@ export const category = pgTable(
       table.storeId
     ),
     index("product_category_store_profile_id_idx").on(table.storeId),
+    index("category_name_search_idx").on(table.name),
   ]
 );
 export const categoryRelations = relations(category, ({ one, many }) => ({
@@ -319,34 +330,44 @@ export const categoryRelations = relations(category, ({ one, many }) => ({
   products: many(product),
 }));
 
-export const product = pgTable("product", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name").notNull(),
-  slug: text("slug").notNull(),
-  description: text("description").notNull(),
-  status: productStatusEnum("status").default("ACTIVE").notNull(),
-  categoryId: text("category_id")
-    .notNull()
-    .references(() => category.id, { onDelete: "cascade" }),
-  price: integer("price").notNull(), // Base price
-  slashedFrom: integer("slashed_from"),
-  trackQuantity: boolean("track_quantity").default(false).notNull(),
-  inStock: integer("in_stock").notNull(), // Total stock across all variants
-  productSourceId: text("product_source_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+export const product = pgTable(
+  "product",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name").notNull(),
+    slug: text("slug").notNull(),
+    description: text("description").notNull(),
+    status: productStatusEnum("status").default("ACTIVE").notNull(),
+    categoryId: text("category_id")
+      .notNull()
+      .references(() => category.id, { onDelete: "cascade" }),
+    price: integer("price").notNull(), // Base price
+    slashedFrom: integer("slashed_from"),
+    trackQuantity: boolean("track_quantity").default(false).notNull(),
+    inStock: integer("in_stock").notNull(), // Total stock across all variants
+    productSourceId: text("product_source_id").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
 
-  metaTitle: text("meta_title"),
-  metaDescription: text("meta_description"),
-  metaKeywords: text("meta_keywords"),
-  metaImage: text("meta_image"),
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    metaKeywords: text("meta_keywords"),
+    metaImage: text("meta_image"),
 
-  storeId: text("store_profile_id")
-    .notNull()
-    .references(() => store.id, { onDelete: "cascade" }),
-});
+    storeId: text("store_profile_id")
+      .notNull()
+      .references(() => store.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    index("product_store_status_idx").on(table.storeId, table.status),
+    index("product_store_name_idx").on(table.storeId, table.name),
+    index("product_name_search_idx").on(table.name),
+    index("product_description_search_idx").on(table.description),
+    index("product_meta_search_idx").on(table.metaTitle, table.metaKeywords),
+  ]
+);
 
 export const productWeight = pgTable(
   "product_weight",
@@ -479,6 +500,8 @@ export const productImage = pgTable(
   (table) => [
     index("product_image_product_id_idx").on(table.productId),
     index("product_image_position_idx").on(table.position),
+    // Search performance index for default images
+    index("product_image_default_idx").on(table.productId, table.isDefault),
   ]
 );
 
@@ -782,6 +805,7 @@ export const tag = pgTable(
     // Ensure tag slugs are unique within a store
     uniqueIndex("tag_slug_store_id_idx").on(table.slug, table.storeId),
     index("tag_store_id_idx").on(table.storeId),
+    index("tag_name_search_idx").on(table.name),
   ]
 );
 
@@ -804,6 +828,7 @@ export const productTag = pgTable(
     uniqueIndex("product_tag_unique_idx").on(table.productId, table.tagId),
     index("product_tag_product_id_idx").on(table.productId),
     index("product_tag_tag_id_idx").on(table.tagId),
+    index("product_tag_composite_idx").on(table.tagId, table.productId),
   ]
 );
 
@@ -879,6 +904,11 @@ export const order = pgTable(
     index("order_payment_status_idx").on(table.paymentStatus),
     index("order_fulfillment_status_idx").on(table.fulfillmentStatus),
     index("payment_reference_idx").on(table.paymentReference),
+    index("order_store_payment_ref_idx").on(
+      table.storeId,
+      table.paymentReference
+    ),
+    index("order_store_created_idx").on(table.storeId, table.createdAt),
   ]
 );
 

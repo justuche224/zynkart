@@ -19,7 +19,7 @@ export default async function Layout({
     <SidebarProvider>
       <AppSidebar storeName={storeName} storeSlug={storeSlug} />
       <section className="w-full">
-        <Nav />
+        <Nav storeSlug={storeSlug} />
         {children}
       </section>
     </SidebarProvider>
