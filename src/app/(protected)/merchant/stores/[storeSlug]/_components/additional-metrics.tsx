@@ -56,7 +56,7 @@ const MetricWrapper = ({
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground">{title}</p>
-          <p className="text-xl font-bold text-foreground">
+          <p className="txet-md md:text-lg font-bold text-foreground">
             {format === "currency"
               ? formatPrice(data?.value || 0)
               : format === "percentage"

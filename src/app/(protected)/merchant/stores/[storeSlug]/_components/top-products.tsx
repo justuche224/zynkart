@@ -122,12 +122,12 @@ const TopProducts = ({ storeId, storeSlug, days }: TopProductsProps) => {
           </Button>
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-2 md:p-6">
         <div className="space-y-4">
           {productsData.map((product) => (
             <div
               key={product.id}
-              className="flex items-center justify-between hover:bg-muted/20 p-2 rounded-lg transition-colors"
+              className="flex items-center justify-between hover:bg-muted/20 p-2 rounded-lg transition-colors gap-2"
             >
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-primary/10 aspect-square text-primary rounded-full flex items-center justify-center mr-3">
@@ -137,7 +137,7 @@ const TopProducts = ({ storeId, storeSlug, days }: TopProductsProps) => {
                   <p className="text-sm font-medium text-foreground">
                     <Link
                       href={`/merchant/stores/${storeSlug}/products/${product.slug}`}
-                      className="hover:underline"
+                      className="hover:underline line-clamp-1"
                     >
                       {product.name}
                     </Link>
@@ -148,7 +148,7 @@ const TopProducts = ({ storeId, storeSlug, days }: TopProductsProps) => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-xs md:text-sm font-medium text-foreground">
                   {formatPrice(product.revenue)}
                 </p>
                 <p className="text-xs text-muted-foreground">

@@ -46,7 +46,7 @@ const StoreDashboard = ({
   };
 
   return (
-    <div className="min-h-screen bg-card p-6">
+    <div className="min-h-screen bg-sidebar p-2 md:p-6">
       <div className="">
         {/* Header */}
         <div className="mb-8">
@@ -55,21 +55,6 @@ const StoreDashboard = ({
               <h1 className="text-3xl font-bold text-foreground">
                 {storeInfo.name}
               </h1>
-              <p className="text-muted-foreground mt-1">
-                Dashboard
-              </p>
-              <Button variant={"link"} asChild>
-                <Link
-                  target="_blank"
-                  href={
-                    process.env.NODE_ENV === "development"
-                      ? `http://${storeInfo.slug}.${process.env.NEXT_PUBLIC_APP_BASE_URL}`
-                      : `https://${storeInfo.slug}.${process.env.NEXT_PUBLIC_APP_BASE_URL}`
-                  }
-                >
-                  Go to store <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
             </div>
             <div className="flex items-center flex-col gap-2 md:flex-row md:space-x-4">
               <select
@@ -87,32 +72,6 @@ const StoreDashboard = ({
               </Button>
             </div>
           </div>
-
-          {/* Store Info */}
-          <div className="mt-4 p-4 bg-background rounded-lg border">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="flex items-center">
-                <span className="font-medium text-muted-foreground">
-                  Email:
-                </span>
-                <span className="ml-2 text-foreground">{storeInfo.email}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="font-medium text-muted-foreground">
-                  Phone:
-                </span>
-                <span className="ml-2 text-foreground">{storeInfo.phone}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="font-medium text-muted-foreground">
-                  Address:
-                </span>
-                <span className="ml-2 text-foreground">
-                  {storeInfo.address}
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Store Health Overview - Show at top if not complete */}
@@ -127,26 +86,6 @@ const StoreDashboard = ({
           storeId={storeInfo.id}
           days={getDaysFromTimeRange(timeRange)}
         />
-
-        {/* Additional Metrics */}
-        <AdditionalMetrics
-          storeId={storeInfo.id}
-          days={getDaysFromTimeRange(timeRange)}
-        />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Sales Chart */}
-          <SalesChart
-            storeId={storeInfo.id}
-            days={getDaysFromTimeRange(timeRange)}
-          />
-
-          {/* Category Performance */}
-          <CategoryPerformance
-            storeId={storeInfo.id}
-            days={getDaysFromTimeRange(timeRange)}
-          />
-        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Recent Orders */}
@@ -163,6 +102,26 @@ const StoreDashboard = ({
             days={getDaysFromTimeRange(timeRange)}
           />
         </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Sales Chart */}
+          <SalesChart
+            storeId={storeInfo.id}
+            days={getDaysFromTimeRange(timeRange)}
+          />
+
+          {/* Category Performance */}
+          <CategoryPerformance
+            storeId={storeInfo.id}
+            days={getDaysFromTimeRange(timeRange)}
+          />
+        </div>
+
+        {/* Additional Metrics */}
+        <AdditionalMetrics
+          storeId={storeInfo.id}
+          days={getDaysFromTimeRange(timeRange)}
+        />
 
         {/* Store Health Overview - Show at bottom if complete */}
         {storeHealth.healthScore === 100 && (

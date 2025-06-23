@@ -25,15 +25,15 @@ export const MetricCard = ({
         : value.toLocaleString();
 
     return (
-      <div className="bg-background p-6 rounded-lg shadow-sm border">
+      <div className="bg-background p-3 md:p-6 rounded-lg shadow-sm border">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-2xl font-bold text-foreground mt-1">
+            <p className="text-md md:text-lg font-bold text-foreground mt-1">
               {formattedValue}
             </p>
           </div>
-          <div className="p-3 bg-primary/10 rounded-full">
+          <div className="p-3 bg-primary/10 rounded-full hidden md:flex">
             <Icon className="h-6 w-6 text-primary" />
           </div>
         </div>

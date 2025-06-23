@@ -272,8 +272,8 @@ const NewProductForm = ({
       setNewTagInput("");
 
       // Redirect to products page
-      router.push(`/merchant/stores/${storeSlug}/products`);
-      router.refresh();
+      // router.push(`/merchant/stores/${storeSlug}/products`);
+      // router.refresh();
     },
     onError: (error: Error) => {
       setError(error.message);

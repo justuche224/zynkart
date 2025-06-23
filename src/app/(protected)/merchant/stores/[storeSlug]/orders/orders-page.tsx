@@ -703,51 +703,51 @@ export const OrdersPage = ({
         </div>
       ) : (
         ordersData?.summary && (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader>
                 <CardTitle className="text-sm font-medium">
                   Total Orders
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xs md:text-lg font-bold">
                   {ordersData.summary.totalOrders}
                 </div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader>
                 <CardTitle className="text-sm font-medium">
                   Total Revenue
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xs md:text-lg font-bold">
                   {formatPrice(ordersData.summary.totalRevenue)}
                 </div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader>
                 <CardTitle className="text-sm font-medium">
                   Pending Orders
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xs md:text-lg font-bold">
                   {ordersData.summary.pendingOrders}
                 </div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader>
                 <CardTitle className="text-sm font-medium">
                   Delivered Orders
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xs md:text-lg font-bold">
                   {ordersData.summary.deliveredOrders}
                 </div>
               </CardContent>
