@@ -7,7 +7,6 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2, X } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -102,7 +101,6 @@ const NewProductForm = ({
   const [success, setSuccess] = useState<string | undefined>("");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isCategoryDragOver, setIsCategoryDragOver] = useState(false);
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
