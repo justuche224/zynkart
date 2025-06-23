@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Download, ArrowRight } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import Metrics from "./_components/metrics";
 import AdditionalMetrics from "./_components/additional-metrics";
 import SalesChart from "./_components/sales-chart";
