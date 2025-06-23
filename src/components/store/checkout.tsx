@@ -147,7 +147,7 @@ export default function Checkout({
   }
 
   return (
-    <section className="container mx-auto py-8 px-4 md:px-6 mt-10">
+    <section className="container mx-auto py-8 md:px-6 mt-10">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-6">
           <Card className={cn(cardBg)}>

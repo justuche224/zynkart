@@ -56,7 +56,7 @@ const StoreDashboard = ({
                 {storeInfo.name}
               </h1>
               <p className="text-muted-foreground mt-1">
-                Store Dashboard Overview
+                Dashboard
               </p>
               <Button variant={"link"} asChild>
                 <Link
@@ -71,17 +71,17 @@ const StoreDashboard = ({
                 </Link>
               </Button>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center flex-col gap-2 md:flex-row md:space-x-4">
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="border border-input rounded-lg px-3 py-2 text-sm bg-card"
+                className="border border-input rounded-lg px-3 py-2 text-sm bg-card w-full md:w-auto"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
                 <option value="90d">Last 90 days</option>
               </select>
-              <Button className="flex items-center">
+              <Button className="flex items-center w-full md:w-auto">
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>

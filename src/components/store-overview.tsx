@@ -43,7 +43,7 @@ export default function StoreOverview({
   return (
     <div className="">
       <main className="">
-        <div className="container mx-auto p-6 space-y-6">
+        <div className="container mx-auto p-0 md:p-6 space-y-6">
           <Card className="bg-background">
             <CardHeader>
               <CardTitle>Store Health</CardTitle>
@@ -194,9 +194,9 @@ export default function StoreOverview({
                     <Alert key={i} variant="default" className="bg-muted">
                       <AlertCircle className="h-4 w-4" color="red" />
                       <AlertTitle>Action Required</AlertTitle>
-                      <AlertDescription className="flex justify-between items-center">
+                      <AlertDescription className="flex justify-between items-center flex-col md:flex-row">
                         <span>{rec.info}</span>
-                        <Button size="sm" variant="outline" asChild>
+                        <Button size="sm" variant="outline" asChild className="w-full md:w-auto">
                           <Link href={rec.link}>
                             Take Action
                             <ArrowRight className="ml-2 h-4 w-4" />
