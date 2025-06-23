@@ -5,9 +5,10 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Globe, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Nav = ({ storeSlug }: { storeSlug: string }) => {
   return (
@@ -15,7 +16,22 @@ const Nav = ({ storeSlug }: { storeSlug: string }) => {
       <nav className="justify-between flex items-center gap-4 w-full">
         <SidebarTrigger />
         <SearchBar className="hidden md:flex" storeSlug={storeSlug} />
-        <ModeToggle />
+        <div className="flex gap-2">
+          <Button variant={"outline"} asChild>
+            <Link
+              aria-label="Visit store"
+              target="_blank"
+              href={
+                process.env.NODE_ENV === "development"
+                  ? `http://${storeSlug}.${process.env.NEXT_PUBLIC_APP_BASE_URL}`
+                  : `https://${storeSlug}.${process.env.NEXT_PUBLIC_APP_BASE_URL}`
+              }
+            >
+              <Globe className="h-4 w-4" /> <span className="hidden md:flex">Visit store</span>
+            </Link>
+          </Button>
+          <ModeToggle />
+        </div>
       </nav>
       <SearchBar className="flex md:hidden" storeSlug={storeSlug} />
     </header>
@@ -40,7 +56,10 @@ function SearchBar({
   };
   return (
     <form
-      className={cn("flex flex-1 items-center gap-2 max-w-3xl mx-auto", className)}
+      className={cn(
+        "flex flex-1 items-center gap-2 max-w-3xl w-full mx-auto",
+        className
+      )}
       onSubmit={onSubmit}
     >
       <Input
@@ -51,7 +70,7 @@ function SearchBar({
       />
       <Button type="submit">
         <Search className="h-4 w-4" />
-        Search
+        <span className="hidden md:flex">Search</span>
       </Button>
     </form>
   );

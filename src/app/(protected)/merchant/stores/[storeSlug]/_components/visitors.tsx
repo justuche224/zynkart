@@ -117,7 +117,7 @@ const Visitors = ({ storeId, days }: VisitorsProps) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Daily Visitor Traffic */}
-      <div className="bg-background p-6 rounded-lg shadow-sm border">
+      <div className="bg-background p-2 md:p-6 rounded-lg shadow-sm border">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-foreground">
             Daily Visitor Traffic

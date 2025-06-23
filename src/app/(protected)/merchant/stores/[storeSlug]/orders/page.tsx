@@ -18,7 +18,7 @@ const storeData = await db.query.store.findFirst({
 if (!storeData) return redirect("/merchant");
 
 
-  return <div className="max-w-7xl mx-auto mt-10 px-4">
+  return <div className="container mx-auto mt-10 px-4">
     <OrdersPage storeId={storeData.id} storeSlug={storeSlug} storeName={storeData.name} />
   </div>;
 };

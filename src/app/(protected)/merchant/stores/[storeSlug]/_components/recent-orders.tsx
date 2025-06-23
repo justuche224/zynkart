@@ -71,7 +71,7 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
   if (error) {
     return (
       <div className="bg-background rounded-lg shadow-sm border">
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-2 md:p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">
               Recent Orders
@@ -95,7 +95,7 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
   if (isLoading) {
     return (
       <div className="bg-background rounded-lg shadow-sm border">
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-2 md:p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">
               Recent Orders
@@ -134,7 +134,7 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
   if (!ordersData || ordersData.length === 0) {
     return (
       <div className="bg-background rounded-lg shadow-sm border">
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-2 md:p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">
               Recent Orders
@@ -157,7 +157,7 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
 
   return (
     <div className="bg-background rounded-lg shadow-sm border">
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-2 md:p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-foreground">
             Recent Orders
@@ -190,7 +190,7 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
           <tbody className="bg-background divide-y divide-gray-200">
             {ordersData.map((order) => (
               <tr key={order.id} className="hover:bg-muted/20">
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap">
                   <div>
                     <div className="text-sm font-medium text-foreground">
                       #{order.id.slice(-8)}
@@ -204,7 +204,7 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap">
                   <div>
                     <div className="text-sm font-medium text-foreground">
                       {order.customer}
@@ -214,10 +214,10 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
+                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap text-sm font-medium text-foreground">
                   {formatPrice(order.total)}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap">
                   <div className="flex flex-col space-y-1">
                     <StatusBadge status={order.status} />
                     <StatusBadge status={order.paymentStatus} type="payment" />

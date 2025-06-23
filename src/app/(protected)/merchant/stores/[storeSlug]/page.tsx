@@ -35,7 +35,7 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   const storeHealth = await getStoreHealth(storeData.id, storeData.slug);
 
   return (
-    <div className="max-w-7xl mx-auto mt-10 px-4">
+    <div className="container mx-auto mt-10 px-2 md:px-4">
       <StoreDashboard storeInfo={storeData} storeHealth={storeHealth} />
     </div>
   );
