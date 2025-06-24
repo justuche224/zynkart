@@ -121,27 +121,45 @@ export const Customers = ({ storeId }: CustomersProps) => {
     return (
       <div className="space-y-6 px-4">
         {/* Header and Search Skeleton */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-10 w-64" />
+          <Skeleton className="h-10 w-full sm:w-64" />
         </div>
 
-        {/* Stats Cards Skeleton */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-3 gap-2 p-3 bg-muted/20 rounded-lg">
           {[...Array(3)].map((_, i) => (
-            <Card key={i}>
-              <CardHeader className="pb-2">
-                <Skeleton className="h-4 w-24" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-16" />
-              </CardContent>
-            </Card>
+            <div key={i} className="text-center space-y-1">
+              <Skeleton className="h-3 w-16 mx-auto" />
+              <Skeleton className="h-5 w-12 mx-auto" />
+            </div>
           ))}
         </div>
 
-        {/* Table Skeleton */}
-        <Card>
+        {/* Mobile Cards Skeleton */}
+        <div className="block md:hidden space-y-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="p-4 border rounded-lg bg-card space-y-3">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+                <Skeleton className="h-8 w-8 rounded" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-3 w-20" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-5 w-12 rounded-full" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Table Skeleton for Desktop */}
+        <Card className="hidden md:block">
           <CardHeader>
             <Skeleton className="h-6 w-24" />
           </CardHeader>
@@ -205,9 +223,9 @@ export const Customers = ({ storeId }: CustomersProps) => {
   return (
     <div className="space-y-6 px-4">
       {/* Header and Search */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h2 className="text-2xl font-bold">Customers</h2>
-        <div className="relative w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Search customers..."
@@ -218,52 +236,113 @@ export const Customers = ({ storeId }: CustomersProps) => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Customers
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {customersData?.total || 0}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Customers
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {customersData?.customers.filter((c) => c.totalOrders > 0)
-                .length || 0}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatPrice(
-                customersData?.customers.reduce(
-                  (sum, c) => sum + c.totalSpent,
-                  0
-                ) || 0
-              )}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-3 gap-2 p-3 bg-muted/20 rounded-lg">
+        <div className="text-center">
+          <div className="text-xs sm:text-sm font-medium text-muted-foreground">
+            Total
+          </div>
+          <div className="text-lg sm:text-xl font-bold">
+            {customersData?.total || 0}
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-xs sm:text-sm font-medium text-muted-foreground">
+            Active
+          </div>
+          <div className="text-lg sm:text-xl font-bold">
+            {customersData?.customers.filter((c) => c.totalOrders > 0).length ||
+              0}
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-xs sm:text-sm font-medium text-muted-foreground">
+            Total Revenue
+          </div>
+          <div className="text-xs sm:text-lg font-bold">
+            {formatPrice(
+              customersData?.customers.reduce(
+                (sum, c) => sum + c.totalSpent,
+                0
+              ) || 0
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Customers Table */}
-      <Card>
+      {/* Mobile-friendly card layout for small screens */}
+      <div className="block md:hidden space-y-4">
+        {customersData?.customers.map((customer) => (
+          <div key={customer.id} className="p-4 border rounded-lg bg-card">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <div className="font-medium text-foreground">
+                  {customer.name}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {customer.email}
+                </div>
+                {customer.phone && (
+                  <div className="text-sm text-muted-foreground">
+                    {customer.phone}
+                  </div>
+                )}
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedCustomerId(customer.id)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
+                  <DialogHeader className="flex-shrink-0">
+                    <DialogTitle>Customer Details</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-y-auto pr-2">
+                    <CustomerDetailsView
+                      customerDetails={customerDetails}
+                      isLoading={isLoadingDetails}
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Orders: </span>
+                <Badge
+                  variant={customer.totalOrders > 0 ? "default" : "secondary"}
+                  className="text-xs"
+                >
+                  {customer.totalOrders}
+                </Badge>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Spent: </span>
+                <span className="font-medium">
+                  {formatPrice(customer.totalSpent)}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Last Order: </span>
+                <span>{formatDate(customer.lastOrderDate)}</span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Joined: </span>
+                <span>{formatDate(customer.createdAt)}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Table layout for larger screens */}
+      <Card className="hidden md:block">
         <CardHeader>
           <CardTitle>Customer List</CardTitle>
         </CardHeader>
@@ -330,13 +409,13 @@ export const Customers = ({ storeId }: CustomersProps) => {
 
           {/* Pagination */}
           {customersData && customersData.totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-500">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
+              <div className="text-sm text-gray-500 text-center sm:text-left">
                 Showing {(page - 1) * limit + 1} to{" "}
                 {Math.min(page * limit, customersData.total)} of{" "}
                 {customersData.total} customers
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-center space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -363,6 +442,40 @@ export const Customers = ({ storeId }: CustomersProps) => {
           )}
         </CardContent>
       </Card>
+
+      {/* Mobile Pagination */}
+      {customersData && customersData.totalPages > 1 && (
+        <div className="block md:hidden">
+          <div className="text-sm text-gray-500 text-center mb-4">
+            Showing {(page - 1) * limit + 1} to{" "}
+            {Math.min(page * limit, customersData.total)} of{" "}
+            {customersData.total} customers
+          </div>
+          <div className="flex items-center justify-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            <span className="text-sm">
+              Page {page} of {customersData.totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(page + 1)}
+              disabled={page === customersData.totalPages}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

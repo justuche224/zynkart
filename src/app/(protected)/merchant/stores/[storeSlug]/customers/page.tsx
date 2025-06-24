@@ -22,7 +22,7 @@ const page = async ({ params }: { params: Promise<{ storeSlug: string }> }) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto mt-10 px-4">
+    <div className="container mx-auto mt-10 px-4">
       <Customers storeId={storeInfo.id} />
     </div>
   );

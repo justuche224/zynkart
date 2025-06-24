@@ -45,7 +45,7 @@ const StoreDashboard = ({
   };
 
   return (
-    <div className="min-h-screen bg-sidebar p-2 md:p-6">
+    <div className="min-h-screen p-2 md:p-6">
       <div className="">
         {/* Header */}
         <div className="mb-8">

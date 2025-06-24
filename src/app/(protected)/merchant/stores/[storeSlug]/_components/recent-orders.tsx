@@ -5,6 +5,14 @@ import { getRecentOrdersData } from "@/actions/dashboard/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import formatPrice from "@/lib/price-formatter";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -169,28 +177,63 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
           </Button>
         </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-background">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Order
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Customer
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Total
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-background divide-y divide-gray-200">
+
+      {/* Mobile-friendly card layout for small screens */}
+      <div className="block md:hidden">
+        <div className="p-4 space-y-4">
+          {ordersData.map((order) => (
+            <div key={order.id} className="p-4 border rounded-lg bg-card">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <div className="text-sm font-medium text-foreground">
+                    #{order.id.slice(-8)}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {new Date(order.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </div>
+                </div>
+                <div className="text-sm font-medium text-foreground">
+                  {formatPrice(order.total)}
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <div className="text-sm font-medium text-foreground">
+                  {order.customer}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {order.email}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <StatusBadge status={order.status} />
+                <StatusBadge status={order.paymentStatus} type="payment" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Table layout for larger screens */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Order</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {ordersData.map((order) => (
-              <tr key={order.id} className="hover:bg-muted/20">
-                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap">
+              <TableRow key={order.id}>
+                <TableCell>
                   <div>
                     <div className="text-sm font-medium text-foreground">
                       #{order.id.slice(-8)}
@@ -203,8 +246,8 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
                       })}
                     </div>
                   </div>
-                </td>
-                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell>
                   <div>
                     <div className="text-sm font-medium text-foreground">
                       {order.customer}
@@ -213,20 +256,20 @@ const RecentOrders = ({ storeId, storeSlug }: RecentOrdersProps) => {
                       {order.email}
                     </div>
                   </div>
-                </td>
-                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap text-sm font-medium text-foreground">
+                </TableCell>
+                <TableCell className="text-sm font-medium text-foreground">
                   {formatPrice(order.total)}
-                </td>
-                <td className="px-2 md:px-6 py-2 md:py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell>
                   <div className="flex flex-col space-y-1">
                     <StatusBadge status={order.status} />
                     <StatusBadge status={order.paymentStatus} type="payment" />
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
