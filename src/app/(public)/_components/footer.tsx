@@ -177,7 +177,7 @@ export default function Footer() {
               Get the latest updates, tips, and insights delivered to your
               inbox.
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-col md:flex-row">
               <input
                 type="email"
                 placeholder="Enter your email"
