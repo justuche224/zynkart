@@ -3,9 +3,20 @@ import { mailService } from "@/services/mail";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { emailHarmony } from "better-auth-harmony";
+import { captcha } from "better-auth/plugins";
 
 export const auth = betterAuth({
-  plugins: [emailHarmony()],
+  plugins: [
+    emailHarmony(),
+    ...(process.env.NODE_ENV === "production"
+      ? [
+          captcha({
+            provider: "cloudflare-turnstile",
+            secretKey: process.env.TURNSTILE_SECRET_KEY!,
+          }),
+        ]
+      : []),
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,

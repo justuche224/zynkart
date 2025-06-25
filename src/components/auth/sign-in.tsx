@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { info } from "@/constants";
+import { TurnstileComponent, TurnstileRef } from "@/components/ui/turnstile";
 
 export function LoginForm({
   className,
@@ -42,6 +43,8 @@ export function LoginForm({
   const [success, setSuccess] = useState<string | undefined>("");
   const [showPassword, setShowPassword] = useState(false);
   const [done, setDone] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const turnstileRef = useRef<TurnstileRef>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackURL = searchParams.get("callbackURL") || info.defaultRedirect;
@@ -62,6 +65,12 @@ export function LoginForm({
   function onSubmit(values: z.infer<typeof formSchema>) {
     setError(undefined);
     setSuccess(undefined);
+
+    if (process.env.NODE_ENV === "production" && !captchaToken) {
+      setError("Please complete the captcha verification");
+      return;
+    }
+
     startTransition(async () => {
       const { error } = await authClient.signIn.email(
         {
@@ -70,11 +79,22 @@ export function LoginForm({
           callbackURL: `${window.location.origin}${callbackURL}`,
         },
         {
+          fetchOptions: {
+            headers: {
+              ...(process.env.NODE_ENV === "production" && captchaToken
+                ? { "x-captcha-response": captchaToken }
+                : {}),
+            },
+          },
           onSuccess: () => {
             // console.log("login success");
             router.push(callbackURL);
           },
           onError(context) {
+            // Reset captcha on error
+            turnstileRef.current?.reset();
+            setCaptchaToken("");
+
             if (context.error.status === 403) {
               toast.error("Verify your email!");
               setDone(true);
@@ -90,6 +110,9 @@ export function LoginForm({
         }
       );
       if (error) {
+        // Reset captcha on error
+        turnstileRef.current?.reset();
+        setCaptchaToken("");
         setError(error.message);
       }
     });
@@ -178,9 +201,33 @@ export function LoginForm({
                 </FormItem>
               )}
             />
+            {process.env.NODE_ENV === "production" && (
+              <div className="flex justify-center">
+                <TurnstileComponent
+                  ref={turnstileRef}
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                  onVerify={(token) => setCaptchaToken(token)}
+                  onError={() => {
+                    setCaptchaToken("");
+                    setError("Captcha verification failed. Please try again.");
+                  }}
+                  onExpire={() => {
+                    setCaptchaToken("");
+                    setError("Captcha expired. Please try again.");
+                  }}
+                />
+              </div>
+            )}
             <FormError message={error} />
             <FormSuccess message={success} />
-            <Button disabled={isPending} type="submit" className="w-full">
+            <Button
+              disabled={
+                isPending ||
+                (process.env.NODE_ENV === "production" && !captchaToken)
+              }
+              type="submit"
+              className="w-full"
+            >
               {isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
