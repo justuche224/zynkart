@@ -1012,3 +1012,188 @@ export const storeVisitRelations = relations(storeVisit, ({ one }) => ({
     references: [store.id],
   }),
 }));
+
+// -------------------------------------------------------
+// Feature Limit System Tables
+// -------------------------------------------------------
+
+export const planTypeEnum = pgEnum("plan_type", ["free", "pro", "elite"]);
+
+export const featureKeyEnum = pgEnum("feature_key", [
+  "stores_count",
+  "products_count",
+  "custom_domain",
+  "email_service",
+  "zynkart_branding",
+  "api_mode",
+  "templates_access",
+]);
+
+export const limitTypeEnum = pgEnum("limit_type", [
+  "count", // Numeric limits (e.g., max 10 products)
+  "monthly", // Monthly reset limits (e.g., 500 emails per month)
+  "boolean", // True/false features (e.g., custom domain yes/no)
+]);
+
+export const resetPeriodEnum = pgEnum("reset_period", [
+  "daily",
+  "monthly",
+  "never",
+]);
+
+// User plans table
+export const userPlans = pgTable(
+  "user_plans",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    planType: planTypeEnum("plan_type").notNull(),
+    status: text("status").default("active").notNull(), // active, cancelled, expired
+    startDate: timestamp("start_date").defaultNow().notNull(),
+    endDate: timestamp("end_date"), // null for lifetime plans
+    stripeSubscriptionId: text("stripe_subscription_id"),
+    stripePriceId: text("stripe_price_id"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("user_plans_user_id_idx").on(table.userId),
+    index("user_plans_status_idx").on(table.status),
+    index("user_plans_plan_type_idx").on(table.planType),
+  ]
+);
+
+// Feature limits configuration table
+export const featureLimits = pgTable(
+  "feature_limits",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    planType: planTypeEnum("plan_type").notNull(),
+    featureKey: featureKeyEnum("feature_key").notNull(),
+    limitType: limitTypeEnum("limit_type").notNull(),
+    limitValue: integer("limit_value").notNull(), // -1 for unlimited, 0 for disabled, positive for limits
+    resetPeriod: resetPeriodEnum("reset_period").default("never").notNull(),
+    enabled: boolean("enabled").default(true).notNull(),
+    description: text("description"), // Human readable description
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure unique combination of plan type and feature key
+    uniqueIndex("feature_limits_plan_feature_idx").on(
+      table.planType,
+      table.featureKey
+    ),
+    index("feature_limits_plan_type_idx").on(table.planType),
+    index("feature_limits_feature_key_idx").on(table.featureKey),
+    index("feature_limits_enabled_idx").on(table.enabled),
+  ]
+);
+
+// Feature usage tracking table
+export const featureUsage = pgTable(
+  "feature_usage",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    featureKey: featureKeyEnum("feature_key").notNull(),
+    usageCount: integer("usage_count").default(0).notNull(),
+    lastUsed: timestamp("last_used").defaultNow().notNull(),
+    resetDate: timestamp("reset_date").notNull(),
+    metadata: jsonb("metadata"), // Store additional context if needed
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure unique combination of user and feature
+    uniqueIndex("feature_usage_user_feature_idx").on(
+      table.userId,
+      table.featureKey
+    ),
+    index("feature_usage_user_id_idx").on(table.userId),
+    index("feature_usage_feature_key_idx").on(table.featureKey),
+    index("feature_usage_reset_date_idx").on(table.resetDate),
+  ]
+);
+
+// Feature override table (for temporary access or special cases)
+export const featureOverrides = pgTable(
+  "feature_overrides",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    featureKey: featureKeyEnum("feature_key").notNull(),
+    overrideValue: integer("override_value").notNull(), // -1 for unlimited, 0 for disabled
+    reason: text("reason").notNull(), // Admin reason for override
+    expiresAt: timestamp("expires_at"), // null for permanent overrides
+    createdBy: text("created_by")
+      .notNull()
+      .references(() => user.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Ensure unique combination of user and feature for active overrides
+    uniqueIndex("feature_overrides_user_feature_idx").on(
+      table.userId,
+      table.featureKey
+    ),
+    index("feature_overrides_user_id_idx").on(table.userId),
+    index("feature_overrides_expires_at_idx").on(table.expiresAt),
+  ]
+);
+
+// Relations
+export const userPlansRelations = relations(userPlans, ({ one }) => ({
+  user: one(user, {
+    fields: [userPlans.userId],
+    references: [user.id],
+  }),
+}));
+
+export const featureLimitsRelations = relations(featureLimits, ({}) => ({}));
+
+export const featureUsageRelations = relations(featureUsage, ({ one }) => ({
+  user: one(user, {
+    fields: [featureUsage.userId],
+    references: [user.id],
+  }),
+}));
+
+export const featureOverridesRelations = relations(
+  featureOverrides,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [featureOverrides.userId],
+      references: [user.id],
+    }),
+    createdByUser: one(user, {
+      fields: [featureOverrides.createdBy],
+      references: [user.id],
+    }),
+  })
+);
+
+// Add user relation to include plans
+export const userRelations = relations(user, ({ many }) => ({
+  accounts: many(account),
+  sessions: many(session),
+  stores: many(store),
+  plans: many(userPlans),
+  featureUsage: many(featureUsage),
+  featureOverrides: many(featureOverrides),
+}));

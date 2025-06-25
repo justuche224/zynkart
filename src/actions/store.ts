@@ -11,6 +11,7 @@ import { slugify } from "@/lib/utils";
 import { StoreSchema } from "@/schemas";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
+import { FeatureLimitService } from "@/services/feature-limit";
 
 export const createStore = async (
   merchantId: string,
@@ -32,18 +33,28 @@ export const createStore = async (
   }
   const { name, email, phone, address } = validationResult.data;
 
-  // TODO subscription check
-  // check if they have a store already
+  const limitCheck = await FeatureLimitService.canUseFeature(
+    user.user.id,
+    "stores_count",
+    1
+  );
+
+  if (!limitCheck.allowed) {
+    return {
+      error:
+        limitCheck.message ||
+        "Store creation limit reached. Please upgrade your plan.",
+    };
+  }
 
   const stores = await db
     .select({ id: store.id })
     .from(store)
     .where(eq(store.merchantId, user.user.id));
 
-  if (stores.length) {
+  if (stores.length >= (limitCheck.limit || 1) && limitCheck.limit !== -1) {
     return {
-      error:
-        "You already have a store. upgrade to a paid plan to create a new store",
+      error: `You have reached your store limit (${limitCheck.limit}). Please upgrade your plan to create more stores.`,
     };
   }
 
@@ -97,6 +108,13 @@ export const createStore = async (
 
       return { data: newStore[0] };
     });
+
+    try {
+      await FeatureLimitService.trackUsage(user.user.id, "stores_count", 1);
+    } catch (error) {
+      console.error("Failed to track store usage:", error);
+      // Don't fail the entire operation if usage tracking fails
+    }
 
     return trx;
   } catch (error) {

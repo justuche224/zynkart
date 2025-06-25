@@ -43,13 +43,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 // import ProductVariants from "./new-product-variant-table";
 import { toast } from "sonner";
-import { Alert } from "@/components/ui/alert";
 import { convertBlobUrlToFile } from "@/lib/convert-blob-url-to-file";
 import { uploadImage } from "@/lib/supabase/storage/client";
 import { createProduct } from "@/actions/product/create-product";
 import formatPrice from "@/lib/price-formatter";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NewProductSchema } from "@/schemas";
+import { useFeatureLimit } from "@/hooks/use-feature-limits";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle, Crown } from "lucide-react";
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024;
 const MAX_FILES = 5;
@@ -102,6 +104,20 @@ const NewProductForm = ({
   const [isDragOver, setIsDragOver] = useState(false);
   const [isCategoryDragOver, setIsCategoryDragOver] = useState(false);
   const queryClient = useQueryClient();
+
+  const {
+    allowed,
+    loading: checkingLimits,
+    limit,
+    current,
+    message,
+    upgradeRequired,
+    suggestedPlan,
+  } = useFeatureLimit({
+    userId: merchantId,
+    featureKey: "products_count",
+    requestedAmount: 1,
+  });
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const categoryImageInputRef = useRef<HTMLInputElement>(null);
@@ -175,7 +191,6 @@ const NewProductForm = ({
     }
   };
 
-  // Create product mutation
   const createProductMutation = useMutation({
     mutationFn: async (values: z.infer<typeof NewProductSchema>) => {
       if (imageUrls.length === 0) {
@@ -239,14 +254,11 @@ const NewProductForm = ({
       return result.data;
     },
     onSuccess: (newProduct) => {
-      // Invalidate products query to trigger refetch
       queryClient.invalidateQueries({ queryKey: ["products", storeData.id] });
 
-      // Optimistically update product list
       if (newProduct) {
         queryClient.setQueryData(
-          ["products", storeData.id, 1], // default to page 1
-
+          ["products", storeData.id, 1],
           (oldData: any) => {
             if (!oldData) return oldData;
 
@@ -259,7 +271,6 @@ const NewProductForm = ({
         );
       }
 
-      // Success handling
       setSuccess("Product created successfully!");
       toast.success("Product added");
       form.reset();
@@ -280,6 +291,13 @@ const NewProductForm = ({
   });
 
   const onSubmit = (values: NewProductFormOutput) => {
+    if (!allowed) {
+      setError(
+        message || "Product creation limit reached. Please upgrade your plan."
+      );
+      return;
+    }
+
     setError("");
     setSuccess("");
     createProductMutation.mutate(values);
@@ -300,7 +318,9 @@ const NewProductForm = ({
     }
 
     // Validate file types
-    const invalidTypes = files.filter((file) => !file.type.startsWith('image/'));
+    const invalidTypes = files.filter(
+      (file) => !file.type.startsWith("image/")
+    );
     if (invalidTypes.length > 0) {
       setImageError("Please select only image files");
       return;
@@ -358,7 +378,9 @@ const NewProductForm = ({
     }
 
     // Validate file types
-    const invalidTypes = files.filter((file) => !file.type.startsWith('image/'));
+    const invalidTypes = files.filter(
+      (file) => !file.type.startsWith("image/")
+    );
     if (invalidTypes.length > 0) {
       setCategoryImageError("Please select only image files");
       return;
@@ -465,6 +487,23 @@ const NewProductForm = ({
   //   return color;
   // };
 
+  if (checkingLimits) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="w-full max-w-3xl mx-auto p-4 pt-20 space-y-6">
+          <div className="flex items-center justify-center p-8">
+            <div className="text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">
+                Checking product creation limits...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="w-full max-w-3xl mx-auto p-4 pt-20 space-y-6">
@@ -487,6 +526,56 @@ const NewProductForm = ({
               <CardDescription>Add a new product to your store</CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Product limit warning */}
+              {!allowed && (
+                <Alert className="border-amber-200 bg-amber-50 mb-6">
+                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  <AlertDescription className="text-amber-800">
+                    <div className="space-y-2">
+                      <p className="font-medium">
+                        {message || "Product creation limit reached"}
+                      </p>
+                      {limit && current !== undefined && (
+                        <p className="text-sm">
+                          You have used {current} of{" "}
+                          {limit === -1 ? "unlimited" : limit} allowed products.
+                        </p>
+                      )}
+                      {upgradeRequired && suggestedPlan && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => window.open("/pricing", "_blank")}
+                          className="bg-amber-600 hover:bg-amber-700 text-white"
+                        >
+                          <Crown className="h-4 w-4 mr-2" />
+                          Upgrade to {suggestedPlan.toUpperCase()}
+                        </Button>
+                      )}
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Usage meter for allowed users */}
+              {allowed && limit && current !== undefined && limit > 0 && (
+                <Alert className="border-blue-200 bg-blue-50 mb-6">
+                  <AlertDescription className="text-blue-800">
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">
+                        Product Usage: {current} of {limit} used
+                      </p>
+                      <div className="w-full bg-blue-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full transition-all"
+                          style={{ width: `${(current / limit) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              )}
+
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
@@ -1200,7 +1289,7 @@ const NewProductForm = ({
                       </Link>
                     </Button>
                     <Button
-                      disabled={createProductMutation.isPending}
+                      disabled={createProductMutation.isPending || !allowed}
                       type="submit"
                       className="min-w-[120px]"
                     >
@@ -1209,6 +1298,8 @@ const NewProductForm = ({
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                           Creating...
                         </>
+                      ) : !allowed ? (
+                        "Product Limit Reached"
                       ) : (
                         "Create Product"
                       )}

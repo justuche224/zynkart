@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useFeatureLimit } from "@/hooks/use-feature-limits";
 
 const Merchant = ({
   merchant,
@@ -65,6 +66,18 @@ const Merchant = ({
   const totalCustomers = useMemo(() => {
     return stores.reduce((acc, store) => acc + store.customerCount, 0);
   }, [stores]);
+
+  // Check store creation limits
+  const {
+    allowed: canCreateStore,
+    limit: storeLimit,
+    current: currentStores,
+    upgradeRequired,
+  } = useFeatureLimit({
+    userId: merchant.id,
+    featureKey: "stores_count",
+    requestedAmount: 1,
+  });
 
   return (
     <div className="min-h-screen">
@@ -127,7 +140,11 @@ const Merchant = ({
                   <div className="flex items-center justify-between mb-2">
                     <Store className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                     <Badge variant="outline" className="text-xs">
-                      Active
+                      {storeLimit === -1
+                        ? "∞"
+                        : `${currentStores || stores.length}/${
+                            storeLimit || 1
+                          }`}
                     </Badge>
                   </div>
                   <div className="text-2xl font-bold text-blue-900 dark:text-blue-200">
@@ -135,6 +152,11 @@ const Merchant = ({
                   </div>
                   <div className="text-blue-700 dark:text-blue-300 text-sm font-medium">
                     Store{stores.length !== 1 ? "s" : ""}
+                    {storeLimit && storeLimit > 0 && (
+                      <span className="text-xs ml-1">
+                        (limit: {storeLimit})
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -225,13 +247,30 @@ const Merchant = ({
               Manage and monitor your store performance
             </p>
           </div>
-          <Button
-            onClick={() => setOpen(true)}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Create Store
-          </Button>
+          <div className="flex items-center gap-3">
+            {!canCreateStore && upgradeRequired && (
+              <Badge variant="destructive" className="text-xs">
+                Limit Reached
+              </Badge>
+            )}
+            <Button
+              onClick={() => setOpen(true)}
+              disabled={!canCreateStore}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {!canCreateStore ? (
+                <>
+                  <Crown className="w-5 h-5 mr-2" />
+                  Upgrade to Create
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5 mr-2" />
+                  Create Store
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         {stores.length === 0 ? (
@@ -252,10 +291,20 @@ const Merchant = ({
               </p>
               <Button
                 onClick={() => setOpen(true)}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl"
+                disabled={!canCreateStore}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Plus className="w-5 h-5 mr-2" />
-                Create Your First Store
+                {!canCreateStore ? (
+                  <>
+                    <Crown className="w-5 h-5 mr-2" />
+                    Upgrade to Create Store
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-5 h-5 mr-2" />
+                    Create Your First Store
+                  </>
+                )}
               </Button>
             </div>
           </div>

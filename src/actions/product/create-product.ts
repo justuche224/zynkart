@@ -15,6 +15,7 @@ import { and, eq } from "drizzle-orm";
 import type z from "zod";
 import { serverAuth } from "@/lib/server-auth";
 import db from "@/db";
+import { FeatureLimitService } from "@/services/feature-limit";
 
 const MAX_FILES = 5;
 
@@ -84,6 +85,25 @@ export const createProduct = async ({
       return {
         success: false,
         error: { message: "Merchant not found!" },
+        data: null,
+      };
+    }
+
+    // Check feature limits before proceeding
+    const limitCheck = await FeatureLimitService.canUseFeature(
+      merchantId,
+      "products_count",
+      1
+    );
+
+    if (!limitCheck.allowed) {
+      return {
+        success: false,
+        error: {
+          message:
+            limitCheck.message ||
+            "Product creation limit reached. Please upgrade your plan.",
+        },
         data: null,
       };
     }
@@ -258,6 +278,14 @@ export const createProduct = async ({
 
       // Add tags to the product object
       (newProduct as any).tags = insertedProductTags;
+    }
+
+    // Track the usage after successful product creation
+    try {
+      await FeatureLimitService.trackUsage(merchantId, "products_count", 1);
+    } catch (error) {
+      console.error("Failed to track product usage:", error);
+      // Don't fail the entire operation if usage tracking fails
     }
 
     return {

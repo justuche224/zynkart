@@ -34,12 +34,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, Crown, AlertTriangle } from "lucide-react";
 import { FormError } from "@/components/ui/form-error";
 import { FormSuccess } from "@/components/ui/form-success";
 import { slugify } from "@/lib/utils";
 import { createStore } from "@/actions/store";
 import { useRouter } from "next/navigation";
+import { useFeatureLimit } from "@/hooks/use-feature-limits";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function NewStore({
   merchantId,
@@ -110,12 +112,34 @@ function ProfileForm({
   const [slug, setSlug] = useState<string>("");
   const router = useRouter();
 
+  // Check store creation limits
+  const {
+    allowed,
+    loading: checkingLimits,
+    limit,
+    current,
+    message,
+    upgradeRequired,
+    suggestedPlan,
+  } = useFeatureLimit({
+    userId: merchantId,
+    featureKey: "stores_count",
+    requestedAmount: 1,
+  });
+
   const storeName = form.watch("name");
   useEffect(() => {
     setSlug(slugify(storeName));
   }, [storeName]);
 
   function onSubmit(values: z.infer<typeof StoreSchema>) {
+    if (!allowed) {
+      setError(
+        message || "Store creation limit reached. Please upgrade your plan."
+      );
+      return;
+    }
+
     setError(undefined);
     setSuccess(undefined);
     startTransition(async () => {
@@ -128,12 +152,75 @@ function ProfileForm({
       }
     });
   }
+  if (checkingLimits) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">
+            Checking store creation limits...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
       <form
         className={cn("grid items-start gap-4", className)}
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        {/* Store limit warning */}
+        {!allowed && (
+          <Alert className="border-amber-200 bg-amber-50">
+            <AlertTriangle className="h-4 w-4 text-amber-600" />
+            <AlertDescription className="text-amber-800">
+              <div className="space-y-2">
+                <p className="font-medium">
+                  {message || "Store creation limit reached"}
+                </p>
+                {limit && current !== undefined && (
+                  <p className="text-sm">
+                    You have used {current} of{" "}
+                    {limit === -1 ? "unlimited" : limit} allowed stores.
+                  </p>
+                )}
+                {upgradeRequired && suggestedPlan && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => router.push("/pricing")}
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Upgrade to {suggestedPlan.toUpperCase()}
+                  </Button>
+                )}
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Usage meter for allowed users */}
+        {allowed && limit && current !== undefined && limit > 0 && (
+          <Alert className="border-blue-200 bg-blue-50">
+            <AlertDescription className="text-blue-800">
+              <div className="space-y-2">
+                <p className="text-sm font-medium">
+                  Store Usage: {current} of {limit} used
+                </p>
+                <div className="w-full bg-blue-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all"
+                    style={{ width: `${(current / limit) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="grid gap-4">
           <FormField
             control={form.control}
@@ -221,9 +308,15 @@ function ProfileForm({
         </div>
         <FormError message={error} />
         <FormSuccess message={success} />
-        <Button disabled={isPending} type="submit" className="w-full">
+        <Button
+          disabled={isPending || !allowed}
+          type="submit"
+          className="w-full"
+        >
           {isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
+          ) : !allowed ? (
+            "Store Limit Reached"
           ) : (
             <>
               <Plus className="h-4 w-4" /> Create

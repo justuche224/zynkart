@@ -45,6 +45,7 @@ export default async function page({
         name: storeData.name,
         slug: storeData.slug,
       }}
+      merchantId={user.user.id}
     />
   );
 }

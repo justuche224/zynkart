@@ -1,10 +1,13 @@
 "use client";
 
-import { Box, Plus } from "lucide-react";
+import { Box, Plus, Crown } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useFeatureLimit } from "@/hooks/use-feature-limits";
 import {
   Pagination,
   PaginationContent,
@@ -24,14 +27,27 @@ interface ProductsPageProps {
     name: string;
     slug: string;
   };
+  merchantId: string;
 }
 
 const ITEMS_PER_PAGE = 20;
 
-const ProductsPage = ({ storeData }: ProductsPageProps) => {
+const ProductsPage = ({ storeData, merchantId }: ProductsPageProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+
+  // Check product creation limits
+  const {
+    allowed: canCreateProduct,
+    limit: productLimit,
+    current: currentProducts,
+    upgradeRequired,
+  } = useFeatureLimit({
+    userId: merchantId,
+    featureKey: "products_count",
+    requestedAmount: 1,
+  });
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["products", storeData.id, currentPage],
@@ -96,18 +112,95 @@ const ProductsPage = ({ storeData }: ProductsPageProps) => {
         <p className="text-muted-foreground text-center max-w-md">
           Create a product to start selling
         </p>
-        <Link
-          href="products/new"
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          Add Product <Plus size={16} />
-        </Link>
+        <div className="flex flex-col items-center gap-4">
+          {!canCreateProduct && upgradeRequired && (
+            <Badge variant="destructive" className="text-xs">
+              Product Limit Reached
+            </Badge>
+          )}
+          {canCreateProduct ? (
+            <Link
+              href="products/new"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Add Product <Plus size={16} />
+            </Link>
+          ) : (
+            <Button
+              onClick={() => window.open("/pricing", "_blank")}
+              className="flex items-center gap-2"
+            >
+              <Crown size={16} />
+              Upgrade to Add Products
+            </Button>
+          )}
+          {productLimit && currentProducts !== undefined && (
+            <p className="text-xs text-muted-foreground">
+              {productLimit === -1
+                ? "Unlimited products"
+                : `${currentProducts}/${productLimit} products used`}
+            </p>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4">
+      {/* Product usage header */}
+      {productLimit && currentProducts !== undefined && (
+        <div className="mb-6 flex items-center justify-between bg-card p-4 rounded-lg border">
+          <div className="flex items-center gap-4">
+            <div>
+              <h3 className="font-medium">Product Usage</h3>
+              <p className="text-sm text-muted-foreground">
+                {productLimit === -1
+                  ? `${currentProducts} products created`
+                  : `${currentProducts} of ${productLimit} products used`}
+              </p>
+            </div>
+            {productLimit > 0 && (
+              <div className="w-32 bg-secondary rounded-full h-2">
+                <div
+                  className="bg-primary h-2 rounded-full transition-all"
+                  style={{
+                    width: `${Math.min(
+                      (currentProducts / productLimit) * 100,
+                      100
+                    )}%`,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {!canCreateProduct && upgradeRequired && (
+              <>
+                <Badge variant="destructive" className="text-xs">
+                  Limit Reached
+                </Badge>
+                <Button
+                  size="sm"
+                  onClick={() => window.open("/pricing", "_blank")}
+                >
+                  <Crown className="h-4 w-4 mr-2" />
+                  Upgrade
+                </Button>
+              </>
+            )}
+            {canCreateProduct && (
+              <Link href="products/new">
+                <Button size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Product
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+
       <motion.div
         initial="hidden"
         animate="visible"
