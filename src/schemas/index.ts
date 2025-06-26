@@ -228,3 +228,19 @@ export const orderInfoSchema = z
     message: "Total amount must equal subtotal plus shipping cost",
     path: ["totalAmount"],
   });
+
+export const savedAddressSchema = z.object({
+  label: z
+    .string()
+    .min(1, "Address label is required")
+    .max(50, "Label must be less than 50 characters"),
+  address: z.string().min(1, "Address is required"),
+  primaryPhone: z.string().min(1, "Primary phone number is required"),
+  secondaryPhone: z.string().optional(),
+  additionalInfo: z.string().optional(),
+  isDefault: z.boolean(),
+});
+
+export const updateSavedAddressSchema = savedAddressSchema.extend({
+  id: z.string().min(1, "Address ID is required"),
+});

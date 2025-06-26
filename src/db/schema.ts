@@ -224,6 +224,7 @@ export const customerRelations = relations(customer, ({ one, many }) => ({
   }),
   sessions: many(customerSesssion),
   savedProducts: many(customerSavedProduct),
+  savedAddresses: many(customerSavedAddress),
 }));
 
 export const storeSocial = pgTable("store_social", {
@@ -781,6 +782,47 @@ export const customerSavedProductRelations = relations(
     product: one(product, {
       fields: [customerSavedProduct.productId],
       references: [product.id],
+    }),
+  })
+);
+
+// -------------------------------------------------------
+// Customer Saved Addresses Table
+// -------------------------------------------------------
+
+export const customerSavedAddress = pgTable(
+  "customer_saved_address",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customer.id, { onDelete: "cascade" }),
+    label: text("label").notNull(), // e.g., "Home", "Work", "Office"
+    address: text("address").notNull(),
+    primaryPhone: text("primary_phone").notNull(),
+    secondaryPhone: text("secondary_phone"),
+    additionalInfo: text("additional_info"),
+    isDefault: boolean("is_default").default(false).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("customer_saved_address_customer_id_idx").on(table.customerId),
+    index("customer_saved_address_default_idx").on(
+      table.customerId,
+      table.isDefault
+    ),
+  ]
+);
+
+export const customerSavedAddressRelations = relations(
+  customerSavedAddress,
+  ({ one }) => ({
+    customer: one(customer, {
+      fields: [customerSavedAddress.customerId],
+      references: [customer.id],
     }),
   })
 );
