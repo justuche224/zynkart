@@ -104,11 +104,9 @@ export function RegisterForm({
         },
         {
           fetchOptions: {
-            headers: {
-              ...(process.env.NODE_ENV === "production" && captchaToken
-                ? { "x-captcha-response": captchaToken }
-                : {}),
-            },
+            headers: { 
+              "x-captcha-response": captchaToken, 
+          }, 
           },
           onError(context) {
             // Reset captcha on error

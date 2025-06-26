@@ -65,9 +65,7 @@ export function ForgotPasswordForm({
         {
           fetchOptions: {
             headers: {
-              ...(process.env.NODE_ENV === "production" && captchaToken
-                ? { "x-captcha-response": captchaToken }
-                : {}),
+              "x-captcha-response": captchaToken,
             },
           },
           onSuccess: () => {
