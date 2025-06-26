@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useRef } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,7 @@ import { FormSuccess } from "../ui/form-success";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { TurnstileComponent, TurnstileRef } from "@/components/ui/turnstile";
 
 export function ResetPasswordForm({
   className,
@@ -35,6 +36,8 @@ export function ResetPasswordForm({
   const [success, setSuccess] = useState<string | undefined>("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const turnstileRef = useRef<TurnstileRef>(null);
   const router = useRouter();
 
   const formSchema = z
@@ -75,15 +78,23 @@ export function ResetPasswordForm({
       return;
     }
 
+    if (process.env.NODE_ENV === "production" && !captchaToken) {
+      setError("Please complete the captcha verification");
+      return;
+    }
+
     setError(undefined);
     setSuccess(undefined);
     startTransition(async () => {
-      const { error: resetError } = await authClient.resetPassword(
-        {
-          newPassword: values.password,
-          token,
-        },
-        {
+      const { error: resetError } = await authClient.resetPassword({
+        newPassword: values.password,
+        token,
+        fetchOptions: {
+          headers: {
+            ...(process.env.NODE_ENV === "production" && captchaToken
+              ? { "x-captcha-response": captchaToken }
+              : {}),
+          },
           onSuccess: () => {
             setSuccess("Password updated successfully!");
             toast.success("Password updated!", {
@@ -93,6 +104,10 @@ export function ResetPasswordForm({
             router.push("/sign-in");
           },
           onError: (ctx) => {
+            // Reset captcha on error
+            turnstileRef.current?.reset();
+            setCaptchaToken("");
+
             if (ctx.error.status === 429) {
               const retryAfter = ctx.error.headers.get("X-Retry-After");
               setError(
@@ -106,9 +121,12 @@ export function ResetPasswordForm({
               setError(ctx.error.message || "Failed to reset password.");
             }
           },
-        }
-      );
+        },
+      });
       if (resetError) {
+        // Reset captcha on error
+        turnstileRef.current?.reset();
+        setCaptchaToken("");
         console.error("Reset Password Error:", resetError);
         setError(resetError.message);
       }
@@ -213,13 +231,35 @@ export function ResetPasswordForm({
             )}
           />
 
+          {process.env.NODE_ENV === "production" && (
+            <div className="flex justify-center">
+              <TurnstileComponent
+                ref={turnstileRef}
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onVerify={(token) => setCaptchaToken(token)}
+                onError={() => {
+                  setCaptchaToken("");
+                  setError("Captcha verification failed. Please try again.");
+                }}
+                onExpire={() => {
+                  setCaptchaToken("");
+                  setError("Captcha expired. Please try again.");
+                }}
+              />
+            </div>
+          )}
+
           <FormError message={error} />
           <FormSuccess message={success} />
 
           <Button
             type="submit"
             className="w-full"
-            disabled={isPending || !!invalidToken}
+            disabled={
+              isPending ||
+              !!invalidToken ||
+              (process.env.NODE_ENV === "production" && !captchaToken)
+            }
           >
             {isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
