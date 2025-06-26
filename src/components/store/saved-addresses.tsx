@@ -119,6 +119,7 @@ export default function SavedAddresses({
         toast.error(result.error || "Failed to save address");
       }
     } catch (error) {
+      console.error(error);
       toast.error("An error occurred while saving the address");
     } finally {
       setIsSubmitting(false);
@@ -140,6 +141,7 @@ export default function SavedAddresses({
         toast.error(result.error || "Failed to update address");
       }
     } catch (error) {
+      console.error(error);
       toast.error("An error occurred while updating the address");
     } finally {
       setIsSubmitting(false);
@@ -156,6 +158,7 @@ export default function SavedAddresses({
         toast.error(result.error || "Failed to delete address");
       }
     } catch (error) {
+      console.error(error);
       toast.error("An error occurred while deleting the address");
     }
   };
@@ -170,6 +173,7 @@ export default function SavedAddresses({
         toast.error(result.error || "Failed to set default address");
       }
     } catch (error) {
+      console.error(error);
       toast.error("An error occurred while setting default address");
     }
   };

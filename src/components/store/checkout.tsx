@@ -36,7 +36,7 @@ import { Separator } from "../ui/separator";
 import formatPrice from "@/lib/price-formatter";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { orderInfoSchema, savedAddressSchema } from "@/schemas";
+import { orderInfoSchema } from "@/schemas";
 import { toast } from "sonner";
 import SavedAddresses from "./saved-addresses";
 import {
