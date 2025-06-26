@@ -72,17 +72,15 @@ export function LoginForm({
     }
 
     startTransition(async () => {
-      const { error } = await authClient.signIn.email(
-        {
-          email: values.email,
-          password: values.password,
-          callbackURL: `${window.location.origin}${callbackURL}`,
-        },
-        {
-          fetchOptions: {
-            headers: {
-              "x-captcha-response": captchaToken,
-            },
+      const { error } = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+        callbackURL: `${window.location.origin}${callbackURL}`,
+        fetchOptions: {
+          headers: {
+            ...(process.env.NODE_ENV === "production" && captchaToken
+              ? { "x-captcha-response": captchaToken }
+              : {}),
           },
           onSuccess: () => {
             // console.log("login success");
@@ -105,8 +103,8 @@ export function LoginForm({
               setError(context.error.message);
             }
           },
-        }
-      );
+        },
+      });
       if (error) {
         // Reset captcha on error
         turnstileRef.current?.reset();

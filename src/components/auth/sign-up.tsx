@@ -94,19 +94,15 @@ export function RegisterForm({
     }
 
     startTransition(async () => {
-      const { data, error } = await authClient.signUp.email(
-        {
-          email: values.email,
-          name: values.name,
-          password: values.password,
-          role: "USER",
-          callbackURL: `${window.location.origin}${callbackURL}`,
-        },
-        {
-          fetchOptions: {
-            headers: { 
-              "x-captcha-response": captchaToken, 
-          }, 
+      const { data, error } = await authClient.signUp.email({
+        email: values.email,
+        name: values.name,
+        password: values.password,
+        role: "USER",
+        callbackURL: `${window.location.origin}${callbackURL}`,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken,
           },
           onError(context) {
             // Reset captcha on error
@@ -114,8 +110,8 @@ export function RegisterForm({
             setCaptchaToken("");
             setError(context.error.message);
           },
-        }
-      );
+        },
+      });
       if (error) {
         // Reset captcha on error
         turnstileRef.current?.reset();

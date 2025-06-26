@@ -57,16 +57,12 @@ export function ForgotPasswordForm({
     }
 
     startTransition(async () => {
-      const { error: forgetPasswordError } = await authClient.forgetPassword(
-        {
-          email: values.email,
-          redirectTo: `${window.location.origin}/reset-password`,
-        },
-        {
-          fetchOptions: {
-            headers: {
-              "x-captcha-response": captchaToken,
-            },
+      const { error: forgetPasswordError } = await authClient.forgetPassword({
+        email: values.email,
+        redirectTo: `${window.location.origin}/reset-password`,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken,
           },
           onSuccess: () => {
             setSuccess("Reset link sent to your email address.");
@@ -85,8 +81,8 @@ export function ForgotPasswordForm({
               setError(ctx.error.message);
             }
           },
-        }
-      );
+        },
+      });
       if (forgetPasswordError) {
         console.error("Forgot Password Error:", forgetPasswordError);
         // Reset captcha on error
