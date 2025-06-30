@@ -19,7 +19,12 @@ export const StoreSchema = z.object({
     .string()
     .regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"),
   email: z.string().email({ message: "Please enter store contact email" }),
-  address: z.string({ message: "Please enter store address" }),
+  address: z
+    .string({ message: "Please enter store address" })
+    .regex(/^[a-zA-Z0-9\s-.,]+$/, {
+      message:
+        "Address can only contain letters, numbers, spaces, hyphens, commas, and periods.",
+    }),
 });
 
 export const NewProductSchema = z
@@ -27,11 +32,19 @@ export const NewProductSchema = z
     name: z
       .string()
       .min(1, "Product name is required")
-      .max(150, "Product name can not be longer than 150 characters"),
+      .max(150, "Product name can not be longer than 150 characters")
+      .regex(/^[a-zA-Z0-9\s-.,]+$/, {
+        message:
+          "Product Name can only contain letters, numbers, spaces, hyphens, commas, and periods.",
+      }),
     description: z
       .string()
       .min(1, "Description is required")
-      .max(1000, "Description can not be longer than 1000 characters"),
+      .max(1000, "Description can not be longer than 1000 characters")
+      .regex(/^[a-zA-Z0-9\s-.,!?"]+$/, {
+        message:
+          "Description can only contain letters, numbers, spaces, hyphens, commas, periods, exclamation marks, question marks, and quotation marks.",
+      }),
     status: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
     categoryId: z.string().optional(),
     newCategoryName: z.string().optional(),

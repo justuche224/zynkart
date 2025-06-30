@@ -49,7 +49,14 @@ export function RegisterForm({
 
   const formSchema = z
     .object({
-      name: z.string().min(2).max(50),
+      name: z
+        .string()
+        .min(2)
+        .max(50)
+        .regex(/^[a-zA-Z0-9\s-]+$/, {
+          message:
+            "Name can only contain letters, numbers, spaces, and hyphens.",
+        }),
       email: z.string().email(),
       // phone: z
       //   .string()
