@@ -213,7 +213,6 @@ const NewProductForm = ({
         uploadedCategoryImageUrl = imageUrl;
       }
 
-      // Upload images to Supabase
       const uploadedImages = await Promise.all(
         imageUrls.map(async (url, index) => {
           const imageFile = await convertBlobUrlToFile(url);
@@ -233,13 +232,11 @@ const NewProductForm = ({
         })
       );
 
-      // Prepare final values with uploaded image URLs
       const finalValues = {
         ...values,
         images: uploadedImages,
       };
 
-      // Call server action to create product
       const result = await createProduct({
         values: finalValues,
         merchantId,
@@ -283,6 +280,7 @@ const NewProductForm = ({
       // Redirect to products page
       // router.push(`/merchant/stores/${storeSlug}/products`);
       // router.refresh();
+      window.location.reload();
     },
     onError: (error: Error) => {
       setError(error.message);
@@ -304,20 +302,17 @@ const NewProductForm = ({
   };
 
   const processFiles = (files: File[]) => {
-    // Validate total number of images
     if (imageUrls.length + files.length > MAX_FILES) {
       setImageError(`Maximum ${MAX_FILES} images allowed`);
       return;
     }
 
-    // Validate file sizes
     const invalidFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
     if (invalidFiles.length > 0) {
       setImageError("Some files exceed 4MB limit");
       return;
     }
 
-    // Validate file types
     const invalidTypes = files.filter(
       (file) => !file.type.startsWith("image/")
     );
@@ -377,7 +372,6 @@ const NewProductForm = ({
       return;
     }
 
-    // Validate file types
     const invalidTypes = files.filter(
       (file) => !file.type.startsWith("image/")
     );
@@ -429,8 +423,6 @@ const NewProductForm = ({
       categoryImageInputRef.current.value = "";
     }
   };
-
-  // VARIATION
 
   // const handleAddSize = async (newSize: {
   //   name: string;
@@ -526,7 +518,6 @@ const NewProductForm = ({
               <CardDescription>Add a new product to your store</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Product limit warning */}
               {!allowed && (
                 <Alert className="border-amber-200 bg-amber-50 mb-6">
                   <AlertTriangle className="h-4 w-4 text-amber-600" />
@@ -557,7 +548,6 @@ const NewProductForm = ({
                 </Alert>
               )}
 
-              {/* Usage meter for allowed users */}
               {allowed && limit && current !== undefined && limit > 0 && (
                 <Alert className="border-blue-200 bg-blue-50 mb-6">
                   <AlertDescription className="text-blue-800">

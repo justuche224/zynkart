@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useFeatureLimit } from "@/hooks/use-feature-limits";
+import { useFeatureLimit, useCurrentUsage } from "@/hooks/use-feature-limits";
 import {
   Pagination,
   PaginationContent,
@@ -37,11 +37,14 @@ const ProductsPage = ({ storeData, merchantId }: ProductsPageProps) => {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  // Check product creation limits
+  const { usage: currentProducts } = useCurrentUsage({
+    userId: merchantId,
+    featureKey: "products_count",
+  });
+
   const {
     allowed: canCreateProduct,
     limit: productLimit,
-    current: currentProducts,
     upgradeRequired,
   } = useFeatureLimit({
     userId: merchantId,
@@ -113,11 +116,6 @@ const ProductsPage = ({ storeData, merchantId }: ProductsPageProps) => {
           Create a product to start selling
         </p>
         <div className="flex flex-col items-center gap-4">
-          {!canCreateProduct && upgradeRequired && (
-            <Badge variant="destructive" className="text-xs">
-              Product Limit Reached
-            </Badge>
-          )}
           {canCreateProduct ? (
             <Link
               href="products/new"
@@ -126,19 +124,24 @@ const ProductsPage = ({ storeData, merchantId }: ProductsPageProps) => {
               Add Product <Plus size={16} />
             </Link>
           ) : (
-            <Button
-              onClick={() => window.open("/pricing", "_blank")}
-              className="flex items-center gap-2"
-            >
-              <Crown size={16} />
-              Upgrade to Add Products
-            </Button>
+            <>
+              <Badge variant="destructive" className="text-xs">
+                Product Limit Reached
+              </Badge>
+              <Button
+                onClick={() => window.open("/pricing", "_blank")}
+                className="flex items-center gap-2"
+              >
+                <Crown size={16} />
+                Upgrade to Add Products
+              </Button>
+            </>
           )}
-          {productLimit && currentProducts !== undefined && (
+          {productLimit && (
             <p className="text-xs text-muted-foreground">
               {productLimit === -1
                 ? "Unlimited products"
-                : `${currentProducts}/${productLimit} products used`}
+                : `${currentProducts || 0}/${productLimit} products used`}
             </p>
           )}
         </div>
@@ -148,16 +151,15 @@ const ProductsPage = ({ storeData, merchantId }: ProductsPageProps) => {
 
   return (
     <div className="container mx-auto px-4">
-      {/* Product usage header */}
-      {productLimit && currentProducts !== undefined && (
+      {productLimit && (
         <div className="mb-6 flex items-center justify-between bg-card p-4 rounded-lg border">
           <div className="flex items-center gap-4">
             <div>
               <h3 className="font-medium">Product Usage</h3>
               <p className="text-sm text-muted-foreground">
                 {productLimit === -1
-                  ? `${currentProducts} products created`
-                  : `${currentProducts} of ${productLimit} products used`}
+                  ? `${currentProducts || 0} products created`
+                  : `${currentProducts || 0} of ${productLimit} products used`}
               </p>
             </div>
             {productLimit > 0 && (
@@ -166,7 +168,7 @@ const ProductsPage = ({ storeData, merchantId }: ProductsPageProps) => {
                   className="bg-primary h-2 rounded-full transition-all"
                   style={{
                     width: `${Math.min(
-                      (currentProducts / productLimit) * 100,
+                      ((currentProducts || 0) / productLimit) * 100,
                       100
                     )}%`,
                   }}

@@ -724,17 +724,15 @@ export class FeatureLimitService {
 
     // Check current usage
     const currentUsage = await this.getCurrentUsage(userId, featureKey);
-    const wouldExceed = currentUsage + requestedAmount > limit.limitValue;
+    const allowed = Number(currentUsage) + requestedAmount <= limit.limitValue;
 
     return {
-      allowed: !wouldExceed,
+      allowed,
       limit: limit.limitValue,
       current: currentUsage,
-      upgradeRequired: wouldExceed,
-      suggestedPlan: wouldExceed
-        ? this.getSuggestedUpgrade(planType)
-        : undefined,
-      message: wouldExceed
+      upgradeRequired: !allowed,
+      suggestedPlan: !allowed ? this.getSuggestedUpgrade(planType) : undefined,
+      message: !allowed
         ? `${featureKey.replace("_", " ")} limit reached (${currentUsage}/${
             limit.limitValue
           } used). ${
