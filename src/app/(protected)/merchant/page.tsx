@@ -27,8 +27,6 @@ const page = async () => {
     .where(eq(store.merchantId, data.user.id))
     .groupBy(store.id, store.name, store.slug);
 
-  console.log(stores);
-
   return (
     <div suppressHydrationWarning>
       <Merchant merchant={data.user} stores={stores} />

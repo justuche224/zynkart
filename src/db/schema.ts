@@ -662,6 +662,35 @@ export const productImageRelations = relations(productImage, ({ one }) => ({
   }),
 }));
 
+export const productVideoRelations = relations(productVideo, ({ one }) => ({
+  product: one(product, {
+    fields: [productVideo.productId],
+    references: [product.id],
+  }),
+}));
+
+export const productVariantRelations = relations(productVariant, ({ one }) => ({
+  product: one(product, {
+    fields: [productVariant.productId],
+    references: [product.id],
+  }),
+  color: one(color, {
+    fields: [productVariant.colorId],
+    references: [color.id],
+  }),
+  size: one(size, {
+    fields: [productVariant.sizeId],
+    references: [size.id],
+  }),
+}));
+
+export const productWeightRelations = relations(productWeight, ({ one }) => ({
+  product: one(product, {
+    fields: [productWeight.productId],
+    references: [product.id],
+  }),
+}));
+
 export const shippingZoneTypeEnum = pgEnum("shipping_zone_type", [
   "COUNTRY",
   "STATE",

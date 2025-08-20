@@ -71,6 +71,7 @@ export const metadata: Metadata = {
       },
     ],
   },
+  metadataBase: new URL("https://zynkart.store"),
   robots: {
     index: true,
     follow: true,
