@@ -78,10 +78,10 @@ export function ResetPasswordForm({
       return;
     }
 
-    if (process.env.NODE_ENV === "production" && !captchaToken) {
-      setError("Please complete the captcha verification");
-      return;
-    }
+    // if (process.env.NODE_ENV === "production" && !captchaToken) {
+    //   setError("Please complete the captcha verification");
+    //   return;
+    // }
 
     setError(undefined);
     setSuccess(undefined);

@@ -95,10 +95,10 @@ export function RegisterForm({
     setError(undefined);
     setSuccess(undefined);
 
-    if (process.env.NODE_ENV === "production" && !captchaToken) {
-      setError("Please complete the captcha verification");
-      return;
-    }
+    // if (process.env.NODE_ENV === "production" && !captchaToken) {
+    //   setError("Please complete the captcha verification");
+    //   return;
+    // }
 
     startTransition(async () => {
       const { data, error } = await authClient.signUp.email({
