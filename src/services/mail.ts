@@ -118,7 +118,7 @@ class MailService {
    */
   private initializeTransporter() {
     this.transporter = nodemailer.createTransport({
-      host: "resonantfinance.org",
+       host: "smtp.hostinger.com",
       port: 465,
       secure: true,
       auth: {
