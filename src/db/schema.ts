@@ -64,10 +64,6 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at"),
 });
 
-// -------------------------------------------------------
-// Store Tables
-// -------------------------------------------------------
-
 export const productStatusEnum = pgEnum("product_status", [
   "ACTIVE",
   "INACTIVE",
