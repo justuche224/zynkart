@@ -2,70 +2,101 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X, ArrowUpRight, Instagram, Linkedin, Mail, Check, Zap, Crown, Rocket } from 'lucide-react';
+import { ArrowRight, Menu, X, ArrowUpRight, Instagram, Linkedin, Mail, Check, Zap, Crown, Rocket, Store, Code, Palette, Package, CreditCard, Users, Globe, Search, BarChart3, Smartphone, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { ModeToggle } from './mode-toggle';
-import Image from 'next/image';
 
 // --- Types & Data ---
 
-type Project = {
-  id: number;
+type FeatureItem = {
   title: string;
-  location: string;
-  year: string;
-  category: string;
-  image: string;
-  size: string;
+  description: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
 };
-const PROJECTS: Project[] = [{
+type FeatureGroup = {
+  id: number;
+  label: string;
+  image: string;
+  items: FeatureItem[];
+};
+const FEATURE_GROUPS: FeatureGroup[] = [{
   id: 1,
-  title: "Skincare Collective",
-  location: "London, UK",
-  year: "2024",
-  category: "Beauty",
-  image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=2400&auto=format&fit=crop",
-  size: "28k orders/mo"
+  label: "Foundation",
+  image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2400&auto=format&fit=crop",
+  items: [{
+    icon: Store,
+    title: "Multi-tenant Architecture",
+    description: "Each store lives on its own subdomain with complete isolation and customization."
+  }, {
+    icon: Code,
+    title: "Dashboard or Headless API",
+    description: "Manage via intuitive dashboard or integrate headlessly with full API access."
+  }]
 }, {
   id: 2,
-  title: "Streetwear Lab",
-  location: "Los Angeles, USA",
-  year: "2023",
-  category: "Apparel",
-  image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=2400&auto=format&fit=crop",
-  size: "19k orders/mo"
+  label: "Design + Ops",
+  image: "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?q=80&w=2400&auto=format&fit=crop",
+  items: [{
+    icon: Palette,
+    title: "Multiple Templates",
+    description: "Choose from stunning professionally designed templates or create your own."
+  }, {
+    icon: Package,
+    title: "Inventory Management",
+    description: "Track products, manage stock levels, and organize everything in one place."
+  }]
 }, {
   id: 3,
-  title: "Home Essentials",
-  location: "Toronto, Canada",
-  year: "2024",
-  category: "Home",
-  image: "https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=2400&auto=format&fit=crop",
-  size: "12k orders/mo"
+  label: "Revenue",
+  image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2400&auto=format&fit=crop",
+  items: [{
+    icon: CreditCard,
+    title: "Payment Processing",
+    description: "Accept payments globally with multiple payment methods and processors."
+  }, {
+    icon: Mail,
+    title: "Email Marketing",
+    description: "Reach your customers with powerful email campaigns and automation."
+  }]
 }, {
   id: 4,
-  title: "Gadget Depot",
-  location: "Berlin, Germany",
-  year: "2022",
-  category: "Electronics",
-  image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2400&auto=format&fit=crop",
-  size: "42k orders/mo"
+  label: "Customers",
+  image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2400&auto=format&fit=crop",
+  items: [{
+    icon: Users,
+    title: "Customer Management",
+    description: "Full user management with customer logins, profiles, and order history."
+  }, {
+    icon: Globe,
+    title: "Custom Domains",
+    description: "Use your own domain name for a fully branded shopping experience."
+  }]
 }, {
   id: 5,
-  title: "Bespoke Jewelry",
-  location: "Paris, France",
-  year: "2023",
-  category: "Jewelry",
-  image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=2400&auto=format&fit=crop",
-  size: "9k orders/mo"
+  label: "Growth",
+  image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=2400&auto=format&fit=crop",
+  items: [{
+    icon: Search,
+    title: "SEO Optimized",
+    description: "Server-side rendered for optimal search engine visibility and performance."
+  }, {
+    icon: BarChart3,
+    title: "Analytics & Insights",
+    description: "Track sales, customer behavior, and store performance with detailed analytics."
+  }]
 }, {
   id: 6,
-  title: "Nutrition Market",
-  location: "Austin, USA",
-  year: "2022",
-  category: "Wellness",
-  image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2400&auto=format&fit=crop",
-  size: "31k orders/mo"
+  label: "Trust",
+  image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2400&auto=format&fit=crop",
+  items: [{
+    icon: Smartphone,
+    title: "Mobile Responsive",
+    description: "Every store is optimized for mobile devices and tablets out of the box."
+  }, {
+    icon: Shield,
+    title: "Security & Compliance",
+    description: "Enterprise-grade security with PCI compliance and data protection."
+  }]
 }];
 const NEWS = [{
   id: 1,
@@ -249,26 +280,43 @@ const Hero = () => {
 const ProjectList = () => {
   return <section id="features" className="py-32 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       <div className="container mx-auto px-6">
-        <div className="flex justify-between items-end mb-20 border-b border-zinc-200 dark:border-zinc-800 pb-6">
-          <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase">Featured Stores</h2>
-          <span className="text-xs tracking-widest hidden md:block">2022 — 2026</span>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-20 border-b border-zinc-200 dark:border-zinc-800 pb-6 gap-6">
+          <div>
+            <span className="text-xs uppercase tracking-widest text-zinc-500">Platform</span>
+            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mt-3">Feature Highlights</h2>
+          </div>
+          <span className="text-xs tracking-widest text-zinc-500">Built for scale</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-24">
-          {PROJECTS.map((project, index) => <div key={project.id} className={`group flex flex-col ${index % 2 === 1 ? 'md:mt-32' : ''}`}>
-              <div className="relative overflow-hidden aspect-[4/5] mb-6 bg-zinc-100">
-                <div className="absolute inset-0 bg-zinc-900/0 group-hover:bg-zinc-900/10 transition-colors duration-500 z-10"></div>
-                <Image fill src={project.image || "/placeholder.svg"} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105" />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {FEATURE_GROUPS.map(group => <div key={group.id} className="group relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-8 min-h-[320px]">
+              <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{
+              backgroundImage: `url(${group.image})`
+            }}></div>
+                <div className="absolute inset-0 bg-white/85 dark:bg-zinc-950/80 opacity-90 group-hover:opacity-60 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/70 to-white/95 dark:from-zinc-950/30 dark:via-zinc-950/70 dark:to-zinc-950/90 opacity-90 group-hover:opacity-65 transition-opacity duration-500"></div>
               </div>
-              
-              <div className="flex justify-between items-start border-t border-zinc-200 dark:border-zinc-800 pt-4">
-                <div>
-                  <h3 className="text-2xl font-medium tracking-tight mb-1">{project.title}</h3>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{project.location}</p>
+
+              <div className="relative z-10 flex h-full flex-col">
+                <div className="flex items-center justify-between mb-8">
+                  <span className="text-xs uppercase tracking-widest text-zinc-500">{group.label}</span>
+                  <span className="text-xs tracking-widest text-zinc-400">0{group.id}</span>
                 </div>
-                <div className="text-right hidden md:block">
-                  <p className="text-sm">{project.year}</p>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{project.category}</p>
+
+                <div className="space-y-6">
+                  {group.items.map(item => {
+                const Icon = item.icon;
+                return <div key={item.title} className="flex items-start gap-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/70">
+                          <Icon size={18} className="text-zinc-900 dark:text-zinc-100" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-medium tracking-tight">{item.title}</h3>
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">{item.description}</p>
+                        </div>
+                      </div>;
+              })}
                 </div>
               </div>
             </div>)}
@@ -276,7 +324,7 @@ const ProjectList = () => {
 
         <div className="mt-32 flex justify-center">
           <button className="group flex items-center gap-3 text-sm uppercase tracking-widest hover:text-zinc-500 transition-colors">
-            Explore Templates
+            See All Features
             <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
           </button>
         </div>
