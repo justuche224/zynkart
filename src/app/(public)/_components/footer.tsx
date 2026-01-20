@@ -10,8 +10,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+
+  const pathname = usePathname();
+  
+  const isHome = pathname === "/";
+  
+  if(isHome) return null;
+
   const footerLinks = {
     product: [
       { name: "Features", href: "#features" },
@@ -78,9 +86,8 @@ export default function Footer() {
                 Zynkart
               </h3>
               <p className="text-gray-400 mt-4 leading-relaxed">
-                The next-generation eCommerce platform that empowers
-                entrepreneurs to build, manage, and scale their online
-                businesses without limits.
+                The commerce platform that unifies storefronts, inventory,
+                payments, and automation so teams move faster.
               </p>
             </div>
 
@@ -91,7 +98,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+1 (415) 555-0199</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <MapPin className="h-4 w-4" />
@@ -172,10 +179,9 @@ export default function Footer() {
         {/* Newsletter Signup */}
         <div className="border-t border-gray-800 pt-12 mb-12">
           <div className="max-w-md mx-auto text-center">
-            <h4 className="font-semibold text-white mb-4">Stay Updated</h4>
+            <h4 className="font-semibold text-white mb-4">Get Product Updates</h4>
             <p className="text-gray-400 mb-6">
-              Get the latest updates, tips, and insights delivered to your
-              inbox.
+              Weekly tips, releases, and growth playbooks for modern brands.
             </p>
             <div className="flex gap-2 flex-col md:flex-row">
               <input
@@ -197,7 +203,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-gray-400 text-sm">
-              © 2024 Zynkart. All rights reserved.
+              © 2026 Zynkart. All rights reserved.
             </div>
 
             <div className="flex items-center gap-6">

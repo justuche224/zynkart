@@ -1,3 +1,4 @@
+/*
 import Hero from "./_components/hero";
 import Features from "./_components/features";
 import HowItWorks from "./_components/how-it-works";
@@ -14,4 +15,13 @@ export default function Home() {
       <Testimonials />
     </main>
   );
+}
+*/
+
+import { LandingPage } from "@/components/home";
+
+export default function Home() {
+  return (
+    <LandingPage />
+  )
 }

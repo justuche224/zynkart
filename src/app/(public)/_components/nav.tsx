@@ -1,3 +1,5 @@
+"use client";
+
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Menu, ShoppingCart } from "lucide-react";
@@ -12,8 +14,16 @@ import {
 } from "@/components/ui/sheet";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
+import { usePathname } from "next/navigation";
 
 const PublicNav = () => {
+  
+  const pathname = usePathname();
+  
+  const isHome = pathname === "/";
+  
+  if(isHome) return null;
+
   return (
     <header className="fixed top-0 z-[99] w-full bg-background/50 backdrop-blur-md shadow">
       <nav className="flex items-center justify-between w-full px-5 md:px-20 py-2">
@@ -48,7 +58,7 @@ const PublicNav = () => {
             asChild
             variant={"link"}
           >
-            <Link href={"/themes"}>Themes</Link>
+            <Link href={"/templates"}>Templates</Link>
           </Button>
         </div>
         <div className="gap-4 hidden md:flex">
@@ -56,7 +66,7 @@ const PublicNav = () => {
             <Link href={"/sign-in"}>Sign In</Link>
           </Button>
           <Button aria-label="Contact" size={"sm"} variant={"outline"} asChild>
-            <Link href={"/contact"}>Contact</Link>
+            <Link href={"/contact"}>Talk to Sales</Link>
           </Button>
           <Button aria-label="Get Started" size={"sm"} asChild>
             <Link href={"/sign-up"}>Get Started</Link>
@@ -93,14 +103,14 @@ const PublicNav = () => {
               <Button aria-label="Features" asChild variant={"link"}>
                 <Link href={"/#features"}>Features</Link>
               </Button>
-              <Button aria-label="Themes" className="hidden md:inline-block" asChild variant={"link"}>
-                <Link href={"/themes"}>Themes</Link>
+              <Button aria-label="Templates" className="hidden md:inline-block" asChild variant={"link"}>
+                <Link href={"/templates"}>Templates</Link>
               </Button>
               <Button aria-label="Sign In" size={"sm"} variant={"outline"} asChild>
                 <Link href={"/sign-in"}>Sign In</Link>
               </Button>
-              <Button aria-label="Contact" size={"sm"} variant={"outline"} asChild>
-                <Link href={"/contact"}>Contact</Link>
+              <Button aria-label="Talk to Sales" size={"sm"} variant={"outline"} asChild>
+                <Link href={"/contact"}>Talk to Sales</Link>
               </Button>
               <Button aria-label="Get Started" size={"sm"} asChild>
                 <Link href={"/sign-up"}>Get Started</Link>
