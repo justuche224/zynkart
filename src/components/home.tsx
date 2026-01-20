@@ -2,8 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X, ArrowDown, ArrowUpRight, Instagram, Linkedin, Mail, Check, Zap, Crown, Rocket } from 'lucide-react';
+import { ArrowRight, Menu, X, ArrowUpRight, Instagram, Linkedin, Mail, Check, Zap, Crown, Rocket } from 'lucide-react';
+import Link from 'next/link';
 import { ModeToggle } from './mode-toggle';
+import Image from 'next/image';
 
 // --- Types & Data ---
 
@@ -142,9 +144,7 @@ const Navigation = () => {
             <span className="text-xs uppercase tracking-widest hidden md:block group-hover:tracking-[0.2em] transition-all duration-300">Menu</span>
             <Menu size={24} strokeWidth={1.5} />
           </button>
-          <div className="pointer-events-auto">
-            <ModeToggle />
-          </div>
+          
         </div>
       </nav>
 
@@ -206,6 +206,11 @@ const Navigation = () => {
                       <p className="hover:text-white cursor-pointer">LinkedIn</p>
                     </div>
                   </div>
+
+                  <div className="pointer-events-auto mt-8 flex items-center gap-2">
+                      <span className="text-xs uppercase tracking-widest">Theme</span>
+            <ModeToggle />
+          </div>
                 </div>
               </div>
             </div>
@@ -233,18 +238,10 @@ const Hero = () => {
           <h1 className="text-[12vw] leading-[0.85] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay">
             Sell <br /> Smarter <br /> <span className="italic font-serif font-light">Everywhere</span>
           </h1>
-        </motion.div>
-        
-        <motion.div style={{
-        opacity
-      }} className="lg:col-span-4 flex flex-col justify-end items-start lg:items-end">
-          <p className="text-sm md:text-base max-w-xs leading-relaxed text-zinc-600 dark:text-zinc-400 text-left lg:text-right mb-12">
-            Zynkart brings storefronts, payments, inventory, and automation together so your team can focus on growth.
-          </p>
-          <a href="#features" className="group flex items-center gap-4 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 px-6 py-3 text-white hover:bg-zinc-900 hover:text-white dark:hover:bg-zinc-100 dark:hover:text-black transition-colors duration-300">
-            See the Platform
-            <ArrowDown size={16} className="group-hover:translate-y-1 transition-transform" />
-          </a>
+          <Link href="/sign-up" className="group inline-flex items-center gap-3 mt-8 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-8 py-4 hover:bg-transparent hover:text-zinc-900 dark:hover:bg-transparent dark:hover:text-zinc-100 transition-colors duration-300">
+            Get Started
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
         </motion.div>
       </div>
     </section>;
@@ -261,7 +258,7 @@ const ProjectList = () => {
           {PROJECTS.map((project, index) => <div key={project.id} className={`group flex flex-col ${index % 2 === 1 ? 'md:mt-32' : ''}`}>
               <div className="relative overflow-hidden aspect-[4/5] mb-6 bg-zinc-100">
                 <div className="absolute inset-0 bg-zinc-900/0 group-hover:bg-zinc-900/10 transition-colors duration-500 z-10"></div>
-                <img src={project.image || "/placeholder.svg"} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105" />
+                <Image fill src={project.image || "/placeholder.svg"} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105" />
               </div>
               
               <div className="flex justify-between items-start border-t border-zinc-200 dark:border-zinc-800 pt-4">
@@ -370,7 +367,7 @@ const Philosophy = () => {
               <p>
                 Zynkart is built for ambitious commerce teams that want speed without sacrificing control. Choose a template, customize your brand, and go live in hours.
               </p>
-              <p>
+              <p>selll
                 Keep every channel in sync with real-time inventory, unified analytics, and automated workflows that turn repeat buyers into loyal customers.
               </p>
             </div>
@@ -422,7 +419,7 @@ const Journal = () => {
       </div>
     </section>;
 };
-const Footer = () => {
+export const Footer = () => {
   return <footer id="contact" className="bg-zinc-950 text-white pt-32 pb-12">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-32">
@@ -525,6 +522,6 @@ export const LandingPage = () => {
         <Philosophy />
         <Journal />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>;
 };
