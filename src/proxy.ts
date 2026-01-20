@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "./routes";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
   const isApiRoute = pathname.startsWith("/api");
