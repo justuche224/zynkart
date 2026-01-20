@@ -41,7 +41,7 @@ const page = async () => {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <Image
-          src="/images/hero-image.png"
+          src="/images/shoper-af5Oi0kOByE-unsplash.jpg"
           alt="Image"
           width={500}
           height={500}
