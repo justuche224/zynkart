@@ -50,61 +50,61 @@ type FeatureGroup = {
 const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 1,
-    label: "Foundation",
+    label: "Your Store",
     image:
       "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2400&auto=format&fit=crop",
     items: [
       {
         icon: Store,
-        title: "Multi-tenant Architecture",
+        title: "Your Own Professional Storefront",
         description:
-          "Each store lives on its own subdomain with complete isolation and customization.",
+          "Get a custom website link (yourstore.zynkart.store) to share on WhatsApp, Instagram, and Twitter. Look like a serious business.",
       },
       {
-        icon: Code,
-        title: "Dashboard or Headless API",
+        icon: Globe,
+        title: "No More 'DM for Price'",
         description:
-          "Manage via intuitive dashboard or integrate headlessly with full API access.",
+          "Your customers see clear prices and can order directly. No more replying to 100 DMs asking the same questions.",
       },
     ],
   },
   {
     id: 2,
-    label: "Design + Ops",
+    label: "Manage Stock",
     image:
       "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?q=80&w=2400&auto=format&fit=crop",
     items: [
       {
-        icon: Palette,
-        title: "Multiple Templates",
+        icon: Package,
+        title: "Easy Inventory Management",
         description:
-          "Choose from stunning professionally designed templates or create your own.",
+          "Add products with photos, prices, sizes, and colors. Track what's in stock automatically—no Excel sheets needed.",
       },
       {
-        icon: Package,
-        title: "Inventory Management",
+        icon: Palette,
+        title: "Beautiful Ready-Made Designs",
         description:
-          "Track products, manage stock levels, and organize everything in one place.",
+          "Pick from professional templates that make your products look premium. Just add your items and go live.",
       },
     ],
   },
   {
     id: 3,
-    label: "Revenue",
+    label: "Get Paid",
     image:
       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2400&auto=format&fit=crop",
     items: [
       {
         icon: CreditCard,
-        title: "Payment Processing",
+        title: "Nigerian Payment Integration",
         description:
-          "Accept payments globally with multiple payment methods and processors.",
+          "Accept payments via Paystack, Flutterwave, and bank transfers. Customers pay in Naira, money goes straight to your account.",
       },
       {
         icon: Mail,
-        title: "Email Marketing",
+        title: "Automatic Invoices",
         description:
-          "Reach your customers with powerful email campaigns and automation.",
+          "Every order creates an invoice automatically. Share it on WhatsApp or email—no manual calculations.",
       },
     ],
   },
@@ -116,35 +116,35 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     items: [
       {
         icon: Users,
-        title: "Customer Management",
+        title: "Customer Accounts",
         description:
-          "Full user management with customer logins, profiles, and order history.",
+          "Customers can create accounts, save addresses, and view order history. They'll keep coming back.",
       },
       {
-        icon: Globe,
-        title: "Custom Domains",
+        icon: Search,
+        title: "People Can Find You on Google",
         description:
-          "Use your own domain name for a fully branded shopping experience.",
+          "Your store is built to rank on Google. New customers can discover you beyond just social media.",
       },
     ],
   },
   {
     id: 5,
-    label: "Growth",
+    label: "Insights",
     image:
       "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=2400&auto=format&fit=crop",
     items: [
       {
-        icon: Search,
-        title: "SEO Optimized",
+        icon: BarChart3,
+        title: "Know What's Selling",
         description:
-          "Server-side rendered for optimal search engine visibility and performance.",
+          "See your best products, busiest days, and customer behavior. Make smarter decisions with real data.",
       },
       {
-        icon: BarChart3,
-        title: "Analytics & Insights",
+        icon: Smartphone,
+        title: "Works Perfectly on Phones",
         description:
-          "Track sales, customer behavior, and store performance with detailed analytics.",
+          "90% of your customers will visit from their phones. Every Zynkart store looks amazing on mobile.",
       },
     ],
   },
@@ -155,16 +155,16 @@ const FEATURE_GROUPS: FeatureGroup[] = [
       "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2400&auto=format&fit=crop",
     items: [
       {
-        icon: Smartphone,
-        title: "Mobile Responsive",
+        icon: Shield,
+        title: "Secure Payments",
         description:
-          "Every store is optimized for mobile devices and tablets out of the box.",
+          "Bank-level security protects every transaction. Your customers can trust buying from you.",
       },
       {
-        icon: Shield,
-        title: "Security & Compliance",
+        icon: Code,
+        title: "Always Available",
         description:
-          "Enterprise-grade security with PCI compliance and data protection.",
+          "Your store never sleeps. Customers can browse and order 24/7—even while you're in class or asleep.",
       },
     ],
   },
@@ -173,19 +173,20 @@ const NEWS = [
   {
     id: 1,
     date: "JAN 16, 2026",
-    title: "Product Update: One-click checkout now live",
-    category: "UPDATE",
+    title:
+      "How Chioma moved from WhatsApp to ₦2M monthly with her Zynkart store",
+    category: "SUCCESS",
   },
   {
     id: 2,
     date: "DEC 12, 2025",
-    title: "Customer Story: 3x revenue with Zynkart flows",
+    title: "No more 'DM for price' — Lagos vendor sees 5x order increase",
     category: "STORY",
   },
   {
     id: 3,
     date: "NOV 05, 2025",
-    title: "Guide: Multichannel inventory without chaos",
+    title: "Guide: How to run your side hustle while in school",
     category: "GUIDE",
   },
 ];
@@ -195,7 +196,7 @@ const PLANS = [
     icon: Zap,
     price: "$0",
     period: "forever",
-    description: "Launch a single store and prove demand.",
+    description: "Perfect for testing your business idea. Start selling today.",
     featured: false,
     features: [
       "1 store",
@@ -211,7 +212,7 @@ const PLANS = [
     icon: Crown,
     price: "$29",
     period: "per month",
-    description: "For growing teams scaling across channels.",
+    description: "For serious sellers ready to grow. Most popular for vendors.",
     featured: true,
     features: [
       "2 stores",
@@ -228,7 +229,8 @@ const PLANS = [
     icon: Rocket,
     price: "$99",
     period: "per month",
-    description: "Multi-brand ops with advanced automation.",
+    description:
+      "For established businesses with multiple brands or high volume.",
     featured: false,
     features: [
       "Unlimited stores",
@@ -276,7 +278,7 @@ const Navigation = () => {
             Zynkart
           </span>
           <span className="text-xs tracking-widest opacity-60 mt-1">
-            Next Gen Commerce
+            Online Store Builder
           </span>
         </div>
 
@@ -363,20 +365,22 @@ const Navigation = () => {
 
                 <div className="hidden md:flex flex-col justify-end pb-4 text-zinc-500">
                   <p className="text-sm max-w-xs leading-relaxed">
-                    We help modern brands launch fast and scale smarter.
-                    Everything you need to run your store, in one place.
+                    Built for Nigerian vendors who want to look professional and
+                    stop replying to DMs manually. Your store, your brand.
                   </p>
                   <div className="mt-8 grid grid-cols-2 gap-8 text-xs uppercase tracking-widest">
                     <div>
-                      <p className="text-white mb-2">San Francisco</p>
-                      <p>95 Market Street</p>
-                      <p>San Francisco, CA</p>
+                      <p className="text-white mb-2">Lagos</p>
+                      <p>Victoria Island</p>
+                      <p>Lagos, Nigeria</p>
                     </div>
                     <div>
                       <p className="text-white mb-2">Socials</p>
-                      <p className="hover:text-white cursor-pointer">X</p>
                       <p className="hover:text-white cursor-pointer">
-                        LinkedIn
+                        X (Twitter)
+                      </p>
+                      <p className="hover:text-white cursor-pointer">
+                        Instagram
                       </p>
                     </div>
                   </div>
@@ -424,14 +428,14 @@ const Hero = () => {
           className="lg:col-span-8"
         >
           <h1 className="text-[12vw] leading-[0.85] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay">
-            Sell <br /> Smarter <br />{" "}
-            <span className="italic font-serif font-light">Everywhere</span>
+            Stop <br /> The DMs <br />{" "}
+            <span className="italic font-serif font-light">Start Selling</span>
           </h1>
           <Link
             href="/sign-up"
             className="group inline-flex items-center gap-3 mt-8 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-8 py-4 hover:bg-transparent hover:text-zinc-900 dark:hover:bg-transparent dark:hover:text-zinc-100 transition-colors duration-300"
           >
-            Get Started
+            Create Your Free Store
             <ArrowRight
               size={16}
               className="group-hover:translate-x-1 transition-transform"
@@ -661,40 +665,40 @@ const Philosophy = () => {
           </div>
           <div className="lg:col-span-8">
             <p className="text-3xl md:text-5xl lg:text-6xl font-light leading-[1.1] tracking-tight mb-12">
-              Launch a premium storefront, connect your stack, and automate
-              operations without hiring an army.
+              Stop replying to DMs manually. Get a professional online store
+              where customers can see prices and order instantly.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               <p>
-                Zynkart is built for ambitious commerce teams that want speed
-                without sacrificing control. Choose a template, customize your
-                brand, and go live in hours.
+                Tired of answering "How much?" a hundred times a day? Zynkart
+                gives you a real online store. Your customers see the price,
+                pick their size and color, and checkout themselves.
               </p>
               <p>
-                selll Keep every channel in sync with real-time inventory,
-                unified analytics, and automated workflows that turn repeat
-                buyers into loyal customers.
+                Upload your products, set your prices, and share your link on
+                WhatsApp, Instagram, or anywhere. Accept payments directly to
+                your bank account with Nigerian payment gateways.
               </p>
             </div>
 
             <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-zinc-300 dark:border-zinc-700 pt-8">
               {[
                 {
-                  label: "Founded",
-                  value: "2021",
+                  label: "Nigerian Vendors",
+                  value: "2,000+",
                 },
                 {
-                  label: "Stores",
-                  value: "3,400+",
+                  label: "Products Listed",
+                  value: "50K+",
                 },
                 {
-                  label: "GMV",
-                  value: "$420M+",
+                  label: "Orders Processed",
+                  value: "₦100M+",
                 },
                 {
-                  label: "Countries",
-                  value: "42",
+                  label: "States Covered",
+                  value: "36",
                 },
               ].map((stat) => (
                 <div key={stat.label}>
@@ -769,48 +773,44 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-32">
           <div className="flex flex-col gap-8">
             <h3 className="text-2xl font-medium tracking-tight">
-              Let&apos;s launch your next store together.
+              Ready to stop replying DMs? Let&apos;s build your store.
             </h3>
             <a
-              href="mailto:hello@zynkart.com"
+              href="mailto:hello@zynkart.store"
               className="flex items-center gap-3 text-zinc-400 hover:text-white transition-colors text-lg"
             >
               <Mail size={20} />
-              hello@zynkart.com
+              hello@zynkart.store
             </a>
           </div>
 
           <div className="flex flex-col gap-4">
             <h4 className="text-xs uppercase tracking-widest text-zinc-500 mb-2">
-              San Francisco
+              Lagos, Nigeria
             </h4>
             <p className="text-sm leading-relaxed text-zinc-300">
-              95 Market Street
+              Victoria Island
               <br />
-              San Francisco, CA
-              <br />
-              94105, USA
+              Lagos, Nigeria
             </p>
-            <p className="text-sm text-zinc-400">+1 (415) 555-0199</p>
+            <p className="text-sm text-zinc-400">WhatsApp: +234 XXX XXX XXXX</p>
           </div>
 
           <div className="flex flex-col gap-4">
             <h4 className="text-xs uppercase tracking-widest text-zinc-500 mb-2">
-              Lagos
+              Support
             </h4>
             <p className="text-sm leading-relaxed text-zinc-300">
-              18 Adeola Odeku
+              Questions about your store?
               <br />
-              Victoria Island, Lagos
-              <br />
-              Nigeria
+              We respond within 24 hours.
             </p>
-            <p className="text-sm text-zinc-400">+234 1 555 0199</p>
+            <p className="text-sm text-zinc-400">support@zynkart.store</p>
           </div>
 
           <div className="flex flex-col gap-4">
             <h4 className="text-xs uppercase tracking-widest text-zinc-500 mb-2">
-              Social
+              Follow Us
             </h4>
             <div className="flex flex-col gap-2">
               <a
@@ -823,7 +823,7 @@ export const Footer = () => {
                 href="#"
                 className="flex items-center gap-2 text-sm text-zinc-300 hover:text-white transition-colors"
               >
-                <Linkedin size={16} /> LinkedIn
+                X (Twitter)
               </a>
             </div>
           </div>

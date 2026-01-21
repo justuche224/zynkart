@@ -1,12 +1,12 @@
 {
-  "name": "Zynkart - Sell Without Limits",
+  "name": "Zynkart - Free Online Store Builder for Nigerian Sellers",
   "short_name": "Zynkart",
-  "description": "Launch, manage, and scale your online business with our all-in-one platform. Create branded stores, process payments, and grow your customer base—all without technical expertise.",
+  "description": "Create your own professional online store in minutes. Stop replying 'DM for price', build a storefront with inventory management, self-service invoicing, and Nigerian payment integration. Perfect for WhatsApp vendors, Instagram sellers, and studentpreneurs.",
   "start_url": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
-  "theme_color": "#F44336",
-  "background_color": "#F44336",
+  "theme_color": "#F97316",
+  "background_color": "#18181B",
   "icons": [
     {
       "src": "/icons/web/favicon.ico",
@@ -37,12 +37,10 @@
     }
   ],
   "categories": [
-    "Ecommerce",
-    "Payment",
-    "online-store",
-    "store",
-    "customer",
-    "business"
+    "business",
+    "shopping",
+    "productivity",
+    "finance"
   ],
   "screenshots": [
     {
@@ -50,14 +48,16 @@
       "type": "image/png",
       "sizes": "1866x959",
       "form_factor": "wide",
-      "label": "Zynkart Homepage"
+      "label": "Zynkart - Online Store Dashboard"
     }
   ],
   "scope": "/",
-  "lang": "en-US",
+  "lang": "en-NG",
   "dir": "ltr",
   "orientation": "portrait",
   "prefer_related_applications": false,
   "capture_links": "new-client",
-  "related_applications": []
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "id": "zynkart-store-builder"
 }
