@@ -24,10 +24,7 @@ export function proxy(req: NextRequest) {
     tenant = hostParts[0];
   }
 
-  if (
-    tenant &&
-    !pathname.startsWith("/api")
-  ) {
+  if (tenant && !pathname.startsWith("/api")) {
     nextUrl.pathname = `/store/${tenant}${pathname}`;
     return NextResponse.rewrite(nextUrl);
   }
@@ -36,8 +33,9 @@ export function proxy(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(pathname);
   const isAuthRoute = authRoutes.includes(pathname);
   const isStoreRoute = pathname.startsWith("/store");
+  const isBlogRoute = pathname.startsWith("/blog");
 
-  if (isStoreRoute) {
+  if (isStoreRoute || isBlogRoute) {
     return NextResponse.next();
   }
 
