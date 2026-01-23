@@ -14,15 +14,17 @@ import {
   Eye,
   BarChart3,
   MoreHorizontal,
+  LogOut,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { NewStore } from "@/components/new-store";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useFeatureLimit } from "@/hooks/use-feature-limits";
+import { authClient } from "@/lib/auth-client";
 
 const Merchant = ({
   merchant,
@@ -116,14 +118,28 @@ const Merchant = ({
                 <p className="text-muted-foreground text-sm mb-3">
                   {merchant.email}
                 </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs font-medium"
-                >
-                  <TrendingUp className="w-3.5 h-3.5 mr-1.5" />
-                  Upgrade Plan
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs font-medium"
+                  >
+                    <Crown className="w-3.5 h-3.5 mr-1.5" />
+                    Plan
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="text-xs font-medium"
+                    onClick={() => {
+                      authClient.signOut();
+                      redirect("/");
+                    }}
+                  >
+                    <LogOut className="w-3.5 h-3.5 mr-1.5" />
+                    Logout
+                  </Button>
+                </div>
               </div>
             </div>
 
