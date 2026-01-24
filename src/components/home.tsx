@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "./mode-toggle";
+import formatPrice from "@/lib/price-formatter";
 
 // --- Types & Data ---
 
@@ -78,7 +79,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
         icon: Package,
         title: "Easy Inventory Management",
         description:
-          "Add products with photos, prices, sizes, and colors. Track what's in stock automatically—no Excel sheets needed.",
+          "Add products with photos, prices, sizes, and colors. Track what's in stock automatically, no Excel sheets needed.",
       },
       {
         icon: Palette,
@@ -104,7 +105,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
         icon: Mail,
         title: "Automatic Invoices",
         description:
-          "Every order creates an invoice automatically. Share it on WhatsApp or email—no manual calculations.",
+          "Every order creates an invoice automatically. Share it on WhatsApp or email, no manual calculations.",
       },
     ],
   },
@@ -164,7 +165,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
         icon: Code,
         title: "Always Available",
         description:
-          "Your store never sleeps. Customers can browse and order 24/7—even while you're in class or asleep.",
+          "Your store never sleeps. Customers can browse and order 24/7, even while you're in class or asleep.",
       },
     ],
   },
@@ -180,7 +181,7 @@ const NEWS = [
   {
     id: 2,
     date: "DEC 12, 2025",
-    title: "No more 'DM for price' — Lagos vendor sees 5x order increase",
+    title: "No more 'DM for price', Lagos vendor sees 5x order increase",
     category: "STORY",
   },
   {
@@ -194,7 +195,7 @@ const PLANS = [
   {
     name: "Starter",
     icon: Zap,
-    price: "$0",
+    price: 0,
     period: "forever",
     description: "Perfect for testing your business idea. Start selling today.",
     featured: false,
@@ -210,7 +211,7 @@ const PLANS = [
   {
     name: "Pro",
     icon: Crown,
-    price: "$29",
+    price: 10000,
     period: "per month",
     description: "For serious sellers ready to grow. Most popular for vendors.",
     featured: true,
@@ -227,7 +228,7 @@ const PLANS = [
   {
     name: "Elite",
     icon: Rocket,
-    price: "$99",
+    price: 100000,
     period: "per month",
     description:
       "For established businesses with multiple brands or high volume.",
@@ -427,9 +428,11 @@ const Hero = () => {
           }}
           className="lg:col-span-8"
         >
-          <h1 className="text-[12vw] leading-[0.85] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay">
+          <h1 className="text-[12vw] 2xl:text-[9vw] xl:text-[8vw] leading-[0.80] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay">
             Stop <br /> The DMs <br />{" "}
-            <span className="italic font-serif font-light">Start Selling</span>
+            <span className="italic font-serif font-light text-nowrap">
+              Start Selling
+            </span>
           </h1>
           <Link
             href="/sign-up"
@@ -582,9 +585,9 @@ const Pricing = () => {
                   {plan.description}
                 </p>
 
-                <div className="flex items-end gap-3 mb-8">
-                  <span className="text-5xl font-medium tracking-tight">
-                    {plan.price}
+                <div className="flex flex-col items-end gap-3 mb-8">
+                  <span className="text-4xl font-medium tracking-tight">
+                    {formatPrice(plan.price)}
                   </span>
                   <span className="text-xs uppercase tracking-widest text-zinc-500 pb-2">
                     {plan.period}
@@ -682,7 +685,7 @@ const Philosophy = () => {
               </p>
             </div>
 
-            <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-zinc-300 dark:border-zinc-700 pt-8">
+            {/*<div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-zinc-300 dark:border-zinc-700 pt-8">
               {[
                 {
                   label: "Nigerian Vendors",
@@ -710,7 +713,7 @@ const Philosophy = () => {
                   </span>
                 </div>
               ))}
-            </div>
+            </div>*/}
           </div>
         </div>
       </div>
