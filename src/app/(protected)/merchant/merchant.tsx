@@ -37,6 +37,7 @@ const Merchant = ({
     slug: string;
     productCount: number;
     customerCount: number;
+    orderCount: number;
   }[];
 }) => {
   const [open, setOpen] = useState(false);
@@ -63,6 +64,10 @@ const Merchant = ({
   const totalCustomers = useMemo(() => {
     return stores.reduce((acc, store) => acc + store.customerCount, 0);
   }, [stores]);
+
+  const totalOrders = useMemo(() => {
+    return stores.reduce((acc, store) => acc + store.orderCount, 0);
+  }, [stores]);  
 
   // Check store creation limits
   const {
@@ -176,9 +181,9 @@ const Merchant = ({
                     <span className="text-3xl font-semibold text-foreground tabular-nums">
                       {totalProducts}
                     </span>
-                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    {/*<span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                       +12%
-                    </span>
+                    </span>*/}
                   </div>
                 </div>
 
@@ -193,9 +198,9 @@ const Merchant = ({
                     <span className="text-3xl font-semibold text-foreground tabular-nums">
                       {totalCustomers}
                     </span>
-                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    {/*<span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                       +8%
-                    </span>
+                    </span>*/}
                   </div>
                 </div>
 
@@ -208,14 +213,14 @@ const Merchant = ({
                   </div>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-semibold text-foreground tabular-nums">
-                      765
+                      {totalOrders}
                     </span>
-                    <Badge
+                    {/*<Badge
                       variant="secondary"
                       className="text-[10px] px-1.5 py-0 h-4 font-medium"
                     >
                       2 new
-                    </Badge>
+                    </Badge>*/}
                   </div>
                 </div>
               </div>
@@ -365,11 +370,11 @@ const Merchant = ({
                     <div className="text-center min-w-[60px]">
                       <div className="flex items-center justify-center gap-1">
                         <span className="text-lg font-semibold text-foreground tabular-nums">
-                          765
+                          {store.orderCount}
                         </span>
-                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                        {/*<span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
                           +12%
-                        </span>
+                        </span>*/}
                       </div>
                       <div className="text-[11px] text-muted-foreground uppercase tracking-wide">
                         Orders
