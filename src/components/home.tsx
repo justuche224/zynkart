@@ -273,7 +273,7 @@ const Navigation = () => {
   ];
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 mix-blend-difference text-white px-6 py-6 flex justify-between items-start pointer-events-none">
+      <nav className="fixed top-0 left-0 w-full z-50 mix-blend-difference text-white px-6 py-6 flex justify-between items-start pointer-events-none bg-background/70 backdrop-blur-lg">
         <div className="flex flex-col pointer-events-auto">
           <span className="font-bold text-lg tracking-tighter uppercase">
             Zynkart
@@ -474,52 +474,42 @@ const ProjectList = () => {
           {FEATURE_GROUPS.map((group) => (
             <div
               key={group.id}
-              className="group relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-8 min-h-[320px]"
+              className="group flex h-full flex-col justify-between border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-8"
             >
-              <div className="absolute inset-0">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{
-                    backgroundImage: `url(${group.image})`,
-                  }}
-                ></div>
-                <div className="absolute inset-0 bg-white/85 dark:bg-zinc-950/80 opacity-90 group-hover:opacity-60 transition-opacity duration-500"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/70 to-white/95 dark:from-zinc-950/30 dark:via-zinc-950/70 dark:to-zinc-950/90 opacity-90 group-hover:opacity-65 transition-opacity duration-500"></div>
+              <div className="flex items-center justify-between mb-8">
+                <span className="text-xs uppercase tracking-widest text-zinc-500">
+                  {group.label}
+                </span>
+                <span className="text-xs tracking-widest text-zinc-400">
+                  0{group.id}
+                </span>
               </div>
 
-              <div className="relative z-10 flex h-full flex-col">
-                <div className="flex items-center justify-between mb-8">
-                  <span className="text-xs uppercase tracking-widest text-zinc-500">
-                    {group.label}
-                  </span>
-                  <span className="text-xs tracking-widest text-zinc-400">
-                    0{group.id}
-                  </span>
-                </div>
-
-                <div className="space-y-6">
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div key={item.title} className="flex items-start gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/70">
-                          <Icon
-                            size={18}
-                            className="text-zinc-900 dark:text-zinc-100"
-                          />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-medium tracking-tight">
-                            {item.title}
-                          </h3>
-                          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                            {item.description}
-                          </p>
-                        </div>
+              <div className="space-y-6">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.title}
+                      className="flex items-start gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-4 first:border-t-0 first:pt-0"
+                    >
+                      <div className="mt-0.5 flex h-8 w-8 items-center justify-center bg-zinc-50 dark:bg-zinc-900">
+                        <Icon
+                          size={16}
+                          className="text-zinc-900 dark:text-zinc-100"
+                        />
                       </div>
-                    );
-                  })}
-                </div>
+                      <div>
+                        <h3 className="text-sm font-medium tracking-tight mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -586,7 +576,7 @@ const Pricing = () => {
                 </p>
 
                 <div className="flex flex-col items-end gap-3 mb-8">
-                  <span className="text-4xl font-medium tracking-tight">
+                  <span className=" text-2xl md:text-4xl font-medium tracking-tight">
                     {formatPrice(plan.price)}
                   </span>
                   <span className="text-xs uppercase tracking-widest text-zinc-500 pb-2">
@@ -666,23 +656,81 @@ const Philosophy = () => {
               How It Works
             </h2>
           </div>
-          <div className="lg:col-span-8">
-            <p className="text-3xl md:text-5xl lg:text-6xl font-light leading-[1.1] tracking-tight mb-12">
-              Stop replying to DMs manually. Get a professional online store
-              where customers can see prices and order instantly.
-            </p>
+          <div className="lg:col-span-8 space-y-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+              <div>
+                <p className="text-xs tracking-[0.25em] uppercase text-zinc-500 mb-4">
+                  Step 01
+                </p>
+                <h3 className="text-3xl md:text-4xl lg:text-5xl font-light leading-tight tracking-tight mb-4">
+                  Move from scattered DMs to a real storefront.
+                </h3>
+                <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  Sign up free, name your store, and add your branding. Zynkart
+                  gives you a clean, professional storefront instead of random
+                  screenshots and voice notes in WhatsApp.
+                </p>
+              </div>
+              <div>
+                <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-200 dark:bg-zinc-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"
+                    alt="Seller creating an online store dashboard"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-              <p>
-                Tired of answering "How much?" a hundred times a day? Zynkart
-                gives you a real online store. Your customers see the price,
-                pick their size and color, and checkout themselves.
-              </p>
-              <p>
-                Upload your products, set your prices, and share your link on
-                WhatsApp, Instagram, or anywhere. Accept payments directly to
-                your bank account with Nigerian payment gateways.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+              <div>
+                <p className="text-xs tracking-[0.25em] uppercase text-zinc-500 mb-4">
+                  Step 02
+                </p>
+                <h3 className="text-3xl md:text-4xl lg:text-5xl font-light leading-tight tracking-tight mb-4">
+                  Load your products once, let Zynkart handle the details.
+                </h3>
+                <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  Add products with photos, prices, sizes, colours, and stock
+                  levels. Your inventory, orders, and customers now live in one
+                  organised dashboard instead of being buried in chats.
+                </p>
+              </div>
+              <div>
+                <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-200 dark:bg-zinc-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=1600&auto=format&fit=crop"
+                    alt="Product grid on a laptop screen"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+              <div>
+                <p className="text-xs tracking-[0.25em] uppercase text-zinc-500 mb-4">
+                  Step 03
+                </p>
+                <h3 className="text-3xl md:text-4xl lg:text-5xl font-light leading-tight tracking-tight mb-4">
+                  Share your link, let customers check out on their own.
+                </h3>
+                <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  Drop your store link on WhatsApp, Instagram, or anywhere.
+                  Customers browse, add items to cart, enter delivery details,
+                  and pay via Nigerian payment gateways while you simply get
+                  order notifications and payouts to your bank account.
+                </p>
+              </div>
+              <div>
+                <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-200 dark:bg-zinc-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop"
+                    alt="Customer shopping online with a phone and card"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
 
             {/*<div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-zinc-300 dark:border-zinc-700 pt-8">
@@ -897,8 +945,8 @@ export const LandingPage = () => {
       <main>
         <Hero />
         <ProjectList />
-        <Pricing />
         <Philosophy />
+        <Pricing />
         <Journal />
       </main>
       {/* <Footer /> */}
