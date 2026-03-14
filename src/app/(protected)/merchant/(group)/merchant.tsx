@@ -4,7 +4,6 @@ import { User } from "better-auth";
 import {
   ArrowRight,
   ShoppingCart,
-  TrendingUp,
   Users,
   Package,
   Store,
