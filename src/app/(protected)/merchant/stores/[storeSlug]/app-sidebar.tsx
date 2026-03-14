@@ -2,12 +2,9 @@
 
 import type * as React from "react";
 import {
-  AudioWaveform,
   Book,
   User2,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Package,
   PieChart,
   Settings2,
@@ -18,7 +15,6 @@ import {
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
-import { TeamSwitcher } from "./team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -46,23 +42,6 @@ export function AppSidebar({
         session?.user.image ||
         "https://qlvnghvpsfqflytgfadz.supabase.co/storage/v1/object/public/cartify//user-placeholder.png",
     },
-    teams: [
-      {
-        name: storeName,
-        logo: GalleryVerticalEnd,
-        plan: "Enterprise",
-      },
-      {
-        name: "Acme Corp.",
-        logo: AudioWaveform,
-        plan: "Startup",
-      },
-      {
-        name: "Evil Corp.",
-        logo: Command,
-        plan: "Free",
-      },
-    ],
     navMain: [
       {
         title: "Store Management",
@@ -182,7 +161,12 @@ export function AppSidebar({
   return (
     <Sidebar className="noscrollbar" collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <div className="flex items-center gap-2 px-2 py-1.5">
+          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+            <ShoppingCart className="size-4" />
+          </div>
+          <span className="truncate text-sm font-semibold">{storeName}</span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} storeSlug={storeSlug} />
