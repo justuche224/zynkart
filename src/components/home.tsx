@@ -428,12 +428,13 @@ const Hero = () => {
           }}
           className="lg:col-span-8"
         >
-          <h1 className="text-[12vw] 2xl:text-[9vw] xl:text-[8vw] leading-[0.80] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay">
+          <h1 className="sr-only">Free Online Store for Nigerian Sellers</h1>
+          <p className="text-[12vw] 2xl:text-[9vw] xl:text-[8vw] leading-[0.80] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay m-0" aria-hidden="true">
             Stop <br /> The DMs <br />{" "}
             <span className="italic font-serif font-light text-nowrap">
               Start Selling
             </span>
-          </h1>
+          </p>
           <Link
             href="/sign-up"
             className="group inline-flex items-center gap-3 mt-8 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-8 py-4 hover:bg-transparent hover:text-zinc-900 dark:hover:bg-transparent dark:hover:text-zinc-100 transition-colors duration-300"
@@ -666,9 +667,12 @@ const Philosophy = () => {
                   Move from scattered DMs to a real storefront.
                 </h3>
                 <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Sign up free, name your store, and add your branding. Zynkart
-                  gives you a clean, professional storefront instead of random
-                  screenshots and voice notes in WhatsApp.
+                  Sign up for free, name your store, and add your branding. Zynkart
+                  provides Nigerian sellers with a clean, professional ecommerce website.
+                  Instead of sending random screenshots and relying on voice notes
+                  for social selling on WhatsApp or Instagram, your customers get a
+                  seamless browsing experience. Stop answering "DM for price" and
+                  start directing your audience to your own link.
                 </p>
               </div>
               <div>
@@ -691,9 +695,10 @@ const Philosophy = () => {
                   Load your products once, let Zynkart handle the details.
                 </h3>
                 <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Add products with photos, prices, sizes, colours, and stock
-                  levels. Your inventory, orders, and customers now live in one
-                  organised dashboard instead of being buried in chats.
+                  Add products with high-quality photos, clear pricing, and product variants like sizes and colors.
+                  Robust inventory management ensures you never oversell an out-of-stock item again.
+                  Your products, incoming orders, and customer data now live in one beautifully
+                  organized dashboard instead of being buried deep in endless chat threads.
                 </p>
               </div>
               <div>
@@ -716,10 +721,9 @@ const Philosophy = () => {
                   Share your link, let customers check out on their own.
                 </h3>
                 <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Drop your store link on WhatsApp, Instagram, or anywhere.
-                  Customers browse, add items to cart, enter delivery details,
-                  and pay via Nigerian payment gateways while you simply get
-                  order notifications and payouts to your bank account.
+                  Drop your custom store link on your WhatsApp status, Instagram bio,
+                  or anywhere you market your business. Customers can browse independently, add items to cart, configure their delivery based on your preset shipping zones,
+                  and complete their secure online checkout. Accept payments instantly via Nigerian payment gateways like <a href="https://paystack.com" target="_blank" rel="noreferrer" className="underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Paystack</a> or <a href="https://flutterwave.com" target="_blank" rel="noreferrer" className="underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Flutterwave</a>. You just wake up to order notifications!
                 </p>
               </div>
               <div>
@@ -768,6 +772,70 @@ const Philosophy = () => {
     </section>
   );
 };
+const FAQ = () => {
+  const faqs = [
+    {
+      question: "How do I receive payments from customers?",
+      answer: "Zynkart integrates directly with reliable Nigerian payment gateways like Paystack and Flutterwave. When a customer orders, they can pay securely via USSD, bank transfer, or card. The money settles directly into your configured bank account."
+    },
+    {
+      question: "Do I need technical skills to build my online store?",
+      answer: "Not at all. Zynkart is designed specifically for Nigerian small business owners and studentpreneurs without coding experience. Simply upload your product images, set your prices, and our platform builds the professional storefront for you instantly."
+    },
+    {
+      question: "Can I connect a custom domain to my Zynkart store?",
+      answer: "Yes! While you get a free 'yourname.zynkart.store' link immediately upon signup, upgrading to our Pro plan allows you to connect your own custom domain (like www.yourbrand.com) for maximum brand credibility."
+    },
+    {
+      question: "What happens if a customer buys an item that is out of stock?",
+      answer: "Zynkart features automated inventory management. Once you set your available stock levels, the system automatically tracks sales. If an item runs out, it will be marked as 'Sold Out', preventing over-ordering and the awkwardness of refunding a customer."
+    }
+  ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
+  return (
+    <section id="faq" className="py-32 bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 border-t border-zinc-200 dark:border-zinc-800">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-20 border-b border-zinc-200 dark:border-zinc-800 pb-6 gap-6">
+          <div>
+            <span className="text-xs uppercase tracking-widest text-zinc-500">
+              Questions
+            </span>
+            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mt-3">
+              Frequently Asked
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+          {faqs.map((faq, index) => (
+            <div key={index} className="flex flex-col border-t border-zinc-200 dark:border-zinc-800 pt-6">
+              <h3 className="text-xl font-medium tracking-tight mb-4">{faq.question}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+    </section>
+  );
+};
+
 const Journal = () => {
   return (
     <section
@@ -947,6 +1015,7 @@ export const LandingPage = () => {
         <ProjectList />
         <Philosophy />
         <Pricing />
+        <FAQ />
         <Journal />
       </main>
       {/* <Footer /> */}

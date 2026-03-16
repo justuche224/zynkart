@@ -1,7 +1,7 @@
 {
   "name": "Zynkart - Free Online Store Builder for Nigerian Sellers",
   "short_name": "Zynkart",
-  "description": "Create your own professional online store in minutes. Stop replying 'DM for price', build a storefront with inventory management, self-service invoicing, and Nigerian payment integration. Perfect for WhatsApp vendors, Instagram sellers, and studentpreneurs.",
+  "description": "Create a free online store in minutes. Stop 'DM for price', build a storefront with inventory, invoicing, and Nigerian payment integration (Paystack, Flutterwave).",
   "start_url": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],

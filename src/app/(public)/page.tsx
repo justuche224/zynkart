@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   creator: "Zynkart",
   publisher: "Zynkart",
   openGraph: {
-    title: "Zynkart - Your Professional Online Store in Minutes",
+    title: "Zynkart - Free Online Store for Nigerian Sellers | No More 'DM for Price'",
     description:
-      "No more 'DM for price'. Create a free online store with clear pricing, Nigerian payment options, and inventory management. Built for WhatsApp vendors and social sellers.",
+      "Create your free online store in minutes. Stop replying to DMs manually, get a professional storefront with Nigerian payment integration (Paystack, Flutterwave). Perfect for WhatsApp vendors, Instagram sellers & studentpreneurs.",
     images: [
       {
         url: "/images/screenshots/image.png",
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zynkart - Free Online Store for Nigerian Sellers",
+    title: "Zynkart - Free Online Store for Nigerian Sellers | No More 'DM for Price'",
     description:
-      "Create your storefront in minutes. Stop the manual DM replies. Nigerian payment integration included. Perfect for WhatsApp & Instagram vendors.",
+      "Create your free online store in minutes. Stop replying to DMs manually, get a professional storefront with Nigerian payment integration (Paystack, Flutterwave). Perfect for WhatsApp vendors, Instagram sellers & studentpreneurs.",
     images: [
       {
         url: "/images/screenshots/image.png",
@@ -90,5 +90,40 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <LandingPage />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://zynkart.store/#organization",
+        "name": "Zynkart",
+        "url": "https://zynkart.store/",
+        "logo": "https://zynkart.store/images/screenshots/image.png",
+        "sameAs": [
+          "https://twitter.com/zynkart"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Zynkart",
+        "operatingSystem": "All",
+        "applicationCategory": "BusinessApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "NGN"
+        }
+      }
+    ]
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <LandingPage />
+    </>
+  );
 }
