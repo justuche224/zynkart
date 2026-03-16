@@ -20,14 +20,6 @@ const page = async () => {
   return (
     <div className="grid min-h-screen lg:grid-cols-2 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
       <div className="flex flex-col p-8 md:p-12 lg:p-20 relative">
-        <div className="absolute top-8 left-8 md:top-12 md:left-12">
-          <Link href="/" className="flex flex-col pointer-events-auto">
-            <span className="font-bold text-lg tracking-tighter uppercase">
-              Zynkart
-            </span>
-          </Link>
-        </div>
-
         <div className="flex flex-1 items-center justify-center -translate-y-10">
           <div className="w-full max-w-[360px]">
             <Suspense
