@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,10 @@ export const Navigation = () => {
       label: "Sign In",
       href: "/sign-in",
     },
+    {
+      label: "Blog",
+      href: "/blog",
+    },
   ];
   return (
     <>
@@ -42,6 +47,9 @@ export const Navigation = () => {
         </Link>
 
         <div className="flex items-center gap-2">
+          <Button variant="ghost" className="pointer-events-auto">
+            <Link href="/sign-in">Get Started</Link>
+          </Button>
           <button
             onClick={() => setIsOpen(true)}
             className="pointer-events-auto group flex items-center gap-2"
