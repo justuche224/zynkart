@@ -273,7 +273,10 @@ const Hero = () => {
           className="lg:col-span-8"
         >
           <h1 className="sr-only">Free Online Store for Nigerian Sellers</h1>
-          <p className="text-[12vw] 2xl:text-[9vw] xl:text-[8vw] leading-[0.80] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay m-0" aria-hidden="true">
+          <p
+            className="text-[12vw] 2xl:text-[9vw] xl:text-[8vw] leading-[0.80] font-medium tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase mix-blend-overlay m-0"
+            aria-hidden="true"
+          >
             Stop <br /> The DMs <br />{" "}
             <span className="italic font-serif font-light text-nowrap">
               Start Selling
@@ -303,70 +306,91 @@ const ProjectList = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-20 border-b border-zinc-200 dark:border-zinc-800 pb-6 gap-6">
           <div>
-            <span className="text-xs uppercase tracking-widest text-zinc-500">
-              Platform
-            </span>
-            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mt-3">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-1.5 h-1.5 bg-zinc-900 dark:bg-zinc-100"></span>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-900 dark:text-zinc-100">
+                Platform
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase">
               Feature Highlights
             </h2>
           </div>
-          <span className="text-xs tracking-widest text-zinc-500">
-            Built for scale
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium uppercase tracking-widest text-zinc-500">
+              Built for scale
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {FEATURE_GROUPS.map((group) => (
             <div
               key={group.id}
-              className="group flex h-full flex-col justify-between border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-8"
+              className="group relative overflow-hidden flex h-full flex-col justify-between border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-8 py-10 transition-all duration-500 hover:border-zinc-900 dark:hover:border-zinc-100"
             >
-              <div className="flex items-center justify-between mb-8">
-                <span className="text-xs uppercase tracking-widest text-zinc-500">
-                  {group.label}
-                </span>
-                <span className="text-xs tracking-widest text-zinc-400">
-                  0{group.id}
-                </span>
+              <div className="absolute -right-6 -top-10 text-[180px] font-bold text-zinc-50 dark:text-zinc-800/20 select-none z-0 transition-transform duration-700 group-hover:scale-105 group-hover:-translate-y-2 group-hover:-translate-x-2">
+                0{group.id}
               </div>
 
-              <div className="space-y-6">
-                {group.items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.title}
-                      className="flex items-start gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-4 first:border-t-0 first:pt-0"
-                    >
-                      <div className="mt-0.5 flex h-8 w-8 items-center justify-center bg-zinc-50 dark:bg-zinc-900">
-                        <Icon
-                          size={16}
-                          className="text-zinc-900 dark:text-zinc-100"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium tracking-tight mb-1">
-                          {item.title}
-                        </h3>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="relative z-10 w-full h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-12">
+                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-900 dark:text-zinc-100 relative before:absolute before:-bottom-2 before:left-0 before:w-6 before:h-[1px] before:bg-zinc-900 dark:before:bg-zinc-100 transition-all duration-300 group-hover:before:w-full">
+                      {group.label}
+                    </span>
+                  </div>
+
+                  <div className="space-y-10">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <div
+                          key={item.title}
+                          className="flex items-start gap-5 group/item cursor-default"
+                        >
+                          <div className="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 group-hover/item:bg-zinc-900 group-hover/item:border-zinc-900 dark:group-hover/item:bg-zinc-100 dark:group-hover/item:border-zinc-100 transition-colors duration-500">
+                            <Icon
+                              size={18}
+                              className="text-zinc-900 dark:text-zinc-100 group-hover/item:text-white dark:group-hover/item:text-zinc-900 transition-colors duration-500"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="text-base font-medium tracking-tight mb-2 text-zinc-900 dark:text-zinc-100 transition-colors">
+                              {item.title}
+                            </h3>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed group-hover/item:text-zinc-700 dark:group-hover/item:text-zinc-300 transition-colors duration-500">
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
         <div className="mt-32 flex justify-center">
-          <button className="group flex items-center gap-3 text-sm uppercase tracking-widest hover:text-zinc-500 transition-colors">
-            See All Features
-            <ArrowRight
-              size={16}
-              className="group-hover:translate-x-2 transition-transform"
-            />
+          <button className="group relative flex items-center gap-3 text-sm uppercase tracking-widest font-medium text-zinc-900 dark:text-zinc-100 pb-2 overflow-hidden">
+            <span className="relative z-10 transition-transform duration-300 group-hover:-translate-y-full">See All Features</span>
+            <span className="absolute inset-0 z-10 translate-y-full transition-transform duration-300 group-hover:translate-y-0 text-zinc-500">See All Features</span>
+            
+            <div className="relative z-10 overflow-hidden w-4 h-4">
+              <ArrowRight
+                size={16}
+                className="absolute transition-transform duration-300 group-hover:translate-x-full"
+              />
+              <ArrowRight
+                size={16}
+                className="absolute -translate-x-full transition-transform duration-300 group-hover:translate-x-0"
+              />
+            </div>
+            
+            <span className="absolute bottom-0 left-0 w-full h-[1px] bg-zinc-900 dark:bg-zinc-100 origin-right transition-transform duration-300 group-hover:scale-x-0"></span>
+            <span className="absolute bottom-0 left-0 w-full h-[1px] bg-zinc-500 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
           </button>
         </div>
       </div>
@@ -511,12 +535,13 @@ const Philosophy = () => {
                   Move from scattered DMs to a real storefront.
                 </h3>
                 <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Sign up for free, name your store, and add your branding. Zynkart
-                  provides Nigerian sellers with a clean, professional ecommerce website.
-                  Instead of sending random screenshots and relying on voice notes
-                  for social selling on WhatsApp or Instagram, your customers get a
-                  seamless browsing experience. Stop answering "DM for price" and
-                  start directing your audience to your own link.
+                  Sign up for free, name your store, and add your branding.
+                  Zynkart provides Nigerian sellers with a clean, professional
+                  ecommerce website. Instead of sending random screenshots and
+                  relying on voice notes for social selling on WhatsApp or
+                  Instagram, your customers get a seamless browsing experience.
+                  Stop answering "DM for price" and start directing your
+                  audience to your own link.
                 </p>
               </div>
               <div>
@@ -539,10 +564,12 @@ const Philosophy = () => {
                   Load your products once, let Zynkart handle the details.
                 </h3>
                 <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Add products with high-quality photos, clear pricing, and product variants like sizes and colors.
-                  Robust inventory management ensures you never oversell an out-of-stock item again.
-                  Your products, incoming orders, and customer data now live in one beautifully
-                  organized dashboard instead of being buried deep in endless chat threads.
+                  Add products with high-quality photos, clear pricing, and
+                  product variants like sizes and colors. Robust inventory
+                  management ensures you never oversell an out-of-stock item
+                  again. Your products, incoming orders, and customer data now
+                  live in one beautifully organized dashboard instead of being
+                  buried deep in endless chat threads.
                 </p>
               </div>
               <div>
@@ -565,9 +592,30 @@ const Philosophy = () => {
                   Share your link, let customers check out on their own.
                 </h3>
                 <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Drop your custom store link on your WhatsApp status, Instagram bio,
-                  or anywhere you market your business. Customers can browse independently, add items to cart, configure their delivery based on your preset shipping zones,
-                  and complete their secure online checkout. Accept payments instantly via Nigerian payment gateways like <a href="https://paystack.com" target="_blank" rel="noreferrer" className="underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Paystack</a> or <a href="https://flutterwave.com" target="_blank" rel="noreferrer" className="underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Flutterwave</a>. You just wake up to order notifications!
+                  Drop your custom store link on your WhatsApp status, Instagram
+                  bio, or anywhere you market your business. Customers can
+                  browse independently, add items to cart, configure their
+                  delivery based on your preset shipping zones, and complete
+                  their secure online checkout. Accept payments instantly via
+                  Nigerian payment gateways like{" "}
+                  <a
+                    href="https://paystack.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+                  >
+                    Paystack
+                  </a>{" "}
+                  or{" "}
+                  <a
+                    href="https://flutterwave.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+                  >
+                    Flutterwave
+                  </a>
+                  . You just wake up to order notifications!
                 </p>
               </div>
               <div>
@@ -620,49 +668,58 @@ const FAQ = () => {
   const faqs = [
     {
       question: "How do I receive payments from customers?",
-      answer: "Zynkart integrates directly with reliable Nigerian payment gateways like Paystack and Flutterwave. When a customer orders, they can pay securely via USSD, bank transfer, or card. The money settles directly into your configured bank account."
+      answer:
+        "Zynkart integrates directly with reliable Nigerian payment gateways like Paystack and Flutterwave. When a customer orders, they can pay securely via USSD, bank transfer, or card. The money settles directly into your configured bank account.",
     },
     {
-      question: "Is this better than selling through WhatsApp or Instagram DMs?",
-      answer: "Absolutely. Directing customers to an online store saves you hours of answering 'DM for price', prevents you from missing orders while asleep, and provides a much more professional shopping experience for your buyers.",
+      question:
+        "Is this better than selling through WhatsApp or Instagram DMs?",
+      answer:
+        "Absolutely. Directing customers to an online store saves you hours of answering 'DM for price', prevents you from missing orders while asleep, and provides a much more professional shopping experience for your buyers.",
       link: {
         url: "/blog/dm-for-price-alternative",
-        text: "Read: Why 'DM for Price' is killing your business"
-      }
+        text: "Read: Why 'DM for Price' is killing your business",
+      },
     },
     {
       question: "Do I need technical skills to build my online store?",
-      answer: "Not at all. Zynkart is designed specifically for Nigerian small business owners and studentpreneurs without coding experience. Simply upload your product images, set your prices, and our platform builds the professional storefront for you instantly."
+      answer:
+        "Not at all. Zynkart is designed specifically for Nigerian small business owners and studentpreneurs without coding experience. Simply upload your product images, set your prices, and our platform builds the professional storefront for you instantly.",
     },
     {
       question: "Can I link my store directly to my Instagram bio?",
-      answer: "Yes! You can add your Zynkart store link directly to your Instagram or WhatsApp business profile, allowing customers to browse your full inventory independently.",
+      answer:
+        "Yes! You can add your Zynkart store link directly to your Instagram or WhatsApp business profile, allowing customers to browse your full inventory independently.",
       link: {
         url: "/blog/instagram-shop-nigeria",
-        text: "Guide: Starting an Instagram Shop in Nigeria"
-      }
+        text: "Guide: Starting an Instagram Shop in Nigeria",
+      },
     },
     {
       question: "What happens if a customer buys an item that is out of stock?",
-      answer: "Zynkart features automated inventory management. Once you set your available stock levels, the system automatically tracks sales. If an item runs out, it will be marked as 'Sold Out', preventing over-ordering and the awkwardness of refunding a customer."
-    }
+      answer:
+        "Zynkart features automated inventory management. Once you set your available stock levels, the system automatically tracks sales. If an item runs out, it will be marked as 'Sold Out', preventing over-ordering and the awkwardness of refunding a customer.",
+    },
   ];
 
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": faqs.map(faq => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
+      name: faq.question,
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": faq.answer
-      }
-    }))
+        text: faq.answer,
+      },
+    })),
   };
 
   return (
-    <section id="faq" className="py-32 bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 border-t border-zinc-200 dark:border-zinc-800">
+    <section
+      id="faq"
+      className="py-32 bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 border-t border-zinc-200 dark:border-zinc-800"
+    >
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-20 border-b border-zinc-200 dark:border-zinc-800 pb-6 gap-6">
           <div>
@@ -677,11 +734,21 @@ const FAQ = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
           {faqs.map((faq, index) => (
-            <div key={index} className="flex flex-col border-t border-zinc-200 dark:border-zinc-800 pt-6">
-              <h3 className="text-xl font-medium tracking-tight mb-4">{faq.question}</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">{faq.answer}</p>
+            <div
+              key={index}
+              className="flex flex-col border-t border-zinc-200 dark:border-zinc-800 pt-6"
+            >
+              <h3 className="text-xl font-medium tracking-tight mb-4">
+                {faq.question}
+              </h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                {faq.answer}
+              </p>
               {faq.link && (
-                <Link href={faq.link.url} className="mt-auto group inline-flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-900 dark:text-zinc-100 font-medium hover:text-zinc-500 transition-colors">
+                <Link
+                  href={faq.link.url}
+                  className="mt-auto group inline-flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-900 dark:text-zinc-100 font-medium hover:text-zinc-500 transition-colors"
+                >
                   {faq.link.text}
                   <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </Link>
