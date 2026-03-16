@@ -245,162 +245,6 @@ const PLANS = [
   },
 ];
 
-// --- Helper Components ---
-
-const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navItems = [
-    {
-      label: "Features",
-      href: "#features",
-    },
-    {
-      label: "Pricing",
-      href: "#pricing",
-    },
-    {
-      label: "How It Works",
-      href: "#how-it-works",
-    },
-    {
-      label: "Stories",
-      href: "#stories",
-    },
-    {
-      label: "Contact",
-      href: "#contact",
-    },
-  ];
-  return (
-    <>
-      <nav className="fixed top-0 left-0 w-full z-50 mix-blend-difference text-white px-6 py-6 flex justify-between items-start pointer-events-none bg-background/70 backdrop-blur-lg">
-        <div className="flex flex-col pointer-events-auto">
-          <span className="font-bold text-lg tracking-tighter uppercase">
-            Zynkart
-          </span>
-          <span className="text-xs tracking-widest opacity-60 mt-1">
-            Online Store Builder
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="pointer-events-auto group flex items-center gap-2"
-          >
-            <span className="text-xs uppercase tracking-widest hidden md:block group-hover:tracking-[0.2em] transition-all duration-300">
-              Menu
-            </span>
-            <Menu size={24} strokeWidth={1.5} />
-          </button>
-        </div>
-      </nav>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.4,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="fixed inset-0 bg-zinc-950 z-[60] text-white flex flex-col"
-          >
-            <div className="flex justify-between items-start px-6 py-6">
-              <div className="flex flex-col">
-                <span className="font-bold text-lg tracking-tighter uppercase">
-                  Zynkart
-                </span>
-              </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="group flex items-center gap-2 hover:text-zinc-400 transition-colors"
-              >
-                <span className="text-xs uppercase tracking-widest hidden md:block">
-                  Close
-                </span>
-                <X size={24} strokeWidth={1.5} />
-              </button>
-            </div>
-
-            <div className="flex-1 flex flex-col justify-center px-6 md:px-24 lg:px-40">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl mx-auto">
-                <ul className="flex flex-col gap-4">
-                  {navItems.map((item, i) => (
-                    <motion.li
-                      key={item.label}
-                      initial={{
-                        opacity: 0,
-                        y: 20,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        delay: 0.1 + i * 0.1,
-                        duration: 0.5,
-                      }}
-                    >
-                      <a
-                        href={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="text-5xl md:text-7xl font-light tracking-tighter hover:ml-4 transition-all duration-300 block group"
-                      >
-                        {item.label}
-                        <span className="text-lg ml-2 opacity-0 group-hover:opacity-100 align-top text-zinc-500 transition-opacity">
-                          0{i + 1}
-                        </span>
-                      </a>
-                    </motion.li>
-                  ))}
-                </ul>
-
-                <div className="hidden md:flex flex-col justify-end pb-4 text-zinc-500">
-                  <p className="text-sm max-w-xs leading-relaxed">
-                    Built for Nigerian vendors who want to look professional and
-                    stop replying to DMs manually. Your store, your brand.
-                  </p>
-                  <div className="mt-8 grid grid-cols-2 gap-8 text-xs uppercase tracking-widest">
-                    <div>
-                      <p className="text-white mb-2">Lagos</p>
-                      <p>Victoria Island</p>
-                      <p>Lagos, Nigeria</p>
-                    </div>
-                    <div>
-                      <p className="text-white mb-2">Socials</p>
-                      <p className="hover:text-white cursor-pointer">
-                        X (Twitter)
-                      </p>
-                      <p className="hover:text-white cursor-pointer">
-                        Instagram
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="pointer-events-auto mt-8 flex items-center gap-2">
-                    <span className="text-xs uppercase tracking-widest">
-                      Theme
-                    </span>
-                    <ModeToggle />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
 const Hero = () => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
@@ -779,12 +623,24 @@ const FAQ = () => {
       answer: "Zynkart integrates directly with reliable Nigerian payment gateways like Paystack and Flutterwave. When a customer orders, they can pay securely via USSD, bank transfer, or card. The money settles directly into your configured bank account."
     },
     {
+      question: "Is this better than selling through WhatsApp or Instagram DMs?",
+      answer: "Absolutely. Directing customers to an online store saves you hours of answering 'DM for price', prevents you from missing orders while asleep, and provides a much more professional shopping experience for your buyers.",
+      link: {
+        url: "/blog/dm-for-price-alternative",
+        text: "Read: Why 'DM for Price' is killing your business"
+      }
+    },
+    {
       question: "Do I need technical skills to build my online store?",
       answer: "Not at all. Zynkart is designed specifically for Nigerian small business owners and studentpreneurs without coding experience. Simply upload your product images, set your prices, and our platform builds the professional storefront for you instantly."
     },
     {
-      question: "Can I connect a custom domain to my Zynkart store?",
-      answer: "Yes! While you get a free 'yourname.zynkart.store' link immediately upon signup, upgrading to our Pro plan allows you to connect your own custom domain (like www.yourbrand.com) for maximum brand credibility."
+      question: "Can I link my store directly to my Instagram bio?",
+      answer: "Yes! You can add your Zynkart store link directly to your Instagram or WhatsApp business profile, allowing customers to browse your full inventory independently.",
+      link: {
+        url: "/blog/instagram-shop-nigeria",
+        text: "Guide: Starting an Instagram Shop in Nigeria"
+      }
     },
     {
       question: "What happens if a customer buys an item that is out of stock?",
@@ -823,7 +679,13 @@ const FAQ = () => {
           {faqs.map((faq, index) => (
             <div key={index} className="flex flex-col border-t border-zinc-200 dark:border-zinc-800 pt-6">
               <h3 className="text-xl font-medium tracking-tight mb-4">{faq.question}</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{faq.answer}</p>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">{faq.answer}</p>
+              {faq.link && (
+                <Link href={faq.link.url} className="mt-auto group inline-flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-900 dark:text-zinc-100 font-medium hover:text-zinc-500 transition-colors">
+                  {faq.link.text}
+                  <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                </Link>
+              )}
             </div>
           ))}
         </div>
@@ -1009,7 +871,6 @@ export const LandingPage = () => {
   return (
     <div className="font-sans bg-white dark:bg-zinc-950 text-black dark:text-zinc-50 min-h-screen w-full selection:bg-zinc-200 selection:text-black dark:selection:bg-zinc-800 dark:selection:text-white overflow-x-hidden">
       <CustomCursor />
-      <Navigation />
       <main>
         <Hero />
         <ProjectList />
