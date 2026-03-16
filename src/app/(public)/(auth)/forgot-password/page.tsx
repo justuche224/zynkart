@@ -4,10 +4,12 @@ import { authClient } from "@/lib/auth-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: `Reset you ${info.name} account password`,
+  title: `Reset your ${info.name} password`,
+  description: "Reset your Zynkart account password securely.",
 };
 
 const page = async () => {
@@ -16,10 +18,18 @@ const page = async () => {
     return redirect(info.defaultRedirect);
   }
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
+    <div className="grid min-h-screen lg:grid-cols-2 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
+      <div className="flex flex-col p-8 md:p-12 lg:p-20 relative">
+        <div className="absolute top-8 left-8 md:top-12 md:left-12">
+          <Link href="/" className="flex flex-col pointer-events-auto">
+            <span className="font-bold text-lg tracking-tighter uppercase">
+              Zynkart
+            </span>
+          </Link>
+        </div>
+
+        <div className="flex flex-1 items-center justify-center -translate-y-10">
+          <div className="w-full max-w-[360px]">
             <Suspense
               fallback={
                 <div className="flex flex-col gap-6">
@@ -39,14 +49,30 @@ const page = async () => {
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
+      
+      {/* Decorative side panel matching aesthetic */}
+      <div className="relative hidden lg:block border-l border-zinc-200 dark:border-zinc-800 bg-zinc-950 overflow-hidden">
         <Image
           src="/images/shoper-af5Oi0kOByE-unsplash.jpg"
-          alt="Image"
-          width={500}
-          height={500}
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          alt="Shopping"
+          fill
+          className="absolute inset-0 h-full w-full object-cover mix-blend-overlay opacity-30 dark:opacity-40 grayscale"
+          priority
         />
+        {/* Abstract typography block over the image */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-20 text-center">
+          <h2 className="text-[12vw] leading-[0.8] font-bold tracking-tighter uppercase text-white/10 select-none pointer-events-none mix-blend-overlay">
+            Zynkart
+          </h2>
+          <div className="absolute bottom-20 left-20">
+            <span className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">
+              Secure
+            </span>
+            <p className="text-xl font-light tracking-tighter max-w-sm text-zinc-300">
+              Get back to managing your professional storefront safely.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

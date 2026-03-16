@@ -155,9 +155,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100">
+        <div className="pt-24 md:pt-32" />
         <article className="py-12 md:py-20">
-          <div className="container mx-auto px-4 max-w-4xl">
+          <div className="container mx-auto px-6 max-w-4xl">
             <BlogArticleHeader
               title={post.title}
               description={post.description}
@@ -169,7 +170,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             {/* Article Content */}
-            <div className="mt-12 md:mt-16 prose-custom">
+            <div className="mt-16 md:mt-24 prose prose-zinc dark:prose-invert max-w-none prose-headings:font-light prose-headings:tracking-tighter prose-h2:text-4xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-zinc-600 dark:prose-p:text-zinc-400 prose-a:underline hover:prose-a:text-zinc-500">
               <MDXRemote source={post.content} components={mdxComponents} />
             </div>
 
@@ -179,17 +180,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </article>
 
         {/* CTA Section */}
-        <section className="py-16 bg-muted/50">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Ready to Start Selling Online?
+        <section className="py-32 bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="container mx-auto px-6 max-w-4xl text-center flex flex-col items-center">
+            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase">
+              Ready to Start <br /><span className="italic font-serif">Selling Online?</span>
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Create your free online store in minutes. No coding required.
+            <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400 max-w-md">
+              Create your free online store in minutes. No coding required. Stop the DMs.
             </p>
             <a
               href="/sign-up"
-              className="inline-flex mt-6 px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full transition-colors"
+              className="mt-10 group inline-flex items-center gap-3 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-8 py-4 hover:bg-transparent hover:text-zinc-900 dark:hover:bg-transparent dark:hover:text-zinc-100 transition-colors duration-300"
             >
               Create Your Free Store
             </a>

@@ -85,18 +85,22 @@ export default function BlogPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-100 pb-20">
+        <div className="pt-24 md:pt-32" />
+
         {/* Hero Section */}
-        <section className="relative py-20 md:py-28 bg-gradient-to-b from-muted/50 to-background">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center max-w-3xl mx-auto">
-              <span className="inline-block px-4 py-1.5 text-sm font-medium bg-accent text-accent-foreground rounded-full mb-6">
-                Zynkart Blog
-              </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
-                Grow Your <span className="text-primary">Online Business</span>
-              </h1>
-              <p className="mt-6 text-lg md:text-xl text-muted-foreground">
+        <section className="relative py-20 border-b border-zinc-200 dark:border-zinc-800">
+          <div className="container mx-auto px-6 max-w-6xl">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
+              <div>
+                <span className="text-xs uppercase tracking-widest text-zinc-500">
+                  Zynkart Blog
+                </span>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter uppercase mt-4">
+                  Grow Your <br /><span className="italic font-serif">Online Business</span>
+                </h1>
+              </div>
+              <p className="max-w-md text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                 Expert guides, tips, and insights for Nigerian online sellers.
                 Learn how to succeed in e-commerce and social commerce.
               </p>
@@ -105,16 +109,16 @@ export default function BlogPage() {
         </section>
 
         {/* Blog Posts Grid */}
-        <section className="py-16 md:py-20">
-          <div className="container mx-auto px-4 max-w-6xl">
+        <section className="py-24 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
+          <div className="container mx-auto px-6 max-w-6xl">
             {posts.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-muted-foreground text-lg">
+                <p className="text-zinc-500 text-sm tracking-widest uppercase">
                   No blog posts yet. Check back soon!
                 </p>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {posts.map((post, index) => (
                   <BlogCard
                     key={post.slug}
@@ -128,17 +132,17 @@ export default function BlogPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-muted/50">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Ready to Start Selling Online?
+        <section className="py-32 bg-white dark:bg-zinc-950">
+          <div className="container mx-auto px-6 text-center flex flex-col items-center">
+            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase">
+              Ready to Start <br /><span className="italic font-serif">Selling Online?</span>
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Create your free online store in minutes. No coding required.
+            <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400 max-w-md">
+              Create your free online store in minutes. No coding required. Stop the DMs.
             </p>
             <a
               href="/sign-up"
-              className="inline-flex mt-6 px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full transition-colors"
+              className="mt-10 group inline-flex items-center gap-3 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-8 py-4 hover:bg-transparent hover:text-zinc-900 dark:hover:bg-transparent dark:hover:text-zinc-100 transition-colors duration-300"
             >
               Create Your Free Store
             </a>

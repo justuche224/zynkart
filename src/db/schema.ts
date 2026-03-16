@@ -97,6 +97,11 @@ export const store = pgTable(
     phone: text("phone").notNull(),
     email: text("email").notNull(),
     description: text("description"),
+
+    // TODO: Add form to collet this in the frontend
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    metaKeywords: text("meta_keywords"),
   },
   (table) => [
     index("store_slug_idx").on(table.slug),
@@ -305,6 +310,10 @@ export const category = pgTable(
       .references(() => store.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
+
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    metaKeywords: text("meta_keywords"),
   },
   (table) => [
     uniqueIndex("product_category_name_store_profile_id_idx").on(

@@ -58,11 +58,11 @@ export function BlogArticleHeader({
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="mb-8"
+        className="mb-12"
       >
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+          className="inline-flex items-center gap-3 text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Blog
@@ -74,12 +74,12 @@ export function BlogArticleHeader({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="flex flex-wrap gap-2 mb-4"
+        className="flex flex-wrap gap-2 mb-8"
       >
         {tags.map((tag) => (
           <span
             key={tag}
-            className="px-3 py-1 text-xs font-medium bg-accent text-accent-foreground rounded-full"
+            className="px-3 py-1 text-xs uppercase tracking-widest font-medium border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
           >
             {tag}
           </span>
@@ -91,7 +91,7 @@ export function BlogArticleHeader({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight"
+        className="text-4xl md:text-5xl lg:text-7xl font-light tracking-tighter uppercase leading-[1.1] text-zinc-900 dark:text-zinc-100"
       >
         {title}
       </motion.h1>
@@ -101,7 +101,7 @@ export function BlogArticleHeader({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-4 text-lg md:text-xl text-muted-foreground"
+        className="mt-6 text-lg md:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-3xl"
       >
         {description}
       </motion.p>
@@ -111,7 +111,7 @@ export function BlogArticleHeader({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground"
+        className="mt-10 pt-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center gap-6 text-xs uppercase tracking-widest text-zinc-500"
       >
         <span className="flex items-center gap-2">
           <User className="w-4 h-4" />
@@ -136,13 +136,13 @@ export function BlogArticleHeader({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="mt-6 flex items-center gap-3"
+        className="mt-8 flex items-center gap-4 text-xs uppercase tracking-widest text-zinc-500"
       >
-        <span className="text-sm text-muted-foreground">Share:</span>
-        <div className="flex items-center gap-2">
+        <span>Share</span>
+        <div className="flex items-center gap-3">
           <button
             onClick={handleShare}
-            className="p-2 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
             aria-label="Share"
           >
             <Share2 className="w-4 h-4" />
@@ -151,7 +151,7 @@ export function BlogArticleHeader({
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
             aria-label="Share on Twitter"
           >
             <Twitter className="w-4 h-4" />
@@ -160,7 +160,7 @@ export function BlogArticleHeader({
             href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
             aria-label="Share on LinkedIn"
           >
             <Linkedin className="w-4 h-4" />
@@ -169,7 +169,7 @@ export function BlogArticleHeader({
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
             aria-label="Share on Facebook"
           >
             <Facebook className="w-4 h-4" />
@@ -182,7 +182,7 @@ export function BlogArticleHeader({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="mt-8 relative aspect-[2/1] rounded-2xl overflow-hidden"
+        className="mt-12 relative aspect-[2/1] border border-zinc-200 dark:border-zinc-800 overflow-hidden"
       >
         <Image
           src={image}
@@ -205,11 +205,11 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   if (posts.length === 0) return null;
 
   return (
-    <section className="mt-16 pt-12 border-t border-border">
-      <h2 className="text-2xl font-bold text-foreground mb-8">
+    <section className="mt-32 pt-16 border-t border-zinc-200 dark:border-zinc-800">
+      <h2 className="text-4xl font-light tracking-tighter uppercase mb-12 text-zinc-900 dark:text-zinc-100">
         Related Articles
       </h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {posts.map((post) => (
           <BlogCard key={post.slug} post={post} />
         ))}
