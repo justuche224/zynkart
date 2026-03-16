@@ -139,10 +139,12 @@ export function RegisterForm({
         className={cn("flex flex-col gap-6", className)}
         {...props}
       >
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Create an account</h1>
-          <p className="text-balance text-sm text-muted-foreground">
-            Enter your details below to create your account
+        <div className="flex flex-col items-center gap-2 text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-light tracking-tighter uppercase text-zinc-900 dark:text-zinc-100">
+            Sign Up
+          </h1>
+          <p className="text-xs uppercase tracking-widest text-zinc-500 mt-2">
+            Create your new store
           </p>
         </div>
         <div className="grid gap-6">
@@ -152,7 +154,7 @@ export function RegisterForm({
             disabled={isPending}
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="name">Name</FormLabel>
+                <FormLabel htmlFor="name" className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -161,6 +163,7 @@ export function RegisterForm({
                     placeholder="John Doe"
                     required
                     autoComplete="name"
+                    className="rounded-none border-zinc-200 dark:border-zinc-800 bg-transparent focus-visible:ring-1 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100"
                   />
                 </FormControl>
                 <FormMessage />
@@ -173,15 +176,16 @@ export function RegisterForm({
             disabled={isPending}
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormLabel htmlFor="email" className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Email</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
+                    placeholder="address@example.com"
                     required
                     autoComplete="email"
+                    className="rounded-none border-zinc-200 dark:border-zinc-800 bg-transparent focus-visible:ring-1 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100"
                   />
                 </FormControl>
                 <FormMessage />
@@ -194,7 +198,7 @@ export function RegisterForm({
             disabled={isPending}
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormLabel htmlFor="password" className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Password</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
@@ -203,6 +207,7 @@ export function RegisterForm({
                       type={showPassword ? "text" : "password"}
                       placeholder="********"
                       required
+                      className="rounded-none border-zinc-200 dark:border-zinc-800 bg-transparent focus-visible:ring-1 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100"
                     />
                     <Button
                       type="button"
@@ -232,7 +237,7 @@ export function RegisterForm({
             disabled={isPending}
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="confirmPassword">
+                <FormLabel htmlFor="confirmPassword" className="text-xs uppercase tracking-widest text-zinc-500 mb-1">
                   Confirm Password
                 </FormLabel>
                 <FormControl>
@@ -243,6 +248,7 @@ export function RegisterForm({
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="********"
                       required
+                      className="rounded-none border-zinc-200 dark:border-zinc-800 bg-transparent focus-visible:ring-1 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100"
                     />
                     <Button
                       type="button"
@@ -289,30 +295,33 @@ export function RegisterForm({
           )}
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button
+          <button
             disabled={
               isPending ||
               (process.env.NODE_ENV === "production" && !captchaToken)
             }
             type="submit"
-            className="w-full"
+            className="mt-4 group inline-flex items-center justify-center gap-3 text-xs uppercase tracking-widest border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-8 py-4 hover:bg-transparent hover:text-zinc-900 dark:hover:bg-transparent dark:hover:text-zinc-100 transition-colors duration-300 w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
-                Sign Up <ArrowRight className="ml-2 h-4 w-4" />
+                Create Store
+                <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
               </>
             )}
-          </Button>
+          </button>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
               Or
             </span>
           </div>
-          <div className="text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/sign-in" className="underline underline-offset-4">
+          <div className="text-center mt-6">
+            <span className="text-xs uppercase tracking-widest text-zinc-500">
+              Already have an account?{" "}
+            </span>
+            <Link href="/sign-in" className="text-xs uppercase tracking-widest font-medium border-b border-zinc-900 dark:border-zinc-100 hover:text-zinc-500 hover:border-zinc-500 transition-colors pb-0.5">
               Sign in
             </Link>
           </div>
